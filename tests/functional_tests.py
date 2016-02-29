@@ -1,6 +1,7 @@
 import unittest
 import sys
-if ".." not in sys.path: sys.path = [".."] + sys.path
+sys.path.append(".")
+sys.path.append("..")
 import pygtop
 
 
@@ -194,3 +195,7 @@ class LigandAccess(unittest.TestCase):
         # The user looks for a ligand with a name that does not exist
         ligand = pygtop.get_ligand_by_name("paracetamoxyfrusebendroneomycin")
         self.assertEqual(ligand, None)
+
+
+if __name__ == "__main__":
+    unittest.main()
