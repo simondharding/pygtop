@@ -123,7 +123,6 @@ class LigandAccess(unittest.TestCase):
         self.check_ligand_precursor_properties(ligand)
 
 
-
     def test_can_get_single_ligand(self):
         # The user gets a ligand by ID
         ligand = pygtop.get_ligand_by_id(1)
@@ -137,7 +136,12 @@ class LigandAccess(unittest.TestCase):
         # The user decides to get the structural information for the ligand
         ligand.get_structural_properties()
         self.check_ligand_structural_properties(ligand)
-        self.check_ligand_basic_properties()
+
+        # The user tries to access molecular properties
+        self.assertRaises(ligand.rotatable_bonds, pygtop.PropertyNotRequestedYetError)
+
+        # The user decides to get molecular properties for the ligand
+        ligand.get_molecular_properties()
         self.check_ligand_molecular_properties(ligand)
 
         # The user decides to get database properties for the ligand
