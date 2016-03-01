@@ -33,3 +33,16 @@ class Ligand:
         self.complex_ids = json_data["complexIds"]
         self.prodrug_ids = json_data["prodrugIds"]
         self.active_drug_ids = json_data["activeDrugIds"]
+
+
+    def get_structural_properties(self):
+        response = requests.get("%sligands/%i/%s" % (ROOT_URL, self.ligand_id, STRUCTURAL_PROPERTIES))
+        json_data = json.loads(response.text)
+        self.iupac_name = json_data["iupacName"]
+        self.smiles = json_data["smiles"]
+        self.inchi = json_data["inchi"]
+        self.inchi_key = json_data["inchiKey"]
+        self.one_letter_sequence = json_data["oneLetterSeq"]
+        self.three_letter_sequence = json_data["threeLetterSeq"]
+        self.post_translational_modifications = json_data["postTranslationalModifications"]
+        self.chemical_modifications = json_data["chemicalModifications"]
