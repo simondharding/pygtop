@@ -69,7 +69,7 @@ class LigandAccess(unittest.TestCase):
 
     def check_ligand_database_properties(self, ligand):
         self.assertIsInstance(ligand.database_links, list)
-        for link in ligand.database_links():
+        for link in ligand.database_links:
             self.assertIsInstance(link, pygtop.DatabaseLink)
             if link.accession: self.assertIsInstance(link.accession, str)
             if link.database: self.assertIsInstance(link.database, str)
@@ -143,7 +143,7 @@ class LigandAccess(unittest.TestCase):
         self.check_ligand_structural_properties(ligand)
 
         # The user tries to access molecular properties
-        self.assertRaises(ligand.rotatable_bonds, pygtop.PropertyNotRequestedYetError)
+        self.assertRaises(pygtop.PropertyNotRequestedYetError, lambda: ligand.rotatable_bonds)
 
         # The user decides to get molecular properties for the ligand
         ligand.get_molecular_properties()
