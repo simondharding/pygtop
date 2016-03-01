@@ -1,0 +1,2 @@
+class NoSuchLigandError(Exception):
+    pass

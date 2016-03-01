@@ -3,6 +3,7 @@ import sys
 sys.path.append(".")
 sys.path.append("..")
 import pygtop
+import pygtop.exceptions
 
 
 class LigandAccess(unittest.TestCase):
@@ -131,7 +132,11 @@ class LigandAccess(unittest.TestCase):
         self.check_ligand_basic_properties(ligand)
 
         # The user tries to get a ligand with a false ID
-        self.assertRaises(pygtop.get_ligand_id(1000000000), pygtop.NoSuchLigandError)
+        self.assertRaises(
+         pygtop.exceptions.NoSuchLigandError,
+         pygtop.get_ligand_by_id,
+         10000000
+        )
 
         # The user decides to get the structural information for the ligand
         ligand.get_structural_properties()
