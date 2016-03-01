@@ -1,14 +1,13 @@
 import requests
 import json
-from .gtop_constants import *
+from .gtop import *
 from .exceptions import *
 from .shared import *
 
 def get_ligand_by_id(ligand_id):
-    response = requests.get("%sligands/%i" % (ROOT_URL, ligand_id))
-    if response.status_code == 200:
-        json_data = response.text
-        return Ligand(json.loads(json_data))
+    json_data = get_json_from_gtop("ligands/%i" % ligand_id)
+    if json_data:
+        return Ligand(json_data)
     else:
         raise NoSuchLigandError
 
@@ -50,40 +49,36 @@ class Ligand:
 
 
     def get_structural_properties(self):
-        response = requests.get("%sligands/%i/%s" % (ROOT_URL, self.ligand_id, STRUCTURAL_PROPERTIES))
-        json_data = json.loads(response.text)
-        self.iupac_name = json_data["iupacName"]
-        self.smiles = json_data["smiles"]
-        self.inchi = json_data["inchi"]
-        self.inchi_key = json_data["inchiKey"]
-        self.one_letter_sequence = json_data["oneLetterSeq"]
-        self.three_letter_sequence = json_data["threeLetterSeq"]
-        self.post_translational_modifications = json_data["postTranslationalModifications"]
-        self.chemical_modifications = json_data["chemicalModifications"]
+        json_data = get_json_from_gtop("ligands/%i/%s" % (self.ligand_id, STRUCTURAL_PROPERTIES))
+        self.iupac_name = json_data["iupacName"] if json_data else None
+        self.smiles = json_data["smiles"] if json_data else None
+        self.inchi = json_data["inchi"] if json_data else None
+        self.inchi_key = json_data["inchiKey"] if json_data else None
+        self.one_letter_sequence = json_data["oneLetterSeq"] if json_data else None
+        self.three_letter_sequence = json_data["threeLetterSeq"] if json_data else None
+        self.post_translational_modifications = json_data["postTranslationalModifications"] if json_data else None
+        self.chemical_modifications = json_data["chemicalModifications"] if json_data else None
 
 
     def get_molecular_properties(self):
-        response = requests.get("%sligands/%i/%s" % (ROOT_URL, self.ligand_id, MOLECULAR_PROPERTIES))
-        json_data = json.loads(response.text)
-        self.hydrogen_bond_acceptors = json_data["hydrogenBondAcceptors"]
-        self.hydrogen_bond_donors = json_data["hydrogenBondDonors"]
-        self.rotatable_bonds = json_data["rotatableBonds"]
-        self.topological_polar_surface_area = json_data["topologicalPolarSurfaceArea"]
-        self.molecular_weight = json_data["molecularWeight"]
-        self.log_p = json_data["logP"]
-        self.lipinksi_rules_broken = json_data["lipinskisRuleOfFive"]
+        json_data = get_json_from_gtop("ligands/%i/%s" % (self.ligand_id, MOLECULAR_PROPERTIES))
+        self.hydrogen_bond_acceptors = json_data["hydrogenBondAcceptors"] if json_data else None
+        self.hydrogen_bond_donors = json_data["hydrogenBondDonors"] if json_data else None
+        self.rotatable_bonds = json_data["rotatableBonds"] if json_data else None
+        self.topological_polar_surface_area = json_data["topologicalPolarSurfaceArea"] if json_data else None
+        self.molecular_weight = json_data["molecularWeight"] if json_data else None
+        self.log_p = json_data["logP"] if json_data else None
+        self.lipinksi_rules_broken = json_data["lipinskisRuleOfFive"] if json_data else None
 
 
     def get_database_properties(self):
-        response = requests.get("%sligands/%i/%s" % (ROOT_URL, self.ligand_id, DATABASE_PROPERTIES))
-        json_data = json.loads(response.text)
-        self.database_links = [DatabaseLink(link) for link in json_data]
+        json_data = get_json_from_gtop("ligands/%i/%s" % (self.ligand_id, DATABASE_PROPERTIES))
+        self.database_links = [DatabaseLink(link) for link in json_data] if json_data else []
 
 
     def get_synonym_properties(self):
-        response = requests.get("%sligands/%i/%s" % (ROOT_URL, self.ligand_id, SYNONYM_PROPERTIES))
-        json_data = json.loads(response.text)
-        self.synonyms = [synonym["name"] for synonym in json_data]
+        json_data = get_json_from_gtop("ligands/%i/%s" % (self.ligand_id, SYNONYM_PROPERTIES))
+        self.synonyms = [synonym["name"] for synonym in json_data] if json_data else []
 
 
     def _get_missing_attribute_error_message(self, attribute):
