@@ -2,6 +2,7 @@ import requests
 import json
 from .gtop_constants import *
 from .exceptions import *
+from .shared import *
 
 def get_ligand_by_id(ligand_id):
     response = requests.get("%sligands/%i" % (ROOT_URL, ligand_id))
@@ -57,6 +58,24 @@ class Ligand:
         self.chemical_modifications = json_data["chemicalModifications"]
 
 
+    def get_molecular_properties(self):
+        response = requests.get("%sligands/%i/%s" % (ROOT_URL, self.ligand_id, MOLECULAR_PROPERTIES))
+        json_data = json.loads(response.text)
+        self.hydrogen_bond_acceptors = json_data["hydrogenBondAcceptors"]
+        self.hydrogen_bond_donors = json_data["hydrogenBondDonors"]
+        self.rotatable_bonds = json_data["rotatableBonds"]
+        self.topological_polar_surface_area = json_data["topologicalPolarSurfaceArea"]
+        self.molecular_weight = json_data["molecularWeight"]
+        self.log_p = json_data["logP"]
+        self.lipinksi_rules_broken = json_data["lipinskisRuleOfFive"]
+
+
+    def get_database_properties(self):
+        response = requests.get("%sligands/%i/%s" % (ROOT_URL, self.ligand_id, DATABASE_PROPERTIES))
+        json_data = json.loads(response.text)
+        self.database_links = [DatabaseLink(link) for link in json_data]
+
+
     def _get_missing_attribute_error_message(self, attribute):
         message = "'%s' is a %s property - you need to request this seperately with my %s() method"
         values = []
@@ -99,7 +118,7 @@ class Ligand:
      "rotatable_bonds",
      "topological_polar_surface_area",
      "molecular_weight",
-     "log_P",
+     "log_p",
      "lipinksi_rules_broken"
     ]
 
