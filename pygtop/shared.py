@@ -6,4 +6,12 @@ class DatabaseLink:
         self.accession = json_data["accession"]
         self.database = json_data["database"]
         self.url = json_data["url"]
-        self.species = json_data["species"]
+        self.species = None if json_data["species"] == "None" else json_data["species"]
+
+
+    def __repr__(self):
+        return "<%s link (%s)%s>" % (
+         self.database,
+         self.accession,
+         " for " + self.species if self.species else ""
+        )

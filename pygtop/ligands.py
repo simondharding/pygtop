@@ -44,6 +44,10 @@ class Ligand:
             raise AttributeError("Ligand object has no attribute '%s'" % key)
 
 
+    def __repr__(self):
+        return "<'%s' Ligand (%s)>" % (self.name, self.type)
+
+
 
     def get_structural_properties(self):
         response = requests.get("%sligands/%i/%s" % (ROOT_URL, self.ligand_id, STRUCTURAL_PROPERTIES))
