@@ -80,6 +80,12 @@ class Ligand:
         self.database_links = [DatabaseLink(link) for link in json_data]
 
 
+    def get_synonym_properties(self):
+        response = requests.get("%sligands/%i/%s" % (ROOT_URL, self.ligand_id, SYNONYM_PROPERTIES))
+        json_data = json.loads(response.text)
+        self.synonyms = [synonym["name"] for synonym in json_data]
+
+
     def _get_missing_attribute_error_message(self, attribute):
         message = "'%s' is a %s property - you need to request this seperately with my %s() method"
         values = []
