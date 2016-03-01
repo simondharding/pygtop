@@ -114,7 +114,7 @@ class LigandAccess(unittest.TestCase):
 
 
     def check_ligand_complete(self, ligand):
-        self.check_ligand_basic_properties()
+        self.check_ligand_basic_properties(ligand)
         ligand.get_all_properties()
         self.check_ligand_structural_properties(ligand)
         self.check_ligand_molecular_properties(ligand)
@@ -170,7 +170,7 @@ class LigandAccess(unittest.TestCase):
         self.check_ligand_complete(ligand)
 
         # The user decides to get a random peptide ligand
-        ligand.get_random_ligand(type="peptide")
+        pygtop.get_random_ligand(ligand_type="peptide")
         self.check_ligand_complete(ligand)
 
 

@@ -1,5 +1,6 @@
 import requests
 import json
+import random
 from .gtop import *
 from .exceptions import *
 from .shared import *
@@ -10,6 +11,23 @@ def get_ligand_by_id(ligand_id):
         return Ligand(json_data)
     else:
         raise NoSuchLigandError
+
+
+def get_random_ligand(ligand_type=None):
+    json_data = get_json_from_gtop("ligands")
+    if ligand_type:
+        types = set([ligand["type"].lower() for ligand in json_data])
+        if ligand_type.lower() in types:
+            json_data = [ligand for ligand in json_data if ligand["type"].lower() == ligand_type.lower()]
+        else:
+            raise NoSuchTypeError("There are no ligands of type %s" % ligand_type)
+    return Ligand(random.choice(json_data))
+
+
+def get_all_ligands():
+    json_data = get_json_from_gtop("ligands")
+    return [Ligand(l) for l in json_data]
+
 
 
 class Ligand:
@@ -98,6 +116,15 @@ class Ligand:
     def get_precursor_properties(self):
         json_data = get_json_from_gtop("ligands/%i/%s" % (self.ligand_id, PRECURSOR_PROPERTIES))
         self.precursors = [Precursor(p) for p in json_data] if json_data else []
+
+
+    def get_all_properties(self):
+        self.get_structural_properties()
+        self.get_molecular_properties()
+        self.get_database_properties()
+        self.get_synonym_properties()
+        self.get_comment_properties()
+        self.get_precursor_properties()
 
 
     def _get_missing_attribute_error_message(self, attribute):

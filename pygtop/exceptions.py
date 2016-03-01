@@ -4,3 +4,7 @@ class NoSuchLigandError(Exception):
 
 class PropertyNotRequestedYetError(Exception):
     pass
+
+
+class NoSuchTypeError(Exception):
+    pass
