@@ -29,3 +29,7 @@ class Precursor:
         self.protein_name = json_data["proteinName"]
         self.species = json_data["species"]
         self.synonyms = [s["name"] for s in json_data["synonyms"]]
+
+
+    def __repr__(self):
+        return "<Precursor %i (%s)>" % (self.precursor_id, self.protein_name)
