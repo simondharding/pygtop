@@ -81,6 +81,25 @@ class Ligand:
         self.synonyms = [synonym["name"] for synonym in json_data] if json_data else []
 
 
+    def get_comment_properties(self):
+        json_data = get_json_from_gtop("ligands/%i/%s" % (self.ligand_id, COMMENT_PROPERTIES))
+        self.general_comments = json_data["comments"] if json_data else ""
+        self.bioactivity_comments = json_data["bioactivityComments"] if json_data else ""
+        self.clinical_use_comments = json_data["clinicalUse"] if json_data else ""
+        self.mechanism_of_action_comments = json_data["mechanismOfAction"] if json_data else ""
+        self.absorption_and_distribution_comments = json_data["absorptionAndDistribution"] if json_data else ""
+        self.metabolism_comments = json_data["metabolism"] if json_data else ""
+        self.elimination_comments = json_data["elimination"] if json_data else ""
+        self.population_pharmacokinetics_comments = json_data["populationPharmacokinetics"] if json_data else ""
+        self.organ_function_impairments_comments = json_data["organFunctionImpairment"] if json_data else ""
+        self.mutations_and_pathophysiology_comments = json_data["mutationsAndPathophysiology"] if json_data else ""
+
+
+    def get_precursor_properties(self):
+        json_data = get_json_from_gtop("ligands/%i/%s" % (self.ligand_id, PRECURSOR_PROPERTIES))
+        self.precursors = [Precursor(p) for p in json_data] if json_data else []
+
+
     def _get_missing_attribute_error_message(self, attribute):
         message = "'%s' is a %s property - you need to request this seperately with my %s() method"
         values = []

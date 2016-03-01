@@ -7,6 +7,8 @@ STRUCTURAL_PROPERTIES = "structure"
 MOLECULAR_PROPERTIES = "molecularProperties"
 DATABASE_PROPERTIES = "databaseLinks"
 SYNONYM_PROPERTIES = "synonyms"
+COMMENT_PROPERTIES = "comments"
+PRECURSOR_PROPERTIES = "precursors"
 
 
 def get_json_from_gtop(query):

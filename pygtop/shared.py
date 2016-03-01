@@ -15,3 +15,17 @@ class DatabaseLink:
          self.accession,
          " for " + self.species if self.species else ""
         )
+
+
+class Precursor:
+
+    def __init__(self, json_data):
+        self.json_data = json_data
+
+        self.precursor_id = json_data["precursorId"]
+        self.gene_symbol = json_data["geneSymbol"]
+        self.gene_name = json_data["geneName"]
+        self.official_gene_id = json_data["officialGeneId"]
+        self.protein_name = json_data["proteinName"]
+        self.species = json_data["species"]
+        self.synonyms = [s["name"] for s in json_data["synonyms"]]
