@@ -29,6 +29,21 @@ def get_all_ligands():
     return [Ligand(l) for l in json_data]
 
 
+def get_ligands_by(criteria):
+    search_string = "&".join(["%s=%s" % (key, criteria[key]) for key in criteria])
+    json_data = get_json_from_gtop("ligands?%s" % search_string)
+    if json_data:
+        return [Ligand(l) for l in json_data]
+    else:
+        return []
+
+
+def get_ligand_by_name(name):
+    ligands = get_ligands_by({"name": name})
+    if ligands:
+        return ligands[0]
+
+
 
 class Ligand:
 
@@ -37,7 +52,7 @@ class Ligand:
 
         self.ligand_id = json_data["ligandId"]
         self.name = json_data["name"]
-        self.abbreviation = json_data["abbreviation"]
+        self.abbreviation = json_data["abbreviation"] if json_data["abbreviation"] else ""
         self.inn = json_data["inn"]
         self.type = json_data["type"]
         self.type = json_data["type"]
