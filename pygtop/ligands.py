@@ -14,13 +14,10 @@ def get_ligand_by_id(ligand_id):
 
 
 def get_random_ligand(ligand_type=None):
-    json_data = get_json_from_gtop("ligands")
     if ligand_type:
-        types = set([ligand["type"].lower() for ligand in json_data])
-        if ligand_type.lower() in types:
-            json_data = [ligand for ligand in json_data if ligand["type"].lower() == ligand_type.lower()]
-        else:
-            raise NoSuchTypeError("There are no ligands of type %s" % ligand_type)
+        json_data = get_json_from_gtop("ligands?type=%s" % ligand_type.lower())
+    else:
+        json_data = get_json_from_gtop("ligands")
     return Ligand(random.choice(json_data))
 
 
@@ -54,7 +51,6 @@ class Ligand:
         self.name = json_data["name"]
         self.abbreviation = json_data["abbreviation"] if json_data["abbreviation"] else ""
         self.inn = json_data["inn"]
-        self.type = json_data["type"]
         self.type = json_data["type"]
         self.species = json_data["species"]
         self.radioactive = json_data["radioactive"]
