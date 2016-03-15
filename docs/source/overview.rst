@@ -37,7 +37,7 @@ You can get a list of ligands by either requesting all ligands, or providing a
 query:
 
     >>> all_ligands = pygtop.get_all_ligands()
-    >>> len(all_ligands) # There are 8,328 ligands as of April 2016
+    >>> len(all_ligands) # There are 8,328 ligands as of March 2016
     8328
     >>> all_ligands[0]
     <'10,10-difluoro TXA<sub>2</sub>' Ligand (Synthetic organic)>
