@@ -12,7 +12,7 @@ Example
   >>> my_drug = pygtop.get_ligand_by_id(5239)
   >>> my_drug.name
   'paracetamol'
-  >>> my_drug.type
+  >>> my_drug.ligand_type
   'Synthetic organic'
 
 Table of Contents
