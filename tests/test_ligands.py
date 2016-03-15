@@ -14,7 +14,7 @@ class LigandTest(unittest.TestCase):
         self.assertIsInstance(ligand.abbreviation, str)
         self.assertIsInstance(ligand.inn, str)
         if ligand.species: self.assertIsInstance(ligand.species, str)
-        self.assertIsInstance(ligand.type, str)
+        self.assertIsInstance(ligand.ligand_type, str)
         self.assertIsInstance(ligand.radioactive, bool)
         self.assertIsInstance(ligand.labelled, bool)
         self.assertIsInstance(ligand.approved, bool)
@@ -210,7 +210,7 @@ class MultiLigands(LigandTest):
         self.assertIsInstance(ligand, Ligand)
         ligand = pygtop.get_random_ligand(ligand_type="peptide")
         self.assertIsInstance(ligand, Ligand)
-        self.assertEqual(ligand.type.lower(), "peptide")
+        self.assertEqual(ligand.ligand_type.lower(), "peptide")
         self.assertRaises(
          NoSuchTypeError,
          lambda: pygtop.get_random_ligand(ligand_type="xxx")

@@ -6,10 +6,21 @@ class DatabaseLink:
 
     :param json_data: A dictionary obtained from the web services.
 
-    :var accession: The Accession code.
-    :var database: The Database being linked to.
-    :var url: The URL for this database entry.
-    :var species: The specific species the database entry refers to."""
+    .. py:attribute:: accession:
+
+        The Accession code.
+
+    .. py:attribute:: database:
+
+        The Database being linked to.
+
+    .. py:attribute:: url:
+
+        The URL for this database entry.
+
+    .. py:attribute:: species:
+
+        The specific species the database entry refers to."""
 
     def __init__(self, json_data):
         self.json_data = json_data
@@ -28,18 +39,39 @@ class DatabaseLink:
         )
 
 
+
 class Precursor:
     """A precursor to a Guide to PHARMACOLOGY ligand/target.
 
     :param json_data: A dictionary obtained from the web services.
 
-    :var precursor_id: GtoP ID for this precursor.
-    :var gene_name: gene name.
-    :var gene_symbol: gene symbol.
-    :var official_gene_id: official gene ID.
-    :var protein_name: protein's name.
-    :var species: species.
-    :var synonyms: a list of str objects."""
+    .. py:attribute:: precursor_id
+
+        GtoP ID for this precursor.
+
+    .. py:attribute:: gene_name
+
+        Gene name.
+
+    .. py:attribute:: gene_symbol
+
+        gene symbol.
+
+    .. py:attribute:: official_gene_id
+
+        Official gene ID.
+
+    .. py:attribute:: protein_name
+
+        Protein's name.
+
+    .. py:attribute:: species
+
+        Species.
+
+    .. py:attribute:: synonyms
+
+        A list of str objects."""
 
     def __init__(self, json_data):
         self.json_data = json_data

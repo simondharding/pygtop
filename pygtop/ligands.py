@@ -11,8 +11,8 @@ def get_ligand_by_id(ligand_id):
     """Returns a Ligand object of the ligand with the given ID.
 
     :param int ligand_id: The GtoP IDof the Ligand desired.
-    :rtype: Ligand
-    :raises: :py:class:`NoSuchLigandError`: if no such ligand exists in the database"""
+    :rtype: :py:class:`Ligand`
+    :raises: :class:`.NoSuchLigandError`: if no such ligand exists in the database"""
 
     json_data = get_json_from_gtop("ligands/%i" % ligand_id)
     if json_data:
@@ -25,10 +25,11 @@ def get_random_ligand(ligand_type=None):
     """Returns a random ligand, with the option to specify the ligand type.
     This can take a few seconds as it must first request *all* ligands.
 
-    :param str ligand_type: If not None, the function will pick a ligand from this category only.
+    :param str ligand_type: If not None, the function will pick a ligand from\
+     this category only.
 
-    :rtype: Ligand
-    :raises: :py:class:`NoSuchTypeError`: if a ligand type is supplied which doesn't exist
+    :rtype: :py:class:`Ligand`
+    :raises: :class:`.NoSuchTypeError`: if a ligand type is supplied which doesn't exist
     """
 
     if ligand_type:
@@ -53,7 +54,9 @@ def get_all_ligands():
 def get_ligands_by(criteria):
     """Get all ligands which specify the criteria dictionary.
 
-    :param dict criteria: A dictionary of `field=value` pairs. See the `GtoP web services page <http://www.guidetopharmacology.org/webServices.jsp#ligands>`_ for key/value pairs which can be supplied.
+    :param dict criteria: A dictionary of `field=value` pairs. See the\
+     `GtoP web services page <http://www.guidetopharmacology.org/\
+     webServices.jsp#ligands>`_ for key/value pairs which can be supplied.
     :returns: list of :py:class:`Ligand` objects."""
 
     search_string = "&".join(["%s=%s" % (key, criteria[key]) for key in criteria])
@@ -68,9 +71,10 @@ def get_ligand_by_name(name):
     """Returns the ligand which matches the name given. Will raise a
     NoSuchLigandError if no ligand by that ID exists.
 
-    :param str name: The name of the ligand to search for. Note that synonyms will not be searched.
-    :rtype: Ligand
-    :raises: :py:class:`NoSuchLigandError`: if no such ligand exists in the database."""
+    :param str name: The name of the ligand to search for. Note that synonyms \
+    will not be searched.
+    :rtype: :py:class:`Ligand`
+    :raises:  :class:`.NoSuchLigandError`: if no such ligand exists in the database."""
 
     ligands = get_ligands_by({"name": name})
     if ligands:
@@ -81,7 +85,64 @@ def get_ligand_by_name(name):
 
 
 class Ligand:
-    """A Guide to PHARMACOLOGY ligand object."""
+    """A Guide to PHARMACOLOGY ligand object.
+
+    .. py:attribute:: ligand_id (int):
+
+        The ligand's GtoP ID.
+
+    .. py:attribute:: abbreviation:
+
+        The ligand's SMILES string.
+
+    .. py:attribute:: inn:
+
+        The ligand's INN name.
+
+    .. py:attribute:: ligand_type:
+
+        The ligand type.
+
+    .. py:attribute:: species:
+
+        The ligand's GtoP ID.
+
+    .. py:attribute:: radioactive:
+
+        Is the ligand radioactive?
+
+    .. py:attribute:: labelled:
+
+        Is the ligand labelled?.
+
+    .. py:attribute:: approved:
+
+        Has the ligand been approved?
+
+    .. py:attribute:: withdrawn:
+
+        Has the drug been withdrawn?
+
+    .. py:attribute:: approval_source:
+
+        The regulatory body which approved the drug.
+
+    .. py:attribute:: subunit_ids:
+
+        GtoP IDs of subunits.
+
+    .. py:attribute:: complex_ids:
+
+        GtoP IDs of complexes the ligand forms.
+
+    .. py:attribute:: prodrug_ids:
+
+        GtoP IDs of prodrugs.
+
+    .. py:attribute:: active_drug_ids:
+
+        GtoP IDs of active equivalents.
+    """
 
     def __init__(self, json_data):
         self.json_data = json_data
@@ -90,7 +151,7 @@ class Ligand:
         self.name = json_data["name"]
         self.abbreviation = json_data["abbreviation"] if json_data["abbreviation"] else ""
         self.inn = json_data["inn"]
-        self.type = json_data["type"]
+        self.ligand_type = json_data["type"]
         self.species = json_data["species"]
         self.radioactive = json_data["radioactive"]
         self.labelled = json_data["labelled"]
@@ -115,101 +176,196 @@ class Ligand:
         return "<'%s' Ligand (%s)>" % (self.name, self.type)
 
 
-
     def request_structural_properties(self):
         """Give ligand object structural properties:
 
-        :var iupac_name: The ligand's full IUPAC name.
-        :var smiles: The ligand's SMILES string.
-        :var inchi: The ligand's InChI string.
-        :var inchi_key: The ligand's InChI key.
-        :var one_letter_sequence: If relevant, the single-code Amino Acid sequence.
-        :var three_letter_sequence: If relevant, the three-char-code Amino Acid sequence.
-        :var post_translational_modifications: Post-translational modifications, if any.
-        :var chemical_modifications: Chemical modifications, if any."""
+        .. py:attribute:: iupac_name:
 
-        json_data = get_json_from_gtop("ligands/%i/%s" % (self.ligand_id, STRUCTURAL_PROPERTIES))
+            The ligand's full IUPAC name.
+
+        .. py:attribute:: smiles:
+
+            The ligand's SMILES string.
+
+        .. py:attribute:: inchi:
+
+            The ligand's InChI string.
+
+        .. py:attribute:: inchi_key:
+
+            The ligand's InChI key.
+
+        .. py:attribute:: one_letter_sequence:
+
+            If relevant, the single-code Amino Acid sequence.
+
+        .. py:attribute:: three_letter_sequence:
+
+            If relevant, the three-char-code Amino Acid sequence.
+
+        .. py:attribute:: post_translational_modifications:
+
+            Post-translational modifications, if any.
+
+        .. py:attribute:: chemical_modifications:
+
+            Chemical modifications, if any."""
+
+        json_data = get_json_from_gtop("ligands/%i/%s" % (
+         self.ligand_id, STRUCTURAL_PROPERTIES))
         self.iupac_name = json_data["iupacName"] if json_data else None
         self.smiles = json_data["smiles"] if json_data else None
         self.inchi = json_data["inchi"] if json_data else None
         self.inchi_key = json_data["inchiKey"] if json_data else None
         self.one_letter_sequence = json_data["oneLetterSeq"] if json_data else None
         self.three_letter_sequence = json_data["threeLetterSeq"] if json_data else None
-        self.post_translational_modifications = json_data["postTranslationalModifications"] if json_data else None
-        self.chemical_modifications = json_data["chemicalModifications"] if json_data else None
+        self.post_translational_modifications = json_data[
+         "postTranslationalModifications"] if json_data else None
+        self.chemical_modifications = json_data[
+         "chemicalModifications"] if json_data else None
 
 
     def request_molecular_properties(self):
         """Give ligand object molecular properties:
 
-        :var hydrogen_bond_acceptors: Number of H-bond acceptor atoms.
-        :var hydrogen_bond_donors: Number of H-bond donor atoms.
-        :var rotatable_bonds: Number of rotatable bonds in the ligand.
-        :var topological_polar_surface_area: polar surface area, in Angstroms
-        :var  molecular_weight: Ligand's mass
-        :var log_p: Log of partition coefficient - a measure fo solubility
-        :var lipinksi_rules_broken: Number of Lipinski's rules the ligand breaks (a measure of druglikeness)"""
+        .. py:attribute:: hydrogen_bond_acceptors:
 
-        json_data = get_json_from_gtop("ligands/%i/%s" % (self.ligand_id, MOLECULAR_PROPERTIES))
-        self.hydrogen_bond_acceptors = json_data["hydrogenBondAcceptors"] if json_data else None
+            Number of H-bond acceptor atoms.
+
+        .. py:attribute:: hydrogen_bond_donors:
+
+            Number of H-bond donor atoms.
+
+        .. py:attribute:: rotatable_bonds:
+
+            Number of rotatable bonds in the ligand.
+
+        .. py:attribute:: topological_polar_surface_area:
+
+            polar surface area, in Angstroms.
+
+        .. py:attribute:: molecular_weight:
+
+            Ligand's mass.
+
+        .. py:attribute:: log_p:
+
+            Log of partition coefficient - a measure fo solubility.
+
+        .. py:attribute:: lipinksi_rules_broken:
+
+            Number of Lipinski's rules the ligand breaks (a measure of druglikeness)."""
+
+        json_data = get_json_from_gtop("ligands/%i/%s" % (
+         self.ligand_id, MOLECULAR_PROPERTIES))
+        self.hydrogen_bond_acceptors = json_data[
+         "hydrogenBondAcceptors"] if json_data else None
         self.hydrogen_bond_donors = json_data["hydrogenBondDonors"] if json_data else None
         self.rotatable_bonds = json_data["rotatableBonds"] if json_data else None
-        self.topological_polar_surface_area = json_data["topologicalPolarSurfaceArea"] if json_data else None
+        self.topological_polar_surface_area = json_data[
+         "topologicalPolarSurfaceArea"] if json_data else None
         self.molecular_weight = json_data["molecularWeight"] if json_data else None
         self.log_p = json_data["logP"] if json_data else None
-        self.lipinksi_rules_broken = json_data["lipinskisRuleOfFive"] if json_data else None
+        self.lipinksi_rules_broken = json_data[
+         "lipinskisRuleOfFive"] if json_data else None
 
 
     def request_database_properties(self):
         """Give ligand object database properties:
 
-        :var database_links: A list of :py:class:`DatabaseLink` objects."""
+        .. py:attribute:: database_links:
 
-        json_data = get_json_from_gtop("ligands/%i/%s" % (self.ligand_id, DATABASE_PROPERTIES))
-        self.database_links = [DatabaseLink(link) for link in json_data] if json_data else []
+            A list of  :class:`.DatabaseLink`: objects."""
+
+        json_data = get_json_from_gtop("ligands/%i/%s" % (
+         self.ligand_id, DATABASE_PROPERTIES))
+        self.database_links = [
+         DatabaseLink(link) for link in json_data] if json_data else []
 
 
     def request_synonym_properties(self):
         """Give ligand object synonym properties:
 
-        :var synonyms: a list of synonym strings."""
+        .. py:attribute:: synonyms:
 
-        json_data = get_json_from_gtop("ligands/%i/%s" % (self.ligand_id, SYNONYM_PROPERTIES))
-        self.synonyms = [synonym["name"] for synonym in json_data] if json_data else []
+            A list of synonym strings."""
+
+        json_data = get_json_from_gtop("ligands/%i/%s" % (
+         self.ligand_id, SYNONYM_PROPERTIES))
+        self.synonyms = [
+         synonym["name"] for synonym in json_data] if json_data else []
 
 
     def request_comment_properties(self):
         """Give ligand object comment properties:
 
-        :var general_comments: General comments.
-        :var bioactivity_comments: Bioactivity comments.
-        :var clinical_use_comments: Clinical use comments.
-        :var mechanism_of_action_comments: Mechanism comments.
-        :var absorption_and_distribution_comments: Absorption and distribution comments
-        :var metabolism_comments: Metabolism comments.
-        :var elimination_comments: Elimination comments.
-        :var population_pharmacokinetics_comments: Population kinetics comments.
-        :var organ_function_impairments_comments: Organ funciton impairment comments."""
+        .. py:attribute:: general_comments:
 
-        json_data = get_json_from_gtop("ligands/%i/%s" % (self.ligand_id, COMMENT_PROPERTIES))
-        self.general_comments = json_data["comments"] if json_data else ""
-        self.bioactivity_comments = json_data["bioactivityComments"] if json_data else ""
-        self.clinical_use_comments = json_data["clinicalUse"] if json_data else ""
-        self.mechanism_of_action_comments = json_data["mechanismOfAction"] if json_data else ""
-        self.absorption_and_distribution_comments = json_data["absorptionAndDistribution"] if json_data else ""
+            General comments.
+
+        .. py:attribute:: bioactivity_comments:
+
+            Bioactivity comments.
+
+        .. py:attribute:: clinical_use_comments:
+
+            Clinical use comments.
+
+        .. py:attribute:: mechanism_of_action_comments:
+
+            Mechanism comments.
+
+        .. py:attribute:: absorption_and_distribution_comments:
+
+            Absorption and distribution comments.
+
+        .. py:attribute:: metabolism_comments:
+
+            Metabolism comments.
+
+        .. py:attribute:: elimination_comments:
+
+            Elimination comments.
+
+        .. py:attribute:: population_pharmacokinetics_comments:
+
+            Population kinetics comments.
+
+        .. py:attribute:: organ_function_impairments_comments:
+
+            Organ funciton impairment comments."""
+
+        json_data = get_json_from_gtop(
+         "ligands/%i/%s" % (self.ligand_id, COMMENT_PROPERTIES))
+        self.general_comments = json_data[
+         "comments"] if json_data else ""
+        self.bioactivity_comments = json_data[
+         "bioactivityComments"] if json_data else ""
+        self.clinical_use_comments = json_data[
+         "clinicalUse"] if json_data else ""
+        self.mechanism_of_action_comments = json_data[
+         "mechanismOfAction"] if json_data else ""
+        self.absorption_and_distribution_comments = json_data[
+         "absorptionAndDistribution"] if json_data else ""
         self.metabolism_comments = json_data["metabolism"] if json_data else ""
         self.elimination_comments = json_data["elimination"] if json_data else ""
-        self.population_pharmacokinetics_comments = json_data["populationPharmacokinetics"] if json_data else ""
-        self.organ_function_impairments_comments = json_data["organFunctionImpairment"] if json_data else ""
-        self.mutations_and_pathophysiology_comments = json_data["mutationsAndPathophysiology"] if json_data else ""
+        self.population_pharmacokinetics_comments = json_data[
+         "populationPharmacokinetics"] if json_data else ""
+        self.organ_function_impairments_comments = json_data[
+         "organFunctionImpairment"] if json_data else ""
+        self.mutations_and_pathophysiology_comments = json_data[
+         "mutationsAndPathophysiology"] if json_data else ""
 
 
     def request_precursor_properties(self):
         """Give ligand object precursor properties:
 
-        :var precursors: a list of :py:class:`Precursor` objects"""
+        .. py:attribute:: precursors:
 
-        json_data = get_json_from_gtop("ligands/%i/%s" % (self.ligand_id, PRECURSOR_PROPERTIES))
+            A list of  :class:`.Precursor`: objects"""
+
+        json_data = get_json_from_gtop("ligands/%i/%s" % (
+         self.ligand_id, PRECURSOR_PROPERTIES))
         self.precursors = [Precursor(p) for p in json_data] if json_data else []
 
 
@@ -225,7 +381,8 @@ class Ligand:
 
 
     def _get_missing_attribute_error_message(self, attribute):
-        message = "'%s' is a %s property - you need to request this seperately with my %s() method"
+        message = "'%s' is a %s property - you need to request this seperately \
+        with my %s() method"
         values = []
 
         if attribute in self._structural_properties:

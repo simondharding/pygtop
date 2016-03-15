@@ -43,10 +43,10 @@ class LigandAccess(unittest.TestCase):
         ligand.request_precursor_properties()
 
         # The user gets a random ligand
-        pygtop.request_random_ligand()
+        pygtop.get_random_ligand()
 
         # The user decides to get a random peptide ligand
-        pygtop.request_random_ligand(ligand_type="peptide")
+        pygtop.get_random_ligand(ligand_type="peptide")
 
 
 
@@ -69,10 +69,6 @@ class LigandAccess(unittest.TestCase):
 
         # The user looks for a ligand with a certain name
         ligand = pygtop.get_ligand_by_name("APIGENIN")
-
-        # The user looks for a ligand with a name that does not exist
-        ligand = pygtop.get_ligand_by_name("paracetamoxyfrusebendroneomycin")
-        self.assertEqual(ligand, None)
 
 
 if __name__ == "__main__":
