@@ -131,7 +131,7 @@ class SingleLigands(LigandTest):
 
     def test_structural_properties(self):
         ligand = get_ligand_by_id(4890)
-        ligand.get_structural_properties()
+        ligand.request_structural_properties()
         self.check_ligand_structural_properties(ligand)
 
 
@@ -139,38 +139,38 @@ class SingleLigands(LigandTest):
         ligand = get_ligand_by_id(4890)
         self.assertRaises(PropertyNotRequestedYetError, lambda: ligand.smiles)
         self.assertRaises(AttributeError, lambda: ligand.xxx)
-        ligand.get_structural_properties()
+        ligand.request_structural_properties()
         self.assertIsInstance(ligand.smiles, str)
         self.assertRaises(AttributeError, lambda: ligand.xxx)
 
 
     def test_structural_properties(self):
         ligand = get_ligand_by_id(4890)
-        ligand.get_structural_properties()
+        ligand.request_structural_properties()
         self.check_ligand_structural_properties(ligand)
 
 
     def test_molecular_properties(self):
         ligand = get_ligand_by_id(4890)
-        ligand.get_molecular_properties()
+        ligand.request_molecular_properties()
         self.check_ligand_molecular_properties(ligand)
 
 
     def test_database_properties(self):
         ligand = get_ligand_by_id(4890)
-        ligand.get_database_properties()
+        ligand.request_database_properties()
         self.check_ligand_database_properties(ligand)
 
 
     def test_comment_properties(self):
         ligand = get_ligand_by_id(4890)
-        ligand.get_comment_properties()
+        ligand.request_comment_properties()
         self.check_ligand_comment_properties(ligand)
 
 
     def test_precursor_properties(self):
         ligand = get_ligand_by_id(4890)
-        ligand.get_precursor_properties()
+        ligand.request_precursor_properties()
         self.check_ligand_precursor_properties(ligand)
 
 
@@ -188,8 +188,10 @@ class MultiLigands(LigandTest):
     def test_can_get_ligand_by_name(self):
         ligand = pygtop.get_ligand_by_name("APIGENIN")
         self.assertIsInstance(ligand, Ligand)
-        ligand = pygtop.get_ligand_by_name("paracetamoxyfrusebendroneomycin")
-        self.assertEqual(ligand, None)
+        self.assertRaises(
+         NoSuchLigandError,
+         lambda: pygtop.get_ligand_by_name("paracetamoxyfrusebendroneomycin")
+        )
 
 
     def test_can_search_ligands(self):
@@ -209,6 +211,10 @@ class MultiLigands(LigandTest):
         ligand = pygtop.get_random_ligand(ligand_type="peptide")
         self.assertIsInstance(ligand, Ligand)
         self.assertEqual(ligand.type.lower(), "peptide")
+        self.assertRaises(
+         NoSuchTypeError,
+         lambda: pygtop.get_random_ligand(ligand_type="xxx")
+        )
 
 
 

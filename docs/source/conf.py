@@ -15,6 +15,9 @@
 
 import sys
 import os
+current_dir = "/".join(os.path.realpath(__file__).split("/")[:-1])
+sys.path.insert(0, current_dir + "/../..")
+import pygtop
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -49,7 +52,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'pyGtoP'
-copyright = '2016, Sam Ireland'
+copyright = '2016'
 author = 'Sam Ireland'
 
 # The version info for the project you're documenting, acts as replacement for

@@ -1,12 +1,11 @@
-pyGtoP Documentation
-====================
+pyGtoP
+======
 
 pyGtoP is a Python wrapper for the [IUPHAR/BPS Guide to PHARMACOLOGY](http://www.guidetopharmacology.org) API. It
 provides a Python interface for access to the GtoP database.
 
 
-Installing
-----------
+## Installing
 
 pyGtoP can be installed using pip:
 
@@ -18,13 +17,17 @@ you may need to specify the Python 3 form of pip using:
 ``$ pip3 install pygtop``
 
 
-Ligands
--------
+## Overview
+
+
+### Ligands
+
+
 The simplest way to create a ligand is via its GtoP ID:
 
     >>> import pygtop
     >>> my_drug = pygtop.get_ligand_by_id(5239)
-    >>> ligand.name
+    >>> my_drug.name
     'paracetamol'
     >>> my_drug.type
     'Synthetic organic'
@@ -32,12 +35,12 @@ The simplest way to create a ligand is via its GtoP ID:
 Properties other than the most basic ones must be requested separately, as they
 require their own HTTP request:
 
-    >>> my_drug.get_molecular_properties()
+    >>> my_drug.request_molecular_properties()
     >>> my_drug.rotatable_bonds
     2
     >>> my_drug.molecular_weight
     151.0633286
-    >>> my_drug.get_structural_properties()
+    >>> my_drug.request_structural_properties()
     >>> my_drug.smiles
     'CC(=O)Nc1ccc(cc1)O'
 
@@ -62,3 +65,13 @@ query:
     >>> ligands = pygtop.get_ligands_by(query) # Get approved ligands between 50 and 200 Da
     >>> len(ligands)
     104
+
+## Changelog
+
+
+### Version 0.1.0
+
+* Ligand functionality
+
+  * Single ligand access (by ID, name, or at random)
+  * Multiple ligand access (all, or by providing a query)

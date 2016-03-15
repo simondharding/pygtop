@@ -1,4 +1,15 @@
+"""Objects not specific to ligands or targets."""
+
 class DatabaseLink:
+    """A link to an external database, containing accession and species
+    information.
+
+    :param json_data: A dictionary obtained from the web services.
+
+    :var accession: The Accession code.
+    :var database: The Database being linked to.
+    :var url: The URL for this database entry.
+    :var species: The specific species the database entry refers to."""
 
     def __init__(self, json_data):
         self.json_data = json_data
@@ -18,6 +29,17 @@ class DatabaseLink:
 
 
 class Precursor:
+    """A precursor to a Guide to PHARMACOLOGY ligand/target.
+
+    :param json_data: A dictionary obtained from the web services.
+
+    :var precursor_id: GtoP ID for this precursor.
+    :var gene_name: gene name.
+    :var gene_symbol: gene symbol.
+    :var official_gene_id: official gene ID.
+    :var protein_name: protein's name.
+    :var species: species.
+    :var synonyms: a list of str objects."""
 
     def __init__(self, json_data):
         self.json_data = json_data

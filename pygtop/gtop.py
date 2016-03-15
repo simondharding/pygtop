@@ -1,3 +1,7 @@
+"""Functions for interacting with the Guide to PHARMACOLOGY web services.
+
+Also contains GtoP constants, such as the root URL."""
+
 import json
 import requests
 import warnings
@@ -14,6 +18,14 @@ PRECURSOR_PROPERTIES = "precursors"
 
 
 def get_json_from_gtop(query):
+    """Issues a query to the GtoP web services, and returns the resulting JSON.
+
+    If it does not get a valid response, it will try again, and if it still
+    doesn't get json back, it will return None.
+
+    :param str query: The query to append to the base URL.
+    :return: JSON object or None"""
+
     warnings.filterwarnings("ignore")
     response = requests.get("%s%s" % (ROOT_URL, query))
     if response.status_code == 200 and len(response.text) > 1:

@@ -22,31 +22,31 @@ class LigandAccess(unittest.TestCase):
         ligand = pygtop.get_ligand_by_id(1)
 
         # The user decides to get the structural information for the ligand
-        ligand.get_structural_properties()
+        ligand.request_structural_properties()
 
         # The user tries to access molecular properties
         self.assertRaises(pygtop.PropertyNotRequestedYetError, lambda: ligand.rotatable_bonds)
 
         # The user decides to get molecular properties for the ligand
-        ligand.get_molecular_properties()
+        ligand.request_molecular_properties()
 
         # The user decides to get database properties for the ligand
-        ligand.get_database_properties()
+        ligand.request_database_properties()
 
         # The user decides to get synonym properties for the ligand
-        ligand.get_synonym_properties()
+        ligand.request_synonym_properties()
 
         # The user decides to get comment properties for the ligand
-        ligand.get_comment_properties()
+        ligand.request_comment_properties()
 
         # The user decides to get precursor properties for the ligand
-        ligand.get_precursor_properties()
+        ligand.request_precursor_properties()
 
         # The user gets a random ligand
-        pygtop.get_random_ligand()
+        pygtop.request_random_ligand()
 
         # The user decides to get a random peptide ligand
-        pygtop.get_random_ligand(ligand_type="peptide")
+        pygtop.request_random_ligand(ligand_type="peptide")
 
 
 
