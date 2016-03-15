@@ -87,7 +87,7 @@ def get_ligand_by_name(name):
 class Ligand:
     """A Guide to PHARMACOLOGY ligand object.
 
-    .. py:attribute:: ligand_id (int):
+    .. py:attribute:: ligand_id:
 
         The ligand's GtoP ID.
 
