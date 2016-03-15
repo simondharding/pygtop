@@ -9,7 +9,7 @@ The simplest way to create a ligand is via its GtoP ID:
     >>> my_drug = pygtop.get_ligand_by_id(5239)
     >>> my_drug.name
     'paracetamol'
-    >>> my_drug.type
+    >>> my_drug.ligand_type
     'Synthetic organic'
 
 Properties other than the most basic ones must be requested separately, as they
