@@ -172,7 +172,7 @@ class Ligand:
 
 
     def __repr__(self):
-        return "<'%s' Ligand (%s)>" % (self.name, self.type)
+        return "<'%s' Ligand (%s)>" % (self.name, self.ligand_type)
 
 
     def request_structural_properties(self):

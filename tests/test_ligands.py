@@ -118,6 +118,7 @@ class SingleLigands(LigandTest):
     def test_can_get_single_ligand(self):
         ligand = get_ligand_by_id(1)
         self.assertIsInstance(ligand, Ligand)
+        self.assertRegex(ligand.__repr__(), r'<.+>')
 
 
     def test_invalid_ligand_exception(self):
