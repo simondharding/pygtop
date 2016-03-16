@@ -6,12 +6,12 @@ pip
 
 pyGtoP can be installed using pip:
 
-``$ pip install pygtop``
-
-Note that pyGtoP is a Python 3 package. If your system has Python 2 installed,
-you may need to specify the Python 3 form of pip using:
-
 ``$ pip3 install pygtop``
+
+pyGtoP is written for Python 3, but should be compatible with Python 2.7. To
+install for Python 2, use:
+
+``$ pip install pygtop``
 
 Requirements
 ~~~~~~~~~~~~
