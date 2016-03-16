@@ -55,7 +55,7 @@ class Precursor:
 
     .. py:attribute:: gene_symbol
 
-        gene symbol.
+        Gene symbol.
 
     .. py:attribute:: official_gene_id
 
