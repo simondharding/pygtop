@@ -6,20 +6,22 @@ import pygtop
 from pygtop.ligands import *
 from pygtop.exceptions import *
 
+string = str if sys.version_info == 3 else unicode
+
 class LigandTest(unittest.TestCase):
 
     def check_ligand_basic_properties(self, ligand):
         self.assertIsInstance(ligand, Ligand)
-        self.assertIsInstance(ligand.name, str)
-        self.assertIsInstance(ligand.abbreviation, str)
-        self.assertIsInstance(ligand.inn, str)
-        if ligand.species: self.assertIsInstance(ligand.species, str)
-        self.assertIsInstance(ligand.ligand_type, str)
+        self.assertIsInstance(ligand.name, string)
+        self.assertIsInstance(ligand.abbreviation, string)
+        self.assertIsInstance(ligand.inn, string)
+        if ligand.species: self.assertIsInstance(ligand.species, string)
+        self.assertIsInstance(ligand.ligand_type, string)
         self.assertIsInstance(ligand.radioactive, bool)
         self.assertIsInstance(ligand.labelled, bool)
         self.assertIsInstance(ligand.approved, bool)
         self.assertIsInstance(ligand.withdrawn, bool)
-        self.assertIsInstance(ligand.approval_source, str)
+        self.assertIsInstance(ligand.approval_source, string)
         self.assertIsInstance(ligand.subunit_ids, list)
         if ligand.subunit_ids: self.assertIsInstance(ligand.subunit_ids[0], int)
         self.assertIsInstance(ligand.complex_ids, list)
@@ -32,21 +34,21 @@ class LigandTest(unittest.TestCase):
 
     def check_ligand_structural_properties(self, ligand):
         if ligand.iupac_name:
-            self.assertIsInstance(ligand.iupac_name, str)
+            self.assertIsInstance(ligand.iupac_name, string)
         if ligand.smiles:
-            self.assertIsInstance(ligand.smiles, str)
+            self.assertIsInstance(ligand.smiles, string)
         if ligand.inchi:
-            self.assertIsInstance(ligand.inchi, str)
+            self.assertIsInstance(ligand.inchi, string)
         if ligand.inchi_key:
-            self.assertIsInstance(ligand.inchi_key, str)
+            self.assertIsInstance(ligand.inchi_key, string)
         if ligand.one_letter_sequence:
-            self.assertIsInstance(ligand.one_letter_sequence, str)
+            self.assertIsInstance(ligand.one_letter_sequence, string)
         if ligand.three_letter_sequence:
-            self.assertIsInstance(ligand.three_letter_sequence, str)
+            self.assertIsInstance(ligand.three_letter_sequence, string)
         if ligand.post_translational_modifications:
-            self.assertIsInstance(ligand.post_translational_modifications, str)
+            self.assertIsInstance(ligand.post_translational_modifications, string)
         if ligand.chemical_modifications:
-            self.assertIsInstance(ligand.chemical_modifications, str)
+            self.assertIsInstance(ligand.chemical_modifications, string)
 
 
     def check_ligand_molecular_properties(self, ligand):
@@ -70,30 +72,30 @@ class LigandTest(unittest.TestCase):
         self.assertIsInstance(ligand.database_links, list)
         for link in ligand.database_links:
             self.assertIsInstance(link, pygtop.DatabaseLink)
-            if link.accession: self.assertIsInstance(link.accession, str)
-            if link.database: self.assertIsInstance(link.database, str)
-            if link.url: self.assertIsInstance(link.url, str)
-            if link.species: self.assertIsInstance(link.species, str)
+            if link.accession: self.assertIsInstance(link.accession, string)
+            if link.database: self.assertIsInstance(link.database, string)
+            if link.url: self.assertIsInstance(link.url, string)
+            if link.species: self.assertIsInstance(link.species, string)
 
 
     def check_ligand_synonym_properties(self, ligand):
         self.assertIsInstance(ligand.synonyms, list)
         for synonym in ligand.synonyms:
-            self.assertIsInstance(synonym, str)
+            self.assertIsInstance(synonym, string)
             self.assertGreater(len(synonym), 0)
 
 
     def check_ligand_comment_properties(self, ligand):
-        self.assertIsInstance(ligand.general_comments, str)
-        self.assertIsInstance(ligand.bioactivity_comments, str)
-        self.assertIsInstance(ligand.clinical_use_comments, str)
-        self.assertIsInstance(ligand.mechanism_of_action_comments, str)
-        self.assertIsInstance(ligand.absorption_and_distribution_comments, str)
-        self.assertIsInstance(ligand.metabolism_comments, str)
-        self.assertIsInstance(ligand.elimination_comments, str)
-        self.assertIsInstance(ligand.population_pharmacokinetics_comments, str)
-        self.assertIsInstance(ligand.organ_function_impairments_comments, str)
-        self.assertIsInstance(ligand.mutations_and_pathophysiology_comments, str)
+        self.assertIsInstance(ligand.general_comments, string)
+        self.assertIsInstance(ligand.bioactivity_comments, string)
+        self.assertIsInstance(ligand.clinical_use_comments, string)
+        self.assertIsInstance(ligand.mechanism_of_action_comments, string)
+        self.assertIsInstance(ligand.absorption_and_distribution_comments, string)
+        self.assertIsInstance(ligand.metabolism_comments, string)
+        self.assertIsInstance(ligand.elimination_comments, string)
+        self.assertIsInstance(ligand.population_pharmacokinetics_comments, string)
+        self.assertIsInstance(ligand.organ_function_impairments_comments, string)
+        self.assertIsInstance(ligand.mutations_and_pathophysiology_comments, string)
 
 
     def check_ligand_precursor_properties(self, ligand):
@@ -101,14 +103,14 @@ class LigandTest(unittest.TestCase):
         for precursor in ligand.precursors:
             self.assertIsInstance(precursor, pygtop.Precursor)
             self.assertIsInstance(precursor.precursor_id, int)
-            self.assertIsInstance(precursor.gene_symbol, str)
-            self.assertIsInstance(precursor.gene_name, str)
-            self.assertIsInstance(precursor.official_gene_id, str)
-            self.assertIsInstance(precursor.protein_name, str)
-            self.assertIsInstance(precursor.species, str)
+            self.assertIsInstance(precursor.gene_symbol, string)
+            self.assertIsInstance(precursor.gene_name, string)
+            self.assertIsInstance(precursor.official_gene_id, string)
+            self.assertIsInstance(precursor.protein_name, string)
+            self.assertIsInstance(precursor.species, string)
             self.assertIsInstance(precursor.synonyms, list)
             for synonym in precursor.synonyms:
-                self.assertIsInstance(synonym, str)
+                self.assertIsInstance(synonym, string)
                 self.assertGreater(len(synonym), 0)
 
 
@@ -118,7 +120,10 @@ class SingleLigands(LigandTest):
     def test_can_get_single_ligand(self):
         ligand = get_ligand_by_id(1)
         self.assertIsInstance(ligand, Ligand)
-        self.assertRegex(ligand.__repr__(), r'<.+>')
+        if sys.version_info[0] == 2:
+            self.assertRegexpMatches(ligand.__repr__(), r'<.+>')
+        else:
+            self.assertRegex(ligand.__repr__(), r'<.+>')
 
 
     def test_invalid_ligand_exception(self):
@@ -141,7 +146,7 @@ class SingleLigands(LigandTest):
         self.assertRaises(PropertyNotRequestedYetError, lambda: ligand.smiles)
         self.assertRaises(AttributeError, lambda: ligand.xxx)
         ligand.request_structural_properties()
-        self.assertIsInstance(ligand.smiles, str)
+        self.assertIsInstance(ligand.smiles, string)
         self.assertRaises(AttributeError, lambda: ligand.xxx)
 
 
