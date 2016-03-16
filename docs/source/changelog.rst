@@ -4,7 +4,7 @@ Changelog
 Release 0.1.1
 ~~~~~~~~~~~~~
 
-`15 March 2016`
+`16 March 2016`
 
 * Added Python 2 compatibility
 
