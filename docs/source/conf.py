@@ -53,7 +53,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'pyGtoP'
-copyright = '2016'
+copyright = '2016, Sam Ireland'
 author = 'Sam Ireland'
 
 # The version info for the project you're documenting, acts as replacement for

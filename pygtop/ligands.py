@@ -68,8 +68,7 @@ def get_ligands_by(criteria):
 
 
 def get_ligand_by_name(name):
-    """Returns the ligand which matches the name given. Will raise a
-    NoSuchLigandError if no ligand by that ID exists.
+    """Returns the ligand which matches the name given.
 
     :param str name: The name of the ligand to search for. Note that synonyms \
     will not be searched.

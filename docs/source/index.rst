@@ -15,6 +15,9 @@ Example
   >>> my_drug.ligand_type
   'Synthetic organic'
 
+See the :doc:`overview page <overview>` for more examples, or the :doc:`full
+documentation <full_documentation>` for a full listing of features.
+
 Table of Contents
 -----------------
 
