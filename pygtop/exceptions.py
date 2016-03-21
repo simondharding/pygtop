@@ -30,6 +30,6 @@ class PropertyNotRequestedYetError(Exception):
 
 
 class NoSuchTypeError(Exception):
-    """The exception raised if a random ligand is requested of a type which does
-    not exist."""
+    """The exception raised if a random ligand or target is requested of a type
+    which does not exist."""
     pass

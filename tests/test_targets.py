@@ -94,6 +94,47 @@ class SingleTargets(TargetTest):
 
 
 
+class MultiTargets(TargetTest):
+
+    def test_can_get_all_targets(self):
+        targets = get_all_targets()
+        self.assertIsInstance(targets, list)
+        self.assertGreater(len(targets), 2000)
+        for target in targets:
+            self.assertIsInstance(target, Target)
+
+
+    def test_can_get_random_target(self):
+        target = pygtop.get_random_target()
+        self.assertIsInstance(target, Target)
+        target = pygtop.get_random_target(target_type="GPCR")
+        self.assertIsInstance(target, Target)
+        self.assertEqual(target.target_type.lower(), "gpcr")
+        self.assertRaises(
+         NoSuchTypeError,
+         lambda: pygtop.get_random_target(target_type="xxx")
+        )
+
+
+    def test_can_get_target_by_name(self):
+        target = pygtop.get_target_by_name("ccr5")
+        self.assertIsInstance(target, Target)
+        self.assertRaises(
+         NoSuchTargetError,
+         lambda: pygtop.get_target_by_name("made up target")
+        )
+
+
+    def test_can_search_targets(self):
+        criteria = {
+         "type": "VGIC",
+        }
+        targets = pygtop.get_targets_by(criteria)
+        self.assertIsInstance(targets, list)
+        self.assertEqual(len(targets), 145)
+
+
+
 class Families(TargetTest):
 
     def test_can_make_target(self):
@@ -138,9 +179,6 @@ class Families(TargetTest):
         family = get_family_by_id(283)
         self.check_family_basic_properties(family)
         sub_families = family.get_subfamilies()
-        self.assertGreater(len(sub_families), 0)
-        for family in sub_families:
-            self.assertIsInstance(family, TargetFamily)
 
 
     def test_can_get_parent_families(self):
@@ -150,6 +188,22 @@ class Families(TargetTest):
         self.assertGreater(len(parent_families), 0)
         for family in parent_families:
             self.assertIsInstance(family, TargetFamily)
+
+
+
+class MultiFamilies(TargetTest):
+
+    def test_can_get_all_families(self):
+        families = get_all_families()
+        self.assertIsInstance(families, list)
+        self.assertGreater(len(families), 100)
+        for family in families:
+            self.assertIsInstance(family, TargetFamily)
+
+
+    def test_can_get_random_family(self):
+        family = pygtop.get_random_family()
+        self.assertIsInstance(family, TargetFamily)
 
 
 
