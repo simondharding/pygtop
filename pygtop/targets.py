@@ -2,6 +2,7 @@
 
 from .exceptions import *
 from .gtop import *
+from .shared import *
 import random
 
 
@@ -81,6 +82,14 @@ class Target:
         self._complex_ids = json_data["complexIds"]
 
 
+    def __getattr__(self, key):
+        error_message = self._get_missing_attribute_error_message(key)
+        if error_message:
+            raise PropertyNotRequestedYetError(error_message)
+        else:
+            raise AttributeError("Target object has no attribute '%s'" % key)
+
+
     def __repr__(self):
         return "<'%s' Target (%s)>" % (self.name, self.target_type)
 
@@ -95,6 +104,58 @@ class Target:
 
     def get_families(self):
         return [get_family_by_id(i) for i in self._family_ids]
+
+
+    def request_database_properties(self):
+        """Give target object database properties:
+
+        .. py:attribute:: database_links:
+
+            A list of  :class:`.DatabaseLink`: objects."""
+
+        json_data = get_json_from_gtop("targets/%i/%s" % (
+         self.target_id, DATABASE_PROPERTIES))
+        self.database_links = [
+         DatabaseLink(link) for link in json_data] if json_data else []
+
+
+    def request_synonym_properties(self):
+        """Give target object synonym properties:
+
+        .. py:attribute:: synonyms:
+
+            A list of synonym strings."""
+
+        json_data = get_json_from_gtop("ligands/%i/%s" % (
+         self.target_id, SYNONYM_PROPERTIES))
+        self.synonyms = [
+         synonym["name"] for synonym in json_data] if json_data else []
+
+
+    def _get_missing_attribute_error_message(self, attribute):
+        message = "'%s' is a %s property - you need to request this seperately \
+        with my %s() method"
+        values = []
+
+        if attribute in self._database_properties:
+            values = ["database", "get_database_properties"]
+        elif attribute in self._synonym_properties:
+            values = ["synonym", "get_synonym_properties"]
+
+        if values:
+            values = [attribute] + values
+            return (message % tuple(values))
+        else:
+            return None
+
+
+    _database_properties = [
+     "database_links"
+    ]
+
+    _synonym_properties = [
+     "synonyms"
+    ]
 
 
 

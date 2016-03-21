@@ -25,6 +25,23 @@ class TargetTest(unittest.TestCase):
         if target._complex_ids: self.assertIsInstance(target._complex_ids[0], int)
 
 
+    def check_target_database_properties(self, target):
+        self.assertIsInstance(target.database_links, list)
+        for link in target.database_links:
+            self.assertIsInstance(link, pygtop.DatabaseLink)
+            if link.accession: self.assertIsInstance(link.accession, string)
+            if link.database: self.assertIsInstance(link.database, string)
+            if link.url: self.assertIsInstance(link.url, string)
+            if link.species: self.assertIsInstance(link.species, string)
+
+
+    def check_target_synonym_properties(self, target):
+        self.assertIsInstance(target.synonyms, list)
+        for synonym in target.synonyms:
+            self.assertIsInstance(synonym, string)
+            self.assertGreater(len(synonym), 0)
+
+
     def check_family_basic_properties(self, family):
         str(family)
         self.assertIsInstance(family, TargetFamily)
@@ -91,6 +108,27 @@ class SingleTargets(TargetTest):
         self.assertGreater(len(families), 0)
         for family in families:
             self.assertIsInstance(family, TargetFamily)
+
+
+    def test_database_properties(self):
+        target = get_target_by_id(1)
+        target.request_database_properties()
+        self.check_target_database_properties(target)
+
+
+    def test_invalid_attribute_access(self):
+        target = get_target_by_id(1)
+        self.assertRaises(PropertyNotRequestedYetError, lambda: target.database_links)
+        self.assertRaises(AttributeError, lambda: target.xxx)
+        target.request_database_properties()
+        self.assertIsInstance(target.database_links, list)
+        self.assertRaises(AttributeError, lambda: target.xxx)
+
+
+    def test_synonym_properties(self):
+        target = get_target_by_id(1)
+        target.request_synonym_properties()
+        self.check_target_synonym_properties(target)
 
 
 

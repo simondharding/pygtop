@@ -168,6 +168,12 @@ class SingleLigands(LigandTest):
         self.check_ligand_database_properties(ligand)
 
 
+    def test_synonym_properties(self):
+        ligand = get_ligand_by_id(1)
+        ligand.request_synonym_properties()
+        self.check_ligand_synonym_properties(ligand)
+
+
     def test_comment_properties(self):
         ligand = get_ligand_by_id(4890)
         ligand.request_comment_properties()

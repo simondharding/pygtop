@@ -396,8 +396,8 @@ class Ligand:
 
 
     def _get_missing_attribute_error_message(self, attribute):
-        message = "'%s' is a %s property - you need to request this seperately \
-        with my %s() method"
+        message = " ".join("'%s' is a %s property - you need to request this seperately \
+        with my %s() method".split())
         values = []
 
         if attribute in self._structural_properties:
@@ -415,7 +415,6 @@ class Ligand:
 
         if values:
             values = [attribute] + values
-            print(message % tuple(values))
             return (message % tuple(values))
         else:
             return None
