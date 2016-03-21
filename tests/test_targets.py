@@ -11,6 +11,7 @@ string = str
 class TargetTest(unittest.TestCase):
 
     def check_target_basic_properties(self, target):
+        str(target)
         self.assertIsInstance(target, Target)
         self.assertIsInstance(target.name, string)
         self.assertIsInstance(target.abbreviation, string)
@@ -51,6 +52,24 @@ class SingleTargets(TargetTest):
 
     def test_invalid_target_id(self):
         self.assertRaises(NoSuchTargetError, lambda: get_target_by_id(0))
+
+
+    def test_can_get_subunits(self):
+        target = get_target_by_id(44)
+        self.check_target_basic_properties(target)
+        subunits = target.get_subunits()
+        self.assertGreater(len(subunits), 0)
+        for subunit in subunits:
+            self.assertIsInstance(subunit, Target)
+
+
+    def test_can_get_complexes(self):
+        target = get_target_by_id(51)
+        self.check_target_basic_properties(target)
+        complexes = target.get_complexes()
+        self.assertGreater(len(complexes), 0)
+        for complex in complexes:
+            self.assertIsInstance(complex, Target)
 
 
 

@@ -27,3 +27,15 @@ class Target:
         self._family_ids = json_data["familyIds"]
         self._subunit_ids = json_data["subunitIds"]
         self._complex_ids = json_data["complexIds"]
+
+
+    def __repr__(self):
+        return "<'%s' Target (%s)>" % (self.name, self.target_type)
+
+
+    def get_subunits(self):
+        return [get_target_by_id(i) for i in self._subunit_ids]
+
+
+    def get_complexes(self):
+        return [get_target_by_id(i) for i in self._complex_ids]
