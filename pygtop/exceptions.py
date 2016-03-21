@@ -7,6 +7,13 @@ class NoSuchLigandError(Exception):
 
 
 
+class NoSuchTargetError(Exception):
+    """The exception raised if a specific target is requested which does not
+    exist."""
+    pass
+
+
+
 class PropertyNotRequestedYetError(Exception):
     """The exception raised if a ligand's property is accessed before it has
     been explictly requested. If the property is not one which can be accessed
