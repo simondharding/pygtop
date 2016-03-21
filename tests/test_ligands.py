@@ -6,7 +6,7 @@ import pygtop
 from pygtop.ligands import *
 from pygtop.exceptions import *
 
-string = str if sys.version_info == 3 else unicode
+string = str
 
 class LigandTest(unittest.TestCase):
 
@@ -22,14 +22,14 @@ class LigandTest(unittest.TestCase):
         self.assertIsInstance(ligand.approved, bool)
         self.assertIsInstance(ligand.withdrawn, bool)
         self.assertIsInstance(ligand.approval_source, string)
-        self.assertIsInstance(ligand.subunit_ids, list)
-        if ligand.subunit_ids: self.assertIsInstance(ligand.subunit_ids[0], int)
-        self.assertIsInstance(ligand.complex_ids, list)
-        if ligand.complex_ids: self.assertIsInstance(ligand.complex_ids[0], int)
-        self.assertIsInstance(ligand.prodrug_ids, list)
-        if ligand.prodrug_ids: self.assertIsInstance(ligand.prodrug_ids[0], int)
-        self.assertIsInstance(ligand.active_drug_ids, list)
-        if ligand.active_drug_ids: self.assertIsInstance(ligand.active_drug_ids[0], int)
+        self.assertIsInstance(ligand._subunit_ids, list)
+        if ligand._subunit_ids: self.assertIsInstance(ligand._subunit_ids[0], int)
+        self.assertIsInstance(ligand._complex_ids, list)
+        if ligand._complex_ids: self.assertIsInstance(ligand._complex_ids[0], int)
+        self.assertIsInstance(ligand._prodrug_ids, list)
+        if ligand._prodrug_ids: self.assertIsInstance(ligand._prodrug_ids[0], int)
+        self.assertIsInstance(ligand._active_drug_ids, list)
+        if ligand._active_drug_ids: self.assertIsInstance(ligand._active_drug_ids[0], int)
 
 
     def check_ligand_structural_properties(self, ligand):
@@ -178,6 +178,42 @@ class SingleLigands(LigandTest):
         ligand = get_ligand_by_id(4890)
         ligand.request_precursor_properties()
         self.check_ligand_precursor_properties(ligand)
+
+
+    def test_can_get_subunits(self):
+        ligand = get_ligand_by_id(1158)
+        self.check_ligand_basic_properties(ligand)
+        subunits = ligand.get_subunits()
+        self.assertGreater(len(subunits), 0)
+        for subunit in subunits:
+            self.assertIsInstance(subunit, Ligand)
+
+
+    def test_can_get_complexes(self):
+        ligand = get_ligand_by_id(5537)
+        self.check_ligand_basic_properties(ligand)
+        complexes = ligand.get_complexes()
+        self.assertGreater(len(complexes), 0)
+        for complex in complexes:
+            self.assertIsInstance(complex, Ligand)
+
+
+    def test_can_get_prodrugs(self):
+        ligand = get_ligand_by_id(7258)
+        self.check_ligand_basic_properties(ligand)
+        prodrugs = ligand.get_prodrugs()
+        self.assertGreater(len(prodrugs), 0)
+        for prodrug in prodrugs:
+            self.assertIsInstance(prodrug, Ligand)
+
+
+    def test_can_get_active_drugs(self):
+        ligand = get_ligand_by_id(96)
+        self.check_ligand_basic_properties(ligand)
+        active_drugs = ligand.get_active_drugs()
+        self.assertGreater(len(active_drugs), 0)
+        for active_drug in active_drugs:
+            self.assertIsInstance(active_drug, Ligand)
 
 
 

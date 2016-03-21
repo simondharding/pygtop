@@ -157,10 +157,10 @@ class Ligand:
         self.approved = json_data["approved"]
         self.withdrawn = json_data["withdrawn"]
         self.approval_source = json_data["approvalSource"]
-        self.subunit_ids = json_data["subunitIds"]
-        self.complex_ids = json_data["complexIds"]
-        self.prodrug_ids = json_data["prodrugIds"]
-        self.active_drug_ids = json_data["activeDrugIds"]
+        self._subunit_ids = json_data["subunitIds"]
+        self._complex_ids = json_data["complexIds"]
+        self._prodrug_ids = json_data["prodrugIds"]
+        self._active_drug_ids = json_data["activeDrugIds"]
 
 
     def __getattr__(self, key):
@@ -173,6 +173,22 @@ class Ligand:
 
     def __repr__(self):
         return "<'%s' Ligand (%s)>" % (self.name, self.ligand_type)
+
+
+    def get_subunits(self):
+        return [get_ligand_by_id(i) for i in self._subunit_ids]
+
+
+    def get_complexes(self):
+        return [get_ligand_by_id(i) for i in self._complex_ids]
+
+
+    def get_prodrugs(self):
+        return [get_ligand_by_id(i) for i in self._prodrug_ids]
+
+
+    def get_active_drugs(self):
+        return [get_ligand_by_id(i) for i in self._active_drug_ids]
 
 
     def request_structural_properties(self):
