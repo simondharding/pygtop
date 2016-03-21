@@ -25,6 +25,18 @@ class TargetTest(unittest.TestCase):
         if target._complex_ids: self.assertIsInstance(target._complex_ids[0], int)
 
 
+    def check_family_basic_properties(self, family):
+        str(family)
+        self.assertIsInstance(family, TargetFamily)
+        self.assertIsInstance(family.name, string)
+        self.assertIsInstance(family._target_ids, list)
+        if family._target_ids: self.assertIsInstance(family._target_ids[0], int)
+        self.assertIsInstance(family._parent_family_ids, list)
+        if family._parent_family_ids: self.assertIsInstance(family._parent_family_ids[0], int)
+        self.assertIsInstance(family._sub_family_ids, list)
+        if family._sub_family_ids: self.assertIsInstance(family._sub_family_ids[0], int)
+
+
 
 class SingleTargets(TargetTest):
 
@@ -70,6 +82,74 @@ class SingleTargets(TargetTest):
         self.assertGreater(len(complexes), 0)
         for complex in complexes:
             self.assertIsInstance(complex, Target)
+
+
+    def test_can_get_families(self):
+        target = get_target_by_id(1)
+        self.check_target_basic_properties(target)
+        families = target.get_families()
+        self.assertGreater(len(families), 0)
+        for family in families:
+            self.assertIsInstance(family, TargetFamily)
+
+
+
+class Families(TargetTest):
+
+    def test_can_make_target(self):
+        test_json = {
+         "familyId": 120,
+         "name": "Chloride channels",
+         "targetIds": [],
+         "parentFamilyIds": [
+          861
+         ],
+         "subFamilyIds": [
+          128,
+          129,
+          130,
+          131,
+          132
+         ]
+        }
+        family = TargetFamily(test_json)
+        self.check_family_basic_properties(family)
+
+
+    def test_can_get_family_by_id(self):
+        family = get_family_by_id(120)
+        self.check_family_basic_properties(family)
+
+
+    def test_invalid_target_id(self):
+        self.assertRaises(NoSuchFamilyError, lambda: get_family_by_id(0))
+
+
+    def test_can_get_targets(self):
+        family = get_family_by_id(840)
+        self.check_family_basic_properties(family)
+        targets = family.get_targets()
+        self.assertGreater(len(targets), 0)
+        for target in targets:
+            self.assertIsInstance(target, Target)
+
+
+    def test_can_get_sub_families(self):
+        family = get_family_by_id(283)
+        self.check_family_basic_properties(family)
+        sub_families = family.get_subfamilies()
+        self.assertGreater(len(sub_families), 0)
+        for family in sub_families:
+            self.assertIsInstance(family, TargetFamily)
+
+
+    def test_can_get_parent_families(self):
+        family = get_family_by_id(283)
+        self.check_family_basic_properties(family)
+        parent_families = family.get_parent_families()
+        self.assertGreater(len(parent_families), 0)
+        for family in parent_families:
+            self.assertIsInstance(family, TargetFamily)
 
 
 
