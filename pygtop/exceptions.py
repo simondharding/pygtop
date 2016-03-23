@@ -22,9 +22,9 @@ class NoSuchFamilyError(Exception):
 
 
 class PropertyNotRequestedYetError(Exception):
-    """The exception raised if a ligand's property is accessed before it has
-    been explictly requested. If the property is not one which can be accessed
-    from the web services, a standard AttributeError will be returned."""
+    """The exception raised if a ligand or target's property is accessed before
+    it has been explictly requested. If the property is not one which can be
+    accessed from the web services, a standard AttributeError will be returned."""
     pass
 
 

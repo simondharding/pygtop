@@ -10,7 +10,7 @@ from .shared import *
 def get_ligand_by_id(ligand_id):
     """Returns a Ligand object of the ligand with the given ID.
 
-    :param int ligand_id: The GtoP IDof the Ligand desired.
+    :param int ligand_id: The GtoP ID of the Ligand desired.
     :rtype: :py:class:`Ligand`
     :raises: :class:`.NoSuchLigandError`: if no such ligand exists in the database"""
 
@@ -55,7 +55,7 @@ def get_ligands_by(criteria):
     """Get all ligands which specify the criteria dictionary.
 
     :param dict criteria: A dictionary of `field=value` pairs. See the\
-     `GtoP web services page <http://www.guidetopharmacology.org/\
+     `GtoP ligand web services page <http://www.guidetopharmacology.org/\
      webServices.jsp#ligands>`_ for key/value pairs which can be supplied.
     :returns: list of :py:class:`Ligand` objects."""
 
@@ -90,9 +90,13 @@ class Ligand:
 
         The ligand's GtoP ID.
 
+    .. py:attribute:: name:
+
+        The ligand's name.
+
     .. py:attribute:: abbreviation:
 
-        The ligand's SMILES string.
+        The ligand's abbreviated name.
 
     .. py:attribute:: inn:
 
