@@ -150,12 +150,6 @@ class SingleLigands(LigandTest):
         self.assertRaises(AttributeError, lambda: ligand.xxx)
 
 
-    def test_structural_properties(self):
-        ligand = get_ligand_by_id(4890)
-        ligand.request_structural_properties()
-        self.check_ligand_structural_properties(ligand)
-
-
     def test_molecular_properties(self):
         ligand = get_ligand_by_id(4890)
         ligand.request_molecular_properties()
@@ -183,6 +177,17 @@ class SingleLigands(LigandTest):
     def test_precursor_properties(self):
         ligand = get_ligand_by_id(4890)
         ligand.request_precursor_properties()
+        self.check_ligand_precursor_properties(ligand)
+
+
+    def test_all_properties(self):
+        ligand = get_ligand_by_id(4890)
+        ligand.request_all_properties()
+        self.check_ligand_structural_properties(ligand)
+        self.check_ligand_molecular_properties(ligand)
+        self.check_ligand_database_properties(ligand)
+        self.check_ligand_synonym_properties(ligand)
+        self.check_ligand_comment_properties(ligand)
         self.check_ligand_precursor_properties(ligand)
 
 

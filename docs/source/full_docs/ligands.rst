@@ -1,5 +1,5 @@
-Ligands (pygtop.ligands)
-~~~~~~~~~~~~~~~~~~~~~~~~
+``pygtop.ligands`` (Ligands)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: pygtop.ligands
     :members:

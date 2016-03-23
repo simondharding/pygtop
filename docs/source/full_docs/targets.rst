@@ -1,6 +1,5 @@
-Targets (pygtop.targets)
-~~~~~~~~~~~~~~~~~~~~~~~~
+``pygtop.targets`` (Targets)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: pygtop.targets
-    :show-inheritance:
     :members:

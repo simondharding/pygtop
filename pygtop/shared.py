@@ -71,7 +71,7 @@ class Precursor:
 
     .. py:attribute:: synonyms
 
-        A list of str objects."""
+        A list of :py:class:`str` objects."""
 
     def __init__(self, json_data):
         self.json_data = json_data

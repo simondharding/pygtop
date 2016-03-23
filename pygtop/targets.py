@@ -211,8 +211,15 @@ class Target:
          synonym["name"] for synonym in json_data] if json_data else []
 
 
+    def request_all_properties(self):
+        """Give target object all extra properties."""
+
+        self.request_database_properties()
+        self.request_synonym_properties()
+
+
     def _get_missing_attribute_error_message(self, attribute):
-        message = "'%s' is a %s property - you need to request this seperately with my %s() method"
+        message = "'%s' is a %s property and needs to be requested with %s()"
         values = []
 
         if attribute in self._database_properties:
@@ -238,7 +245,9 @@ class Target:
 
 
 class SpeciesTarget(Target):
-    """A species-specific variant of a Target. This object behaves much like a
+    """Base class: :py:class:`Target`
+
+    A species-specific variant of a Target. This object behaves much like a
     Target object (from which it inherits), but it is species-aware, and will
     only collect properties which are applicable to this species.
 
@@ -280,8 +289,6 @@ class SpeciesTarget(Target):
          link for link in self.database_links
           if link.species.lower() == self.species.lower()
         ]
-
-
 
 
 class TargetFamily:

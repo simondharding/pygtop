@@ -1,5 +1,5 @@
-Exceptions (pygtop.exceptions)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+``pygtop.exceptions`` (Exceptions)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: pygtop.exceptions
     :members:

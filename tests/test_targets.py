@@ -116,6 +116,19 @@ class SingleTargets(TargetTest):
         self.check_target_database_properties(target)
 
 
+    def test_synonym_properties(self):
+        target = get_target_by_id(1)
+        target.request_synonym_properties()
+        self.check_target_synonym_properties(target)
+
+
+    def test_all_properties(self):
+        target = get_target_by_id(1)
+        target.request_all_properties()
+        self.check_target_database_properties(target)
+        self.check_target_synonym_properties(target)
+
+
     def test_invalid_attribute_access(self):
         target = get_target_by_id(1)
         self.assertRaises(PropertyNotRequestedYetError, lambda: target.database_links)
@@ -123,12 +136,6 @@ class SingleTargets(TargetTest):
         target.request_database_properties()
         self.assertIsInstance(target.database_links, list)
         self.assertRaises(AttributeError, lambda: target.xxx)
-
-
-    def test_synonym_properties(self):
-        target = get_target_by_id(1)
-        target.request_synonym_properties()
-        self.check_target_synonym_properties(target)
 
 
     def test_species_specific(self):

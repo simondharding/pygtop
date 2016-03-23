@@ -269,7 +269,7 @@ class Ligand:
 
         .. py:attribute:: log_p:
 
-            Log of partition coefficient - a measure fo solubility.
+            Log of partition coefficient - a measure of solubility.
 
         .. py:attribute:: lipinksi_rules_broken:
 
@@ -294,7 +294,7 @@ class Ligand:
 
         .. py:attribute:: database_links:
 
-            A list of  :class:`.DatabaseLink`: objects."""
+            A list of  :class:`.DatabaseLink` objects."""
 
         json_data = get_json_from_gtop("ligands/%i/%s" % (
          self.ligand_id, DATABASE_PROPERTIES))
@@ -381,7 +381,7 @@ class Ligand:
 
         .. py:attribute:: precursors:
 
-            A list of  :class:`.Precursor`: objects"""
+            A list of  :class:`.Precursor` objects"""
 
         json_data = get_json_from_gtop("ligands/%i/%s" % (
          self.ligand_id, PRECURSOR_PROPERTIES))
@@ -400,7 +400,7 @@ class Ligand:
 
 
     def _get_missing_attribute_error_message(self, attribute):
-        message = " ".join("'%s' is a %s property - you need to request this seperately with my %s() method".split())
+        message = "'%s' is a %s property and needs to be requested with %s()"
         values = []
 
         if attribute in self._structural_properties:

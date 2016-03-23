@@ -1,5 +1,5 @@
-Shared objects (pygtop.shared)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+``pygtop.shared`` (Shared objects)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: pygtop.shared
     :members:

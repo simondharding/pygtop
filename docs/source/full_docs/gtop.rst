@@ -1,5 +1,5 @@
-GtoP Interface (pygtop.gtop)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+``pygtop.gtop`` (GtoP Interface)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: pygtop.gtop
     :members:
