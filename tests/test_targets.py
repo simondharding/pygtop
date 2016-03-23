@@ -131,6 +131,27 @@ class SingleTargets(TargetTest):
         self.check_target_synonym_properties(target)
 
 
+    def test_species_specific(self):
+        ppt = SpeciesTarget(1, "human")
+        self.assertIsInstance(ppt, SpeciesTarget)
+        self.assertIsInstance(ppt.target, Target)
+        self.assertEqual(1, ppt.target.target_id)
+
+
+    def test_species_invalid_id(self):
+        self.assertRaises(NoSuchTargetError, lambda: SpeciesTarget(0, "human"))
+
+
+    def test_species_database_links(self):
+        ppt = SpeciesTarget(1, "human")
+        self.assertRaises(PropertyNotRequestedYetError, lambda: ppt.database_links)
+        ppt.request_database_properties()
+        self.assertIsInstance(ppt.database_links, list)
+        for link in ppt.database_links:
+            self.assertIsInstance(link, DatabaseLink)
+            self.assertEqual(link.species.lower(), "human")
+
+
 
 class MultiTargets(TargetTest):
 

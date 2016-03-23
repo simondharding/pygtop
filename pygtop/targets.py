@@ -133,14 +133,13 @@ class Target:
 
 
     def _get_missing_attribute_error_message(self, attribute):
-        message = "'%s' is a %s property - you need to request this seperately \
-        with my %s() method"
+        message = "'%s' is a %s property - you need to request this seperately with my %s() method"
         values = []
 
         if attribute in self._database_properties:
-            values = ["database", "get_database_properties"]
+            values = ["database", "request_database_properties"]
         elif attribute in self._synonym_properties:
-            values = ["synonym", "get_synonym_properties"]
+            values = ["synonym", "request_synonym_properties"]
 
         if values:
             values = [attribute] + values
@@ -156,6 +155,28 @@ class Target:
     _synonym_properties = [
      "synonyms"
     ]
+
+
+
+class SpeciesTarget(Target):
+
+    def __init__(self, target_id, species):
+        self.target_id = target_id
+        self.target = get_target_by_id(target_id)
+        self.species = species
+
+
+    def __repr__(self):
+        return "<%s %s>" % (self.species, self.get_target().name)
+
+
+    def request_database_properties(self):
+        Target.request_database_properties(self)
+        self.database_links = [
+         link for link in self.database_links
+          if link.species.lower() == self.species.lower()
+        ]
+
 
 
 

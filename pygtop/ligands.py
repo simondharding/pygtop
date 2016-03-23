@@ -396,22 +396,21 @@ class Ligand:
 
 
     def _get_missing_attribute_error_message(self, attribute):
-        message = " ".join("'%s' is a %s property - you need to request this seperately \
-        with my %s() method".split())
+        message = " ".join("'%s' is a %s property - you need to request this seperately with my %s() method".split())
         values = []
 
         if attribute in self._structural_properties:
-            values = ["structural", "get_structural_properties"]
+            values = ["structural", "request_structural_properties"]
         elif attribute in self._molecular_properties:
-            values = ["molecular", "get_molecular_properties"]
+            values = ["molecular", "request_molecular_properties"]
         elif attribute in self._database_properties:
-            values = ["database", "get_database_properties"]
+            values = ["database", "request_database_properties"]
         elif attribute in self._synonym_properties:
-            values = ["synonym", "get_synonym_properties"]
+            values = ["synonym", "request_synonym_properties"]
         elif attribute in self._comment_properties:
-            values = ["comment", "get_common_properties"]
+            values = ["comment", "request_common_properties"]
         elif attribute in self._precursor_properties:
-            values = ["precursor", "get_precursor_properties"]
+            values = ["precursor", "request_precursor_properties"]
 
         if values:
             values = [attribute] + values
