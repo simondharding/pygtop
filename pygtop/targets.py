@@ -190,7 +190,7 @@ class Target:
 
         .. py:attribute:: database_links:
 
-            A list of  :class:`.DatabaseLink`: objects."""
+            A list of  :class:`.DatabaseLink` objects."""
 
         json_data = get_json_from_gtop("targets/%i/%s" % (
          self.target_id, DATABASE_PROPERTIES))
@@ -269,6 +269,12 @@ class SpeciesTarget(Target):
 
 
     def request_database_properties(self):
+        """Get database properties relevant to this species:
+
+        .. py:attribute:: database_links:
+
+            A list of  :class:`.DatabaseLink` objects for this species."""
+
         Target.request_database_properties(self)
         self.database_links = [
          link for link in self.database_links

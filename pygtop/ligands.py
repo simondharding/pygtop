@@ -12,7 +12,7 @@ def get_ligand_by_id(ligand_id):
 
     :param int ligand_id: The GtoP ID of the Ligand desired.
     :rtype: :py:class:`Ligand`
-    :raises: :class:`.NoSuchLigandError`: if no such ligand exists in the database"""
+    :raises: :class:`.NoSuchLigandError` if no such ligand exists in the database"""
 
     json_data = get_json_from_gtop("ligands/%i" % ligand_id)
     if json_data:
@@ -29,7 +29,7 @@ def get_random_ligand(ligand_type=None):
      this category only.
 
     :rtype: :py:class:`Ligand`
-    :raises: :class:`.NoSuchTypeError`: if a ligand type is supplied which doesn't exist
+    :raises: :class:`.NoSuchTypeError` if a ligand type is supplied which doesn't exist
     """
 
     if ligand_type:
@@ -73,7 +73,7 @@ def get_ligand_by_name(name):
     :param str name: The name of the ligand to search for. Note that synonyms \
     will not be searched.
     :rtype: :py:class:`Ligand`
-    :raises:  :class:`.NoSuchLigandError`: if no such ligand exists in the database."""
+    :raises:  :class:`.NoSuchLigandError` if no such ligand exists in the database."""
 
     ligands = get_ligands_by({"name": name})
     if ligands:

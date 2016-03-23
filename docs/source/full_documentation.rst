@@ -1,34 +1,9 @@
 Full documentation
 ------------------
 
-
-Ligands (pygtop.ligands)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. automodule:: pygtop.ligands
-    :members:
-
-Targets (pygtop.targets)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. automodule:: pygtop.targets
-    :show-inheritance:
-    :members:
-
-GtoP Interface (pygtop.gtop)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. automodule:: pygtop.gtop
-    :members:
-
-Shared objects (pygtop.shared)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. automodule:: pygtop.shared
-    :members:
-
-Exceptions (pygtop.exceptions)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. automodule:: pygtop.exceptions
-    :members:
+.. toctree ::
+    full_docs/ligands
+    full_docs/targets
+    full_docs/gtop
+    full_docs/shared
+    full_docs/exceptions

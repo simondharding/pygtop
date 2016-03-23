@@ -22,6 +22,7 @@ Table of Contents
 -----------------
 
 .. toctree ::
+
     installing
     about_gtop
     overview
