@@ -125,22 +125,6 @@ class Ligand:
     .. py:attribute:: approval_source:
 
         The regulatory body which approved the drug.
-
-    .. py:attribute:: subunit_ids:
-
-        GtoP IDs of subunits.
-
-    .. py:attribute:: complex_ids:
-
-        GtoP IDs of complexes the ligand forms.
-
-    .. py:attribute:: prodrug_ids:
-
-        GtoP IDs of prodrugs.
-
-    .. py:attribute:: active_drug_ids:
-
-        GtoP IDs of active equivalents.
     """
 
     def __init__(self, json_data):
@@ -176,18 +160,34 @@ class Ligand:
 
 
     def get_subunits(self):
+        """Returns a list of all ligands which are subunits of this ligand.
+
+        :returns: list of :py:class:`Ligand` objects"""
+
         return [get_ligand_by_id(i) for i in self._subunit_ids]
 
 
     def get_complexes(self):
+        """Returns a list of all ligands of which this ligand is a subunit.
+
+        :returns: list of :py:class:`Ligand` objects"""
+
         return [get_ligand_by_id(i) for i in self._complex_ids]
 
 
     def get_prodrugs(self):
+        """Returns a list of all ligands which are prodrugs of this ligand.
+
+        :returns: list of :py:class:`Ligand` objects"""
+
         return [get_ligand_by_id(i) for i in self._prodrug_ids]
 
 
     def get_active_drugs(self):
+        """Returns a list of all ligands which are active equivalents of this ligand.
+
+        :returns: list of :py:class:`Ligand` objects"""
+
         return [get_ligand_by_id(i) for i in self._active_drug_ids]
 
 
@@ -385,7 +385,7 @@ class Ligand:
 
 
     def request_all_properties(self):
-        """Give ligand object all ancilliary properties."""
+        """Give ligand object all extra properties."""
 
         self.request_structural_properties()
         self.request_molecular_properties()
