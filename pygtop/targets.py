@@ -167,7 +167,7 @@ class SpeciesTarget(Target):
 
 
     def __repr__(self):
-        return "<%s %s>" % (self.species, self.get_target().name)
+        return "<%s %s>" % (self.species, self.target.name)
 
 
     def request_database_properties(self):

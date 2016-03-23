@@ -133,6 +133,7 @@ class SingleTargets(TargetTest):
 
     def test_species_specific(self):
         ppt = SpeciesTarget(1, "human")
+        str(ppt)
         self.assertIsInstance(ppt, SpeciesTarget)
         self.assertIsInstance(ppt.target, Target)
         self.assertEqual(1, ppt.target.target_id)
