@@ -8,6 +8,13 @@ Ligands (pygtop.ligands)
 .. automodule:: pygtop.ligands
     :members:
 
+Targets (pygtop.targets)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automodule:: pygtop.targets
+    :show-inheritance:
+    :members:
+
 GtoP Interface (pygtop.gtop)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
