@@ -6,7 +6,7 @@ import random
 from .gtop import *
 from .exceptions import *
 from .shared import *
-from .interactions import *
+from . import interactions
 
 def get_ligand_by_id(ligand_id):
     """Returns a Ligand object of the ligand with the given ID.
@@ -205,6 +205,9 @@ class Ligand:
             return [Interaction(json) for json in interactions_json]
         else:
             return []
+
+
+    get_interaction_by_id = interactions.get_interaction_by_id
 
 
     def get_targets(self):

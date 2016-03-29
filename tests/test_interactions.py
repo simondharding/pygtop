@@ -28,9 +28,9 @@ class InteractionTest(unittest.TestCase):
         if interaction.affinity_value:
             self.assertIsInstance(interaction.affinity_value, float)
         if interaction.affinity_value:
-            self.assertIsInstance(interaction.affinity_type, str)
-        self.assertIsInstance(interaction.type, str)
-        self.assertIsInstance(interaction.action, str)
+            self.assertIsInstance(interaction.affinity_type, string)
+        self.assertIsInstance(interaction.type, string)
+        self.assertIsInstance(interaction.action, string)
         self.assertIsInstance(interaction.ligand_primary_target, bool)
         self.assertIsInstance(interaction.is_voltage_dependent, bool)
         if interaction.is_voltage_dependent:
@@ -39,7 +39,7 @@ class InteractionTest(unittest.TestCase):
             self.assertEqual(interaction.voltage, None)
         self.assertIsInstance(interaction.references, list)
         for ref in interaction.references:
-            self.assertIsInstance(ref, str)
+            self.assertIsInstance(ref, string)
             self.assertEqual(ref[0], "(")
 
 
@@ -84,6 +84,16 @@ class InteractionTest(unittest.TestCase):
             self.assertEqual(interaction._ligand_id, ligand.ligand_id)
 
 
+    def test_ligand_can_get_specific_interaction(self):
+        ligand = get_ligand_by_id(1)
+        interaction = ligand.get_interaction_by_id(1)
+        self.assertEqual(interaction.interaction_id, 1)
+        self.assertRaises(
+         NoSuchInteractionError,
+         lambda: ligand.get_interaction_by_id(2)
+        )
+
+
     def test_ligand_can_get_targets(self):
         ligand = get_ligand_by_id(1)
         targets = ligand.get_targets()
@@ -107,6 +117,16 @@ class InteractionTest(unittest.TestCase):
         for interaction in interactions:
             self.check_interaction_properties(interaction)
             self.assertEqual(interaction._target_id, target.target_id)
+
+
+    def test_target_can_get_specific_interaction(self):
+        target = get_target_by_id(1)
+        interaction = target.get_interaction_by_id(1)
+        self.assertEqual(interaction.interaction_id, 1)
+        self.assertRaises(
+         NoSuchInteractionError,
+         lambda: target.get_interaction_by_id(0)
+        )
 
 
     def test_species_target_can_get_interactions(self):

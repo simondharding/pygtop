@@ -1,5 +1,5 @@
 from __future__ import division
-from .exceptions import NoSuchLigandError, NoSuchTargetError
+from .exceptions import NoSuchLigandError, NoSuchTargetError, NoSuchInteractionError
 
 def get_interactions_between(ligand, target):
     ligand_interactions = ligand.get_interactions()
@@ -10,6 +10,13 @@ def get_interactions_between(ligand, target):
         if interaction._ligand_id in ligand_interaction_ids:
             mutual_interactions.append(interaction)
     return mutual_interactions
+
+
+def get_interaction_by_id(interactor, interaction_id):
+    for interaction in interactor.get_interactions():
+        if interaction.interaction_id == interaction_id:
+            return interaction
+    raise NoSuchInteractionError
 
 
 class Interaction:

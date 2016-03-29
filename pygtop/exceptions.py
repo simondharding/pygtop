@@ -21,6 +21,13 @@ class NoSuchFamilyError(Exception):
 
 
 
+class NoSuchInteractionError(Exception):
+    """The exception raised if a specific interaction is requested which does not
+    exist."""
+    pass
+
+
+
 class PropertyNotRequestedYetError(Exception):
     """The exception raised if a ligand or target's property is accessed before
     it has been explictly requested. If the property is not one which can be

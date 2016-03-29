@@ -3,6 +3,7 @@
 from .exceptions import *
 from .gtop import *
 from .shared import *
+from . import interactions
 import random
 
 
@@ -194,6 +195,9 @@ class Target:
             return [Interaction(json) for json in interactions_json]
         else:
             return []
+
+
+    get_interaction_by_id = interactions.get_interaction_by_id
 
 
     def get_ligands(self):
