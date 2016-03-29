@@ -1,4 +1,7 @@
 from __future__ import division
+from . import ligands
+from . import targets
+from .exceptions import NoSuchLigandError, NoSuchTargetError
 
 class Interaction:
 
@@ -21,3 +24,27 @@ class Interaction:
         self.voltage = float(json_data["voltage"]
          ) if json_data["voltage"] != "-" else None
         self.ligand_primary_target = json_data["primaryTarget"]
+        self.references = [
+         "(%i) %s" % (ref["year"], ref["articleTitle"]) for ref in json_data["refs"]
+        ]
+
+
+    def get_ligand(self):
+        try:
+            return ligands.get_ligand_by_id(self._ligand_id)
+        except NoSuchLigandError:
+            return None
+
+
+    def get_target(self):
+        try:
+            return targets.get_target_by_id(self._target_id)
+        except NoSuchTargetError:
+            return None
+
+
+    def get_species_target(self):
+        try:
+            return targets.SpeciesTarget(self._target_id, self.species)
+        except NoSuchTargetError:
+            return None
