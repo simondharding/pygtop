@@ -127,6 +127,13 @@ class InteractionTest(unittest.TestCase):
             self.assertIsInstance(ligand, Ligand)
 
 
+    def test_interactions_between(self):
+        ligand = get_ligand_by_id(1)
+        target = get_target_by_id(1)
+        mutual = get_interactions_between(ligand, target)
+        self.assertEqual(len(mutual), 1)
+
+
 
 
 

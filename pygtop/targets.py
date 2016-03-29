@@ -290,7 +290,7 @@ class SpeciesTarget(Target):
     def __init__(self, target_id, species):
         self.target_id = target_id
         self.target = get_target_by_id(target_id)
-        self.species = species
+        self.species = species.lower()
 
 
     def __repr__(self):

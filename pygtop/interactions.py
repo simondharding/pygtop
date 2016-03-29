@@ -1,6 +1,17 @@
 from __future__ import division
 from .exceptions import NoSuchLigandError, NoSuchTargetError
 
+def get_interactions_between(ligand, target):
+    ligand_interactions = ligand.get_interactions()
+    ligand_interaction_ids = [i._ligand_id for i in ligand_interactions]
+    target_interactions = target.get_interactions()
+    mutual_interactions = []
+    for interaction in target_interactions:
+        if interaction._ligand_id in ligand_interaction_ids:
+            mutual_interactions.append(interaction)
+    return mutual_interactions
+
+
 class Interaction:
 
     def __init__(self, json_data):
@@ -30,6 +41,14 @@ class Interaction:
         self.references = [
          "(%i) %s" % (ref["year"], ref["articleTitle"]) for ref in json_data["refs"]
         ]
+
+
+    def __repr__(self):
+        return "<Interaction (%i --> %s %i)>" % (
+         self._ligand_id,
+         self.species,
+         self._target_id
+        )
 
 
     def get_ligand(self):
