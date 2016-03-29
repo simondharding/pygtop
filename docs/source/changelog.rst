@@ -1,6 +1,22 @@
 Changelog
 ---------
 
+Release 0.3.0
+~~~~~~~~~~~~~
+
+`30 March 2016`
+
+* Interaction functionality
+
+  * Interaction objects now available, which can link to ligands and targets
+  * Ligands can get their interactions, and by extension their targets
+  * Targets can get their interactions, and by extension their ligands
+
+* Other features
+
+  * Python 2 json strings no longer throw errors if they contain special characters
+  * All species names now lowercase, regardless of how they are stored in the database
+
 Release 0.2.0
 ~~~~~~~~~~~~~
 

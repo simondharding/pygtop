@@ -114,3 +114,70 @@ pertaining to that species will be obtained:
      r Rat>, <Protein GI link (294661831) for Rat>, <RefSeq Nucleotide link (NM_
      022291) for Rat>, <RefSeq Protein link (NP_071627) for Rat>, <UniProtKB lin
      k (Q9EP86) for Rat>, <UniProtKB ID/Entry name link (NPFF1_RAT) for Rat>]
+
+Interactions
+~~~~~~~~~~~~
+
+The interactions of a ligand can be accessed as follows:
+
+    >>> import pygtop
+    >>> ligand = pygtop.get_ligand_by_id(5239)
+    >>> ligand.get_interactions()
+    [<Interaction (5239 --> Human 1375)>, <Interaction (5239 --> Human 1376)>]
+
+Alternatively you can request the interacting targets instead:
+
+    >>> ligand.get_targets()
+    [<'COX-1' Target (Enzyme)>, <'COX-2' Target (Enzyme)>]
+    >>> ligand.get_species_targets()
+    [<human COX-1>, <human COX-2>]
+
+Targets can access interactions in much the same way:
+
+    >>> target = pygtop.get_target_by_id(50)
+    >>> target.get_interactions()
+    [<Interaction (681 --> Human 50)>, <Interaction (682 --> Human 50)>, <Intera
+    ction (683 --> Human 50)>, <Interaction (684 --> Human 50)>, <Interaction (6
+    95 --> Mouse 50)>, <Interaction (695 --> Rat 50)>, <Interaction (696 --> Rat
+     50)>, <Interaction (697 --> Mouse 50)>, <Interaction (697 --> Rat 50)>, <In
+    teraction (3768 --> Human 50)>, <Interaction (700 --> Human 50)>, <Interacti
+    on (701 --> Mouse 50)>, <Interaction (701 --> Rat 50)>, <Interaction (705 --
+    > Mouse 50)>, <Interaction (705 --> Rat 50)>, <Interaction (706 --> Human 50
+    )>]
+    >>> species_target = pygtop.SpeciesTarget(50, "rat")
+    >>> species_target.get_interactions()
+    [<Interaction (695 --> Rat 50)>, <Interaction (696 --> Rat 50)>, <Interactio
+    n (697 --> Rat 50)>, <Interaction (701 --> Rat 50)>, <Interaction (705 --> R
+    at 50)>]
+    >>> target.get_ligands()
+    [<'&alpha;-CGRP' Ligand (Peptide)>, <'&beta;-CGRP' Ligand (Peptide)>, <'adre
+    nomedullin' Ligand (Peptide)>, <'adrenomedullin 2/intermedin' Ligand (Peptid
+    e)>, <'&alpha;-CGRP' Ligand (Peptide)>, <'&alpha;-CGRP' Ligand (Peptide)>, <
+    '&beta;-CGRP' Ligand (Peptide)>, <'adrenomedullin' Ligand (Peptide)>, <'adre
+    nomedullin' Ligand (Peptide)>, <'[<sup>125</sup>I]AM (rat)' Ligand (Peptide)
+    >, <'&alpha;-CGRP-(8-37) (human)' Ligand (Peptide)>, <'&alpha;-CGRP-(8-37) (
+    rat)' Ligand (Peptide)>, <'&alpha;-CGRP-(8-37) (rat)' Ligand (Peptide)>, <'A
+    M-(20-50) (rat)' Ligand (Peptide)>, <'AM-(20-50) (rat)' Ligand (Peptide)>, <
+    'AM-(22-52) (human)' Ligand (Peptide)>]
+    >>> species_target.get_ligands()
+    [<'&alpha;-CGRP' Ligand (Peptide)>, <'&beta;-CGRP' Ligand (Peptide)>, <'adre
+    nomedullin' Ligand (Peptide)>, <'&alpha;-CGRP-(8-37) (rat)' Ligand (Peptide)
+    >, <'AM-(20-50) (rat)' Ligand (Peptide)>]
+
+The interaction objects themselves have methods for returning the relevant
+ligand or target object:
+
+    >>> interaction = ligand.get_interactions()[0]
+    >>> interaction.get_ligand()
+    <'paracetamol' Ligand (Synthetic organic)>
+    >>> interaction.get_target()
+    <'COX-1' Target (Enzyme)>
+    >>> interaction.get_species_target()
+    <human COX-1>
+
+The interactions between a ligand and target, if any, can be obtained using:
+
+    >>> ligand = pygtop.get_ligand_by_id(1)
+    >>> target = pygtop.get_target_by_id(1)
+    >>> pygtop.get_interactions_between(ligand, target)
+    [<Interaction (1 --> Human 1)>]

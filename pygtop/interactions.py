@@ -46,7 +46,9 @@ class Interaction:
          ) if json_data["voltage"] != "-" else None
         self.ligand_primary_target = json_data["primaryTarget"]
         self.references = [
-         "(%i) %s" % (ref["year"], ref["articleTitle"]) for ref in json_data["refs"]
+         "(%s) %s" % (
+          str(ref["year"]) if ref["year"] else "????", ref["articleTitle"]
+         ) for ref in json_data["refs"]
         ]
 
 

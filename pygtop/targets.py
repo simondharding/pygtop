@@ -139,7 +139,7 @@ class Target:
         self.json_data = json_data
 
         self.target_id = json_data["targetId"]
-        self.name = json_data["name"]
+        self.name = json_data["name"].strip()
         self.abbreviation = json_data["abbreviation"]\
          if json_data["abbreviation"] else ""
         self.systematic_name = json_data["systematicName"]\
