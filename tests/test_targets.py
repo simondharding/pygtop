@@ -125,7 +125,7 @@ class SingleTargets(TargetTest):
     def test_all_properties(self):
         target = get_target_by_id(1)
         target.request_all_properties()
-        self.check_target_database_properties(target)
+        self.check_target_database_properties(target)targets/485/interactions
         self.check_target_synonym_properties(target)
 
 
