@@ -6,6 +6,7 @@ import random
 from .gtop import *
 from .exceptions import *
 from .shared import *
+from .interactions import *
 
 def get_ligand_by_id(ligand_id):
     """Returns a Ligand object of the ligand with the given ID.
@@ -193,6 +194,35 @@ class Ligand:
         :returns: list of :py:class:`Ligand` objects"""
 
         return [get_ligand_by_id(i) for i in self._active_drug_ids]
+
+
+    def get_interactions(self):
+        from .interactions import Interaction
+        interactions_json = get_json_from_gtop(
+         "/ligands/%i/interactions" % self.ligand_id
+        )
+        if interactions_json:
+            return [Interaction(json) for json in interactions_json]
+        else:
+            return []
+
+
+    def get_targets(self):
+        targets = []
+        for interaction in self.get_interactions():
+            target = interaction.get_target()
+            if target not in targets:
+                targets.append(target)
+        return targets
+
+
+    def get_species_targets(self):
+        species_targets = []
+        for interaction in self.get_interactions():
+            species_target = interaction.get_species_target()
+            if species_target not in species_targets:
+                species_targets.append(species_target)
+        return species_targets
 
 
     def request_structural_properties(self):

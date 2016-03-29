@@ -20,11 +20,15 @@ class InteractionTest(unittest.TestCase):
         self.assertIsInstance(interaction._ligand_id, int)
         self.assertIsInstance(interaction._target_id, int)
         self.assertIsInstance(interaction.species, string)
-        self.assertIsInstance(interaction.affinity_range, tuple)
+        if interaction.affinity_value: self.assertIsInstance(
+         interaction.affinity_range, tuple
+        )
         for val in interaction.affinity_range:
             self.assertIsInstance(val, float)
-        self.assertIsInstance(interaction.affinity_value, float)
-        self.assertIsInstance(interaction.affinity_type, str)
+        if interaction.affinity_value:
+            self.assertIsInstance(interaction.affinity_value, float)
+        if interaction.affinity_value:
+            self.assertIsInstance(interaction.affinity_type, str)
         self.assertIsInstance(interaction.type, str)
         self.assertIsInstance(interaction.action, str)
         self.assertIsInstance(interaction.ligand_primary_target, bool)
@@ -69,6 +73,61 @@ class InteractionTest(unittest.TestCase):
 
         interaction._target_id = 0
         self.assertEqual(None, interaction.get_target())
+
+
+    def test_ligand_can_get_interactions(self):
+        ligand = get_ligand_by_id(1)
+        interactions = ligand.get_interactions()
+        self.assertGreater(len(interactions), 0)
+        for interaction in interactions:
+            self.check_interaction_properties(interaction)
+            self.assertEqual(interaction._ligand_id, ligand.ligand_id)
+
+
+    def test_ligand_can_get_targets(self):
+        ligand = get_ligand_by_id(1)
+        targets = ligand.get_targets()
+        self.assertGreater(len(targets), 0)
+        for target in targets:
+            self.assertIsInstance(target, Target)
+
+
+    def test_ligand_can_get_species_targets(self):
+        ligand = get_ligand_by_id(1)
+        targets = ligand.get_species_targets()
+        self.assertGreater(len(targets), 0)
+        for target in targets:
+            self.assertIsInstance(target, SpeciesTarget)
+
+
+    def test_target_can_get_interactions(self):
+        target = get_target_by_id(1)
+        interactions = target.get_interactions()
+        self.assertGreater(len(interactions), 0)
+        for interaction in interactions:
+            self.check_interaction_properties(interaction)
+            self.assertEqual(interaction._target_id, target.target_id)
+
+
+    def test_species_target_can_get_interactions(self):
+        target = SpeciesTarget(1, "human")
+        interactions = target.get_interactions()
+        self.assertGreater(len(interactions), 0)
+        for interaction in interactions:
+            self.check_interaction_properties(interaction)
+            self.assertEqual(interaction._target_id, target.target_id)
+            self.assertEqual(interaction.species.lower(), target.species.lower())
+
+
+    def test_target_can_get_ligands(self):
+        target = get_target_by_id(1)
+        ligands = target.get_ligands()
+        self.assertGreater(len(ligands), 0)
+        for ligand in ligands:
+            self.assertIsInstance(ligand, Ligand)
+
+
+
 
 
 if __name__ == "__main__":

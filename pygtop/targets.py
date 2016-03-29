@@ -185,6 +185,26 @@ class Target:
         return [get_family_by_id(i) for i in self._family_ids]
 
 
+    def get_interactions(self):
+        from .interactions import Interaction
+        interactions_json = get_json_from_gtop(
+         "/targets/%i/interactions" % self.target_id
+        )
+        if interactions_json:
+            return [Interaction(json) for json in interactions_json]
+        else:
+            return []
+
+
+    def get_ligands(self):
+        ligands = []
+        for interaction in self.get_interactions():
+            ligand = interaction.get_ligand()
+            if ligand not in ligands:
+                ligands.append(ligand)
+        return ligands
+
+
     def request_database_properties(self):
         """Give target object database properties:
 
@@ -275,6 +295,13 @@ class SpeciesTarget(Target):
 
     def __repr__(self):
         return "<%s %s>" % (self.species, self.target.name)
+
+
+    def get_interactions(self):
+        interactions = Target.get_interactions(self)
+        return [
+         i for i in interactions if i.species.lower() == self.species.lower()
+        ]
 
 
     def request_database_properties(self):
