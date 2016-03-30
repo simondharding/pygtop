@@ -83,20 +83,10 @@ class Interaction:
         self.species = json_data["targetSpecies"]
         self.type = json_data["type"]
         self.action = json_data["action"]
-        if json_data["affinity"] == "-":
-            self.affinity_range = ()
-            self.affinity_value = None
-            self.affinity_type = None
-        else:
-            self.affinity_range = tuple(
-             [float(val) for val in json_data["affinity"].split(" &ndash; ")]
-            ) if "&" in json_data["affinity"] else (float(json_data["affinity"]),)
-            self.affinity_value = self.affinity_range[0] if len(self.affinity_range
-             ) == 1 else sum(self.affinity_range) / len(self.affinity_range)
-            self.affinity_type = json_data["affinityType"]
+        self.affinity_range, self.affinity_value = value_string_to_tuple_value(json_data["affinity"])
+        self.affinity_type = json_data["affinityType"] if self.affinity_value else None
         self.is_voltage_dependent = json_data["voltageDependent"]
-        self.voltage = float(json_data["voltage"]
-         ) if json_data["voltage"] != "-" else None
+        self.voltage_range, self.voltage_value = value_string_to_tuple_value(json_data["voltage"])
         self.ligand_primary_target = json_data["primaryTarget"]
         self.references = [
          "(%s) %s" % (
@@ -147,3 +137,15 @@ class Interaction:
             return SpeciesTarget(self._target_id, self.species)
         except NoSuchTargetError:
             return None
+
+
+def value_string_to_tuple_value(s):
+    if s == "-":
+        return ((), None)
+    else:
+        if "median" in s:
+            s = s.split()[0]
+        range_ = tuple([float(val) for val in s.split(" &ndash; ")]
+         ) if "&" in s else (float(s),)
+        value = range_[0] if len(range_) == 1 else (sum(range_) / len(range_))
+        return range_, value

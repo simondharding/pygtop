@@ -33,10 +33,10 @@ class InteractionTest(unittest.TestCase):
         self.assertIsInstance(interaction.action, string)
         self.assertIsInstance(interaction.ligand_primary_target, bool)
         self.assertIsInstance(interaction.is_voltage_dependent, bool)
-        if interaction.is_voltage_dependent:
-            self.assertIsInstance(interaction.voltage, float)
+        if interaction.voltage_value:
+            self.assertIsInstance(interaction.voltage_value, float)
         else:
-            self.assertEqual(interaction.voltage, None)
+            self.assertEqual(interaction.voltage_value, None)
         self.assertIsInstance(interaction.references, list)
         for ref in interaction.references:
             self.assertIsInstance(ref, string)
@@ -45,6 +45,12 @@ class InteractionTest(unittest.TestCase):
 
     def test_can_make_interaction(self):
         interaction_json = get_json_from_gtop("/targets/485/interactions")[0]
+        interaction = Interaction(interaction_json)
+        self.check_interaction_properties(interaction)
+        interaction_json = get_json_from_gtop("/targets/64/interactions")[0]
+        interaction = Interaction(interaction_json)
+        self.check_interaction_properties(interaction)
+        interaction_json = get_json_from_gtop("/targets/381/interactions")[0]
         interaction = Interaction(interaction_json)
         self.check_interaction_properties(interaction)
 
