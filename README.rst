@@ -219,6 +219,16 @@ The interactions between a ligand and target, if any, can be obtained using:
 Changelog
 ---------
 
+Release 0.3.1
+~~~~~~~~~~~~~
+
+`31 March 2016`
+
+* Bug fixes:
+
+  * Interactions with median affinity values no longer throw errors
+  * Interactions with string voltages no longer throw errors
+
 Release 0.3.0
 ~~~~~~~~~~~~~
 
