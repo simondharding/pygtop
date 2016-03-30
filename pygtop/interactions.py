@@ -61,7 +61,11 @@ class Interaction:
 
         Returns True if the interactions is dependent on a certain voltage.
 
-    .. py:attribute:: voltage:
+    .. py:attribute:: voltage_range:
+
+        A tuple containing the ranges of voltage for this interaction.
+
+    .. py:attribute:: voltage_value:
 
         The voltage for voltage dependent interactions, None for other interactions.
 
