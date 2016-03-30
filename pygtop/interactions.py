@@ -2,7 +2,7 @@ from __future__ import division
 from .exceptions import NoSuchLigandError, NoSuchTargetError, NoSuchInteractionError
 
 def get_interactions_between(ligand, target):
-    """Returns a list of the Interactions, if any, between a ligand and target.
+    """Returns a list of the interactions, if any, between a ligand and target.
 
     :param Ligand ligand: The interacting ligand.
     :param Target target: The interacting target (can be species-specific).
@@ -23,6 +23,7 @@ def get_interaction_by_id(self, interaction_id):
         if interaction.interaction_id == interaction_id:
             return interaction
     raise NoSuchInteractionError
+
 
 
 class Interaction:

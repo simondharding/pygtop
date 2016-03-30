@@ -6,14 +6,16 @@ import pygtop
 from pygtop.ligands import *
 from pygtop.exceptions import *
 
+
 string = str
+
 
 class LigandTest(unittest.TestCase):
 
     def check_ligand_basic_properties(self, ligand):
         self.assertIsInstance(ligand, Ligand)
         self.assertIsInstance(ligand.name, string)
-        self.assertIsInstance(ligand.abbreviation, string)
+        if ligand.abbreviation: self.assertIsInstance(ligand.abbreviation, string)
         self.assertIsInstance(ligand.inn, string)
         if ligand.species: self.assertIsInstance(ligand.species, string)
         self.assertIsInstance(ligand.ligand_type, string)

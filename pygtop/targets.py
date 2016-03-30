@@ -111,6 +111,7 @@ def get_random_family():
     return TargetFamily(random.choice(json_data))
 
 
+
 class Target:
     """A Guide to PHARMACOLOGY target object.
 
@@ -143,9 +144,9 @@ class Target:
         self.target_id = json_data["targetId"]
         self.name = json_data["name"].strip()
         self.abbreviation = json_data["abbreviation"]\
-         if json_data["abbreviation"] else ""
+         if json_data["abbreviation"] else None
         self.systematic_name = json_data["systematicName"]\
-         if json_data["systematicName"] else ""
+         if json_data["systematicName"] else None
         self.target_type = json_data["type"]
         self._family_ids = json_data["familyIds"]
         self._subunit_ids = json_data["subunitIds"]

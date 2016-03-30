@@ -14,8 +14,8 @@ class TargetTest(unittest.TestCase):
         str(target)
         self.assertIsInstance(target, Target)
         self.assertIsInstance(target.name, string)
-        self.assertIsInstance(target.abbreviation, string)
-        self.assertIsInstance(target.systematic_name, string)
+        if target.abbreviation: self.assertIsInstance(target.abbreviation, string)
+        if target.systematic_name: self.assertIsInstance(target.systematic_name, string)
         self.assertIsInstance(target.target_type, string)
         self.assertIsInstance(target._family_ids, list)
         if target._family_ids: self.assertIsInstance(target._family_ids[0], int)
@@ -125,7 +125,7 @@ class SingleTargets(TargetTest):
     def test_all_properties(self):
         target = get_target_by_id(1)
         target.request_all_properties()
-        self.check_target_database_properties(target)targets/485/interactions
+        self.check_target_database_properties(target)
         self.check_target_synonym_properties(target)
 
 

@@ -139,7 +139,7 @@ class Ligand:
 
         self.ligand_id = json_data["ligandId"]
         self.name = json_data["name"]
-        self.abbreviation = json_data["abbreviation"] if json_data["abbreviation"] else ""
+        self.abbreviation = json_data["abbreviation"] if json_data["abbreviation"] else None
         self.inn = json_data["inn"]
         self.ligand_type = json_data["type"]
         self.species = json_data["species"]
