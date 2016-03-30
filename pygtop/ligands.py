@@ -87,6 +87,8 @@ def get_ligand_by_name(name):
 class Ligand:
     """A Guide to PHARMACOLOGY ligand object.
 
+    :param json_data: A dictionary obtained from the web services.
+
     .. py:attribute:: ligand_id:
 
         The ligand's GtoP ID.
@@ -197,6 +199,10 @@ class Ligand:
 
 
     def get_interactions(self):
+        """Returns a list of all interactions which this ligand is involved in.
+
+        :returns: list of :py:class:`.Interaction` objects"""
+
         from .interactions import Interaction
         interactions_json = get_json_from_gtop(
          "/ligands/%i/interactions" % self.ligand_id
@@ -208,9 +214,18 @@ class Ligand:
 
 
     get_interaction_by_id = interactions.get_interaction_by_id
+    """Returns an Interaction object of a given ID belonging to the ligand.
+
+    :param int interaction_id: The interactions's ID.
+    :rtype: :py:class:`.Interaction`
+    :raises: :class:`.NoSuchInteractionError`: if no such interaction exists in the database."""
 
 
     def get_targets(self):
+        """Returns a list of all targets which this ligand interacts with.
+
+        :returns: list of :py:class:`.Target` objects"""
+
         targets = []
         for interaction in self.get_interactions():
             target = interaction.get_target()
@@ -220,6 +235,10 @@ class Ligand:
 
 
     def get_species_targets(self):
+        """Returns a list of all species-specific targets which this ligand interacts with.
+
+        :returns: list of :py:class:`.SpeciesTarget` objects"""
+
         species_targets = []
         for interaction in self.get_interactions():
             species_target = interaction.get_species_target()

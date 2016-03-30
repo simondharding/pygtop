@@ -2,6 +2,12 @@ from __future__ import division
 from .exceptions import NoSuchLigandError, NoSuchTargetError, NoSuchInteractionError
 
 def get_interactions_between(ligand, target):
+    """Returns a list of the Interactions, if any, between a ligand and target.
+
+    :param Ligand ligand: The interacting ligand.
+    :param Target target: The interacting target (can be species-specific).
+    :returns: list of :py:class:`Interaction` objects."""
+
     ligand_interactions = ligand.get_interactions()
     ligand_interaction_ids = [i._ligand_id for i in ligand_interactions]
     target_interactions = target.get_interactions()
@@ -12,14 +18,60 @@ def get_interactions_between(ligand, target):
     return mutual_interactions
 
 
-def get_interaction_by_id(interactor, interaction_id):
-    for interaction in interactor.get_interactions():
+def get_interaction_by_id(self, interaction_id):
+    for interaction in self.get_interactions():
         if interaction.interaction_id == interaction_id:
             return interaction
     raise NoSuchInteractionError
 
 
 class Interaction:
+    """A Guide to PHARMACOLOGY interaction object.
+
+    .. py:attribute:: interaction_id:
+
+        The interaction's GtoP ID.
+
+    .. py:attribute:: species:
+
+        The species in which the interaction occurs.
+
+    .. py:attribute:: type:
+
+        The type of interaction.
+
+    .. py:attribute:: action:
+
+        The interaction's action.
+
+    .. py:attribute:: affinity_range:
+
+        A tuple containing the ranges of affinity for this interaction.
+
+    .. py:attribute:: affinity_value:
+
+        A single value for the interaction's affinity (a mean if the range has multiple values).
+
+    .. py:attribute:: affinity_type:
+
+        The type of affinity the above values represent (IC\ :sub:`50`\  etc.).
+
+    .. py:attribute:: is_voltage_dependent:
+
+        Returns True if the interactions is dependent on a certain voltage.
+
+    .. py:attribute:: voltage:
+
+        The voltage for voltage dependent interactions, None for other interactions.
+
+    .. py:attribute:: ligand_primary_target:
+
+        Returns True if the interaction represents a ligand interacting with its primary target.
+
+    .. py:attribute:: references:
+
+        A list of academic paper titles as strings which constitute the references for this interaction.
+    """
 
     def __init__(self, json_data):
         self.json_data = json_data
@@ -61,6 +113,10 @@ class Interaction:
 
 
     def get_ligand(self):
+        """Returns the Ligand object for this interaction.
+
+        :rtype: :py:class:`.Ligand`"""
+
         from .ligands import get_ligand_by_id
         try:
             return get_ligand_by_id(self._ligand_id)
@@ -69,6 +125,10 @@ class Interaction:
 
 
     def get_target(self):
+        """Returns the Target object for this interaction.
+
+        :rtype: :py:class:`.Target`"""
+
         from .targets import get_target_by_id
         try:
             return get_target_by_id(self._target_id)
@@ -77,6 +137,10 @@ class Interaction:
 
 
     def get_species_target(self):
+        """Returns the species-specific Target object for this interaction.
+
+        :rtype: :py:class:`.SpeciesTarget`"""
+
         from .targets import SpeciesTarget
         try:
             return SpeciesTarget(self._target_id, self.species)

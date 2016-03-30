@@ -141,7 +141,7 @@ Targets can access interactions in much the same way:
     95 --> Mouse 50)>, <Interaction (695 --> Rat 50)>, <Interaction (696 --> Rat
      50)>, <Interaction (697 --> Mouse 50)>, <Interaction (697 --> Rat 50)>, <In
     teraction (3768 --> Human 50)>, <Interaction (700 --> Human 50)>, <Interacti
-    on (701 --> Mouse 50)>, <Interaction (701 --> Rat 50)>, <Interaction (705 --
+    on (701 --> Mouse 50)>, <Interaction (701 --> Rat 50)>, <Interaction (705 --o
     > Mouse 50)>, <Interaction (705 --> Rat 50)>, <Interaction (706 --> Human 50
     )>]
     >>> species_target = pygtop.SpeciesTarget(50, "rat")

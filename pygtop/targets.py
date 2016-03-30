@@ -114,6 +114,8 @@ def get_random_family():
 class Target:
     """A Guide to PHARMACOLOGY target object.
 
+    :param json_data: A dictionary obtained from the web services.
+
     .. py:attribute:: target_id:
 
         The target's GtoP ID.
@@ -187,6 +189,10 @@ class Target:
 
 
     def get_interactions(self):
+        """Returns a list of all interactions which this target is involved in.
+
+        :returns: list of :py:class:`.Interaction` objects"""
+
         from .interactions import Interaction
         interactions_json = get_json_from_gtop(
          "/targets/%i/interactions" % self.target_id
@@ -198,9 +204,18 @@ class Target:
 
 
     get_interaction_by_id = interactions.get_interaction_by_id
+    """Returns an Interaction object of a given ID belonging to the target.
+
+    :param int interaction_id: The interactions's ID.
+    :rtype: :py:class:`.Interaction`
+    :raises: :class:`.NoSuchInteractionError`: if no such interaction exists in the database."""
 
 
     def get_ligands(self):
+        """Returns a list of all ligands which this target interacts with.
+
+        :returns: list of :py:class:`.Ligand` objects"""
+
         ligands = []
         for interaction in self.get_interactions():
             ligand = interaction.get_ligand()
@@ -278,6 +293,9 @@ class SpeciesTarget(Target):
     For example, when requesting database links, only those links which apply
     to this species will be returned.
 
+    :param target_id: The base Target's GtoP ID.
+    :param species: The species of this target.
+
     .. py:attribute:: target_id:
 
         The GtoP ID of the target.
@@ -302,6 +320,10 @@ class SpeciesTarget(Target):
 
 
     def get_interactions(self):
+        """Returns a list of all interactions which this target is involved in for this species.
+
+        :returns: list of :py:class:`.Interaction` objects"""
+
         interactions = Target.get_interactions(self)
         return [
          i for i in interactions if i.species.lower() == self.species.lower()
@@ -324,6 +346,8 @@ class SpeciesTarget(Target):
 
 class TargetFamily:
     """A Guide to PHARMACOLOGY target family object.
+
+    :param json_data: A dictionary obtained from the web services.
 
     .. py:attribute:: family_id:
 
