@@ -161,6 +161,23 @@ class InteractionTest(unittest.TestCase):
 
 
 
+class InteractionPdbs(unittest.TestCase):
+
+    def test_interaction_can_get_pdbs(self):
+        interaction = get_target_by_id(2).get_interaction_by_id(143)
+        self.assertEqual(
+         interaction.get_gtop_pdbs(),
+         ["4IAQ"]
+        )
+        interaction = get_target_by_id(2).get_interaction_by_id(79398)
+        self.assertEqual(
+         interaction.get_gtop_pdbs(),
+         []
+        )
+
+
+
+
 
 
 if __name__ == "__main__":

@@ -1,4 +1,5 @@
 from __future__ import division
+from .gtop import *
 from .exceptions import NoSuchLigandError, NoSuchTargetError, NoSuchInteractionError
 
 def get_interactions_between(ligand, target):
@@ -141,6 +142,18 @@ class Interaction:
             return SpeciesTarget(self._target_id, self.species)
         except NoSuchTargetError:
             return None
+
+
+    def get_gtop_pdbs(self):
+        json_data = get_json_from_gtop("targets/%i/pdbStructure" % self._target_id)
+        if json_data:
+            return [
+             pdb["pdbCode"] for pdb in json_data
+              if pdb["species"].lower() == self.species.lower()
+               and pdb["ligandId"] == self._ligand_id
+            ]
+        else:
+            return []
 
 
 def value_string_to_tuple_value(s):
