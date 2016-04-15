@@ -225,6 +225,14 @@ class Target:
         return ligands
 
 
+    def get_gtop_pdbs(self):
+        json_data = get_json_from_gtop("targets/%i/pdbStructure" % self.target_id)
+        if json_data:
+            return [pdb["pdbCode"] for pdb in json_data if pdb["pdbCode"]]
+        else:
+            return []
+
+
     def request_database_properties(self):
         """Give target object database properties:
 
@@ -329,6 +337,17 @@ class SpeciesTarget(Target):
         return [
          i for i in interactions if i.species.lower() == self.species.lower()
         ]
+
+
+    def get_gtop_pdbs(self):
+        json_data = get_json_from_gtop("targets/%i/pdbStructure" % self.target_id)
+        if json_data:
+            return [
+             pdb["pdbCode"] for pdb in json_data if pdb["pdbCode"]
+              and pdb["species"].lower() == self.species.lower()
+            ]
+        else:
+            return []
 
 
     def request_database_properties(self):

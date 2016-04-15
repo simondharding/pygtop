@@ -274,5 +274,35 @@ class MultiFamilies(TargetTest):
 
 
 
+class TargetPdbs(unittest.TestCase):
+
+    def test_target_can_get_gtop_pdbs(self):
+        target = get_target_by_id(206)
+        self.assertEqual(
+         target.get_gtop_pdbs(),
+         ["2JXA", "2JX9", "4DLQ"]
+        )
+        target = get_target_by_id(1)
+        self.assertEqual(
+         target.get_gtop_pdbs(),
+         []
+        )
+
+
+    def test_species_target_can_get_gtop_pdbs(self):
+        target = SpeciesTarget(206, "rat")
+        self.assertEqual(
+         target.get_gtop_pdbs(),
+         ["4DLQ"]
+        )
+        target = SpeciesTarget(1, "human")
+        self.assertEqual(
+         target.get_gtop_pdbs(),
+         []
+        )
+
+
+
+
 if __name__ == "__main__":
     unittest.main()

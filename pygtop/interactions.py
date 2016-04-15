@@ -151,6 +151,7 @@ class Interaction:
              pdb["pdbCode"] for pdb in json_data
               if pdb["species"].lower() == self.species.lower()
                and pdb["ligandId"] == self._ligand_id
+                and pdb["pdbCode"]
             ]
         else:
             return []
