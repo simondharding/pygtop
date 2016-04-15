@@ -247,6 +247,15 @@ class Ligand:
         return species_targets
 
 
+    def get_gtop_pdbs(self):
+        pdbs = []
+        for interaction in self.get_interactions():
+            for pdb in interaction.get_gtop_pdbs():
+                if pdb not in pdbs:
+                    pdbs.append(pdb)
+        return pdbs
+
+
     def request_structural_properties(self):
         """Give ligand object structural properties:
 

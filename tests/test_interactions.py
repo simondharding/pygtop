@@ -163,7 +163,7 @@ class InteractionTest(unittest.TestCase):
 
 class InteractionPdbs(unittest.TestCase):
 
-    def test_interaction_can_get_pdbs(self):
+    def test_interaction_can_get_gtop_pdbs(self):
         interaction = get_target_by_id(2).get_interaction_by_id(143)
         self.assertEqual(
          interaction.get_gtop_pdbs(),

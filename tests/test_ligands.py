@@ -257,7 +257,7 @@ class MultiLigands(LigandTest):
         }
         ligands = pygtop.get_ligands_by(criteria)
         self.assertIsInstance(ligands, list)
-        self.assertEqual(len(ligands), 104)
+        self.assertGreaterEqual(len(ligands), 104)
 
 
     def test_can_get_random_ligand(self):
@@ -269,6 +269,22 @@ class MultiLigands(LigandTest):
         self.assertRaises(
          NoSuchTypeError,
          lambda: pygtop.get_random_ligand(ligand_type="xxx")
+        )
+
+
+
+class InteractionPdbs(unittest.TestCase):
+
+    def test_ligand_can_get_gtop_pdbs(self):
+        ligand = get_ligand_by_id(121)
+        self.assertEqual(
+         ligand.get_gtop_pdbs(),
+         ["4IAQ"]
+        )
+        ligand = get_ligand_by_id(1)
+        self.assertEqual(
+         ligand.get_gtop_pdbs(),
+         []
         )
 
 
