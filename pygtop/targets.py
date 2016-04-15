@@ -251,7 +251,7 @@ class Target:
 
         .. py:attribute:: synonyms:
 
-            A list of synonym strings."""
+            A list of synonym :py:class:`str` objects."""
 
         json_data = get_json_from_gtop("ligands/%i/%s" % (
          self.target_id, SYNONYM_PROPERTIES))

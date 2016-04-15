@@ -21,7 +21,7 @@ def get_json_from_gtop(query):
     """Issues a query to the GtoP web services, and returns the resulting JSON.
 
     If it does not get a valid response, it will try again, and if it still
-    doesn't get json back, it will return None.
+    doesn't get JSON back, it will return None.
 
     :param str query: The query to append to the base URL.
     :return: JSON object or None"""
