@@ -273,7 +273,7 @@ class MultiLigands(LigandTest):
 
 
 
-class InteractionPdbs(unittest.TestCase):
+class LigandPdbs(unittest.TestCase):
 
     def test_ligand_can_get_gtop_pdbs(self):
         ligand = get_ligand_by_id(121)
