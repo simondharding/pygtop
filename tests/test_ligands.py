@@ -288,6 +288,14 @@ class LigandPdbs(unittest.TestCase):
         )
 
 
+    def test_ligand_can_find_pdbs_by_smiles(self):
+        ligand = get_ligand_by_name("paracetamol")
+        self.assertIsInstance(
+         ligand.find_pdbs_by_smiles(),
+         list
+        )
+
+
 
 
 

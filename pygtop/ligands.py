@@ -3,7 +3,8 @@
 import requests
 import json
 import random
-from .gtop import *
+from . import gtop
+from . import pdb
 from .exceptions import *
 from .shared import *
 from . import interactions
@@ -15,7 +16,7 @@ def get_ligand_by_id(ligand_id):
     :rtype: :py:class:`Ligand`
     :raises: :class:`.NoSuchLigandError` if no such ligand exists in the database"""
 
-    json_data = get_json_from_gtop("ligands/%i" % ligand_id)
+    json_data = gtop.get_json_from_gtop("ligands/%i" % ligand_id)
     if json_data:
         return Ligand(json_data)
     else:
@@ -34,11 +35,11 @@ def get_random_ligand(ligand_type=None):
     """
 
     if ligand_type:
-        json_data = get_json_from_gtop("ligands?type=%s" % ligand_type.lower())
+        json_data = gtop.get_json_from_gtop("ligands?type=%s" % ligand_type.lower())
         if not json_data:
             raise NoSuchTypeError("There are no ligands of type %s" % ligand_type)
     else:
-        json_data = get_json_from_gtop("ligands")
+        json_data = gtop.get_json_from_gtop("ligands")
     return Ligand(random.choice(json_data))
 
 
@@ -48,7 +49,7 @@ def get_all_ligands():
 
     :returns: list of :py:class:`Ligand` objects"""
 
-    json_data = get_json_from_gtop("ligands")
+    json_data = gtop.get_json_from_gtop("ligands")
     return [Ligand(l) for l in json_data]
 
 
@@ -61,7 +62,7 @@ def get_ligands_by(criteria):
     :returns: list of :py:class:`Ligand` objects."""
 
     search_string = "&".join(["%s=%s" % (key, criteria[key]) for key in criteria])
-    json_data = get_json_from_gtop("ligands?%s" % search_string)
+    json_data = gtop.get_json_from_gtop("ligands?%s" % search_string)
     if json_data:
         return [Ligand(l) for l in json_data]
     else:
@@ -204,7 +205,7 @@ class Ligand:
         :returns: list of :py:class:`.Interaction` objects"""
 
         from .interactions import Interaction
-        interactions_json = get_json_from_gtop(
+        interactions_json = gtop.get_json_from_gtop(
          "/ligands/%i/interactions" % self.ligand_id
         )
         if interactions_json:
@@ -256,6 +257,20 @@ class Ligand:
         return pdbs
 
 
+    def find_pdbs_by_smiles(self, search_type="exact"):
+        if "smiles" not in self.__dict__:
+            self.request_structural_properties()
+        xml = pdb.query_rcsb("smilesQuery", {
+         "smiles": self.smiles,
+         "search_type": search_type
+        })
+        if xml:
+            ligand_elements = list(xml[0])
+            return [element.attrib["structureId"] for element in ligand_elements]
+        else:
+            return []
+
+
     def request_structural_properties(self):
         """Give ligand object structural properties:
 
@@ -291,8 +306,8 @@ class Ligand:
 
             Chemical modifications, if any."""
 
-        json_data = get_json_from_gtop("ligands/%i/%s" % (
-         self.ligand_id, STRUCTURAL_PROPERTIES))
+        json_data = gtop.get_json_from_gtop("ligands/%i/%s" % (
+         self.ligand_id, gtop.STRUCTURAL_PROPERTIES))
         self.iupac_name = json_data["iupacName"] if json_data else None
         self.smiles = json_data["smiles"] if json_data else None
         self.inchi = json_data["inchi"] if json_data else None
@@ -336,8 +351,8 @@ class Ligand:
 
             Number of Lipinski's rules the ligand breaks (a measure of druglikeness)."""
 
-        json_data = get_json_from_gtop("ligands/%i/%s" % (
-         self.ligand_id, MOLECULAR_PROPERTIES))
+        json_data = gtop.get_json_from_gtop("ligands/%i/%s" % (
+         self.ligand_id, gtop.MOLECULAR_PROPERTIES))
         self.hydrogen_bond_acceptors = json_data[
          "hydrogenBondAcceptors"] if json_data else None
         self.hydrogen_bond_donors = json_data["hydrogenBondDonors"] if json_data else None
@@ -357,8 +372,8 @@ class Ligand:
 
             A list of  :class:`.DatabaseLink` objects."""
 
-        json_data = get_json_from_gtop("ligands/%i/%s" % (
-         self.ligand_id, DATABASE_PROPERTIES))
+        json_data = gtop.get_json_from_gtop("ligands/%i/%s" % (
+         self.ligand_id, gtop.DATABASE_PROPERTIES))
         self.database_links = [
          DatabaseLink(link) for link in json_data] if json_data else []
 
@@ -370,8 +385,8 @@ class Ligand:
 
             A list of synonym :py:class:`str` objects."""
 
-        json_data = get_json_from_gtop("ligands/%i/%s" % (
-         self.ligand_id, SYNONYM_PROPERTIES))
+        json_data = gtop.get_json_from_gtop("ligands/%i/%s" % (
+         self.ligand_id, gtop.SYNONYM_PROPERTIES))
         self.synonyms = [
          synonym["name"] for synonym in json_data] if json_data else []
 
@@ -415,8 +430,8 @@ class Ligand:
 
             Organ funciton impairment comments."""
 
-        json_data = get_json_from_gtop(
-         "ligands/%i/%s" % (self.ligand_id, COMMENT_PROPERTIES))
+        json_data = gtop.get_json_from_gtop(
+         "ligands/%i/%s" % (self.ligand_id, gtop.COMMENT_PROPERTIES))
         self.general_comments = json_data[
          "comments"] if json_data else ""
         self.bioactivity_comments = json_data[
@@ -444,8 +459,8 @@ class Ligand:
 
             A list of  :class:`.Precursor` objects"""
 
-        json_data = get_json_from_gtop("ligands/%i/%s" % (
-         self.ligand_id, PRECURSOR_PROPERTIES))
+        json_data = gtop.get_json_from_gtop("ligands/%i/%s" % (
+         self.ligand_id, gtop.PRECURSOR_PROPERTIES))
         self.precursors = [Precursor(p) for p in json_data] if json_data else []
 
 
