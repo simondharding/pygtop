@@ -176,6 +176,20 @@ class InteractionPdbs(unittest.TestCase):
         )
 
 
+    def test_interaction_can_find_all_external_pdbs(self):
+        interaction = get_target_by_id(2).get_interaction_by_id(143)
+        external_pdbs = interaction.find_all_external_pdbs()
+        self.assertIsInstance(external_pdbs, list)
+        self.assertGreaterEqual(len(external_pdbs), 1)
+
+
+    def test_interaction_can_find_all_pdbs(self):
+        interaction = get_target_by_id(2).get_interaction_by_id(143)
+        pdbs = interaction.find_all_pdbs()
+        self.assertIsInstance(pdbs, list)
+        self.assertGreaterEqual(len(pdbs), 1)
+
+
 
 
 

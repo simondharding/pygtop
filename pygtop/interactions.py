@@ -157,6 +157,18 @@ class Interaction:
             return []
 
 
+    def find_all_external_pdbs(self):
+        ligand_external_pdbs = self.get_ligand().find_all_external_pdbs()
+        target_external_pdbs = self.get_species_target().find_pdbs_by_uniprot_accession()
+        return [code for code in ligand_external_pdbs if code in target_external_pdbs]
+
+
+    def find_all_pdbs(self):
+        ligand_pdbs = self.get_ligand().find_all_pdbs()
+        target_pdbs = self.get_species_target().find_all_pdbs()
+        return [code for code in ligand_pdbs if code in target_pdbs]
+
+
 def value_string_to_tuple_value(s):
     if s == "-":
         return ((), None)

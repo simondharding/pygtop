@@ -196,7 +196,7 @@ class Target:
         :returns: list of :py:class:`.Interaction` objects"""
 
         from .interactions import Interaction
-        interactions_json = get_json_from_gtop(
+        interactions_json = gtop.get_json_from_gtop(
          "/targets/%i/interactions" % self.target_id
         )
         if interactions_json:
