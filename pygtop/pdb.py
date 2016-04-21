@@ -1,3 +1,5 @@
+"""Functions for interacting with the RSCB PDB web services."""
+
 import requests
 import xml.etree.ElementTree as ElementTree
 
