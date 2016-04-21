@@ -145,6 +145,11 @@ class Interaction:
 
 
     def get_gtop_pdbs(self):
+        """Returns a list of PDBs which the Guide to PHARMACOLOGY says contain
+        this interaction.
+
+        :returns: list of ``str`` PDB codes"""
+
         json_data = get_json_from_gtop("targets/%i/pdbStructure" % self._target_id)
         if json_data:
             return [
@@ -158,12 +163,22 @@ class Interaction:
 
 
     def find_all_external_pdbs(self):
+        """Queries the RSCB PDB database for PDBs containing this interaction
+        by all parameters.
+
+        :returns: list of ``str`` PDB codes"""
+
         ligand_external_pdbs = self.get_ligand().find_all_external_pdbs()
         target_external_pdbs = self.get_species_target().find_pdbs_by_uniprot_accession()
         return [code for code in ligand_external_pdbs if code in target_external_pdbs]
 
 
     def find_all_pdbs(self):
+        """Get a list of PDB codes containing this interaction using all means
+        available - annotated and external.
+
+        :returns: list of ``str`` PDB codes"""
+
         ligand_pdbs = self.get_ligand().find_all_pdbs()
         target_pdbs = self.get_species_target().find_all_pdbs()
         return [code for code in ligand_pdbs if code in target_pdbs]

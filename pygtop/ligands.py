@@ -84,7 +84,16 @@ def get_ligand_by_name(name):
         raise NoSuchLigandError
 
 
-def get_ligand_by_smiles(smiles, search_type="exact", cutoff=0.8):
+def get_ligands_by_smiles(smiles, search_type="exact", cutoff=0.8):
+    """Search for ligands by SMILES string.
+
+    :param str smiles: The SMILES string to search with.
+    :param str search_type: The type of search. Viable options are ``"exact"``, \
+    ``"substructure"`` or ``"similarity"``.
+    :param float cutoff: If performing a similarity search, this is the cutoff \
+    used for similarity. The default is 0.8 and the maximum is 1.
+    :returns: list of :py:class:`Ligand` objects."""
+
     query = "ligands/%s/smiles?smiles=%s%s" % (
      search_type,
      smiles,
@@ -262,6 +271,11 @@ class Ligand:
 
 
     def get_gtop_pdbs(self):
+        """Returns a list of PDBs which the Guide to PHARMACOLOGY says contain
+        this ligand.
+
+        :returns: list of ``str`` PDB codes"""
+
         pdbs = []
         for interaction in self.get_interactions():
             for pdb in interaction.get_gtop_pdbs():
@@ -271,6 +285,12 @@ class Ligand:
 
 
     def find_pdbs_by_smiles(self, search_type="exact"):
+        """Queries the RSCB PDB database with the ligand's SMILES string.
+
+        :param str search_type: The type of search to run - whether exact matches\
+        only should be returned.
+        :returns: list of ``str`` PDB codes"""
+
         if "smiles" not in self.__dict__:
             self.request_structural_properties()
         if self.smiles:
@@ -288,6 +308,10 @@ class Ligand:
 
 
     def find_pdbs_by_inchi(self):
+        """Queries the RSCB PDB database with the ligand's InChI string.
+
+        :returns: list of ``str`` PDB codes"""
+
         if "inchi" not in self.__dict__:
             self.request_structural_properties()
         if self.inchi:
@@ -301,6 +325,12 @@ class Ligand:
 
 
     def find_pdbs_by_name(self, comparator="equals"):
+        """Queries the RSCB PDB database with the ligand's name.
+
+        :param str comparator: The type of search to run - whether exact matches\
+        only should be returned, or substrings etc.
+        :returns: list of ``str`` PDB codes"""
+
         results = pdb.query_rcsb_advanced("ChemCompNameQuery", {
          "comparator": comparator.title(),
          "name": self.name,
@@ -310,6 +340,11 @@ class Ligand:
 
 
     def find_pdbs_by_sequence(self):
+        """Queries the RSCB PDB database with the ligand's amino acid sequence,\
+        if that ligand is a peptide.
+
+        :returns: list of ``str`` PDB codes"""
+
         if "one_letter_sequence" not in self.__dict__:
             self.request_structural_properties()
         if self.one_letter_sequence:
@@ -325,6 +360,10 @@ class Ligand:
 
 
     def find_all_external_pdbs(self):
+        """Queries the RSCB PDB database by all parameters.
+
+        :returns: list of ``str`` PDB codes"""
+
         return list(set(
          self.find_pdbs_by_smiles() +
          self.find_pdbs_by_inchi() +
@@ -334,6 +373,11 @@ class Ligand:
 
 
     def find_all_pdbs(self):
+        """Get a list of PDB codes using all means available - annotated and
+        external.
+
+        :returns: list of ``str`` PDB codes"""
+
         return list(set(
          self.get_gtop_pdbs() +
          self.find_all_external_pdbs()

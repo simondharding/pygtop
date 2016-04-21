@@ -227,6 +227,11 @@ class Target:
 
 
     def get_gtop_pdbs(self):
+        """Returns a list of PDBs which the Guide to PHARMACOLOGY says contain
+        this target.
+
+        :returns: list of ``str`` PDB codes"""
+
         json_data = gtop.get_json_from_gtop("targets/%i/pdbStructure" % self.target_id)
         if json_data:
             return [pdb["pdbCode"] for pdb in json_data if pdb["pdbCode"]]
@@ -235,6 +240,10 @@ class Target:
 
 
     def find_pdbs_by_uniprot_accession(self):
+        """Queries the RSCB PDB database with the targets's uniprot accessions.
+
+        :returns: list of ``str`` PDB codes"""
+
         if "database_links" not in self.__dict__:
             self.request_database_properties()
         uniprot_accessions = [
@@ -251,6 +260,11 @@ class Target:
 
 
     def find_all_pdbs(self):
+        """Get a list of PDB codes using all means available - annotated and
+        external.
+
+        :returns: list of ``str`` PDB codes"""
+
         return list(set(
          self.get_gtop_pdbs() +
          self.find_pdbs_by_uniprot_accession()
@@ -364,6 +378,11 @@ class SpeciesTarget(Target):
 
 
     def get_gtop_pdbs(self):
+        """Returns a list of PDBs which the Guide to PHARMACOLOGY says contain
+        this target and in this species.
+
+        :returns: list of ``str`` PDB codes"""
+
         json_data = gtop.get_json_from_gtop("targets/%i/pdbStructure" % self.target_id)
         if json_data:
             return [
