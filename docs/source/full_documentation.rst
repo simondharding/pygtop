@@ -6,5 +6,6 @@ Full documentation
     full_docs/targets
     full_docs/interactions
     full_docs/gtop
+    full_docs/pdb
     full_docs/shared
     full_docs/exceptions
