@@ -1,7 +1,8 @@
 """Contains target-specific objects and functions."""
 
 from .exceptions import *
-from .gtop import *
+from . import pdb
+from . import gtop
 from .shared import *
 from . import interactions
 import random
@@ -14,7 +15,7 @@ def get_target_by_id(target_id):
     :rtype: :py:class:`Target`
     :raises: :class:`.NoSuchTargetError`: if no such target exists in the database"""
 
-    json_data = get_json_from_gtop("targets/%i" % target_id)
+    json_data = gtop.get_json_from_gtop("targets/%i" % target_id)
     if json_data:
         return Target(json_data)
     else:
@@ -31,11 +32,11 @@ def get_random_target(target_type=None):
     :rtype: :py:class:`Target`
     :raises: :class:`.NoSuchTypeError`: if a target type is supplied which doesn't exist"""
     if target_type:
-        json_data = get_json_from_gtop("targets?type=%s" % target_type.lower())
+        json_data = gtop.get_json_from_gtop("targets?type=%s" % target_type.lower())
         if not json_data:
             raise NoSuchTypeError("There are no targets of type %s" % target_type)
     else:
-        json_data = get_json_from_gtop("targets")
+        json_data = gtop.get_json_from_gtop("targets")
     return Target(random.choice(json_data))
 
 
@@ -45,7 +46,7 @@ def get_all_targets():
 
     :returns: list of :py:class:`Target` objects"""
 
-    json_data = get_json_from_gtop("targets")
+    json_data = gtop.get_json_from_gtop("targets")
     return [Target(t) for t in json_data]
 
 
@@ -58,7 +59,7 @@ def get_targets_by(criteria):
     :returns: list of :py:class:`Target` objects."""
 
     search_string = "&".join(["%s=%s" % (key, criteria[key]) for key in criteria])
-    json_data = get_json_from_gtop("targets?%s" % search_string)
+    json_data = gtop.get_json_from_gtop("targets?%s" % search_string)
     if json_data:
         return [Target(t) for t in json_data]
     else:
@@ -87,7 +88,7 @@ def get_family_by_id(family_id):
     :rtype: :py:class:`TargetFamily`
     :raises: :class:`.NoSuchFamilyError`: if no such family exists in the database"""
 
-    json_data = get_json_from_gtop("targets/families/%i" % family_id)
+    json_data = gtop.get_json_from_gtop("targets/families/%i" % family_id)
     if json_data:
         return TargetFamily(json_data)
     else:
@@ -99,7 +100,7 @@ def get_all_families():
 
     :returns: list of :py:class:`TargetFamily` objects"""
 
-    json_data = get_json_from_gtop("targets/families")
+    json_data = gtop.get_json_from_gtop("targets/families")
     return [TargetFamily(f) for f in json_data]
 
 
@@ -107,7 +108,7 @@ def get_random_family():
     """Returns a random target, with the option to specify the target type.
 
     :rtype: :py:class:`TargetFamily`"""
-    json_data = get_json_from_gtop("targets/families")
+    json_data = gtop.get_json_from_gtop("targets/families")
     return TargetFamily(random.choice(json_data))
 
 
@@ -226,9 +227,25 @@ class Target:
 
 
     def get_gtop_pdbs(self):
-        json_data = get_json_from_gtop("targets/%i/pdbStructure" % self.target_id)
+        json_data = gtop.get_json_from_gtop("targets/%i/pdbStructure" % self.target_id)
         if json_data:
             return [pdb["pdbCode"] for pdb in json_data if pdb["pdbCode"]]
+        else:
+            return []
+
+
+    def find_pdbs_by_uniprot_accession(self):
+        if "database_links" not in self.__dict__:
+            self.request_database_properties()
+        uniprot_accessions = [
+         link.accession for link in self.database_links
+          if link.database == "UniProtKB"
+        ]
+        if uniprot_accessions:
+            results = pdb.query_rcsb_advanced("UpAccessionIdQuery", {
+             "accessionIdList": ",".join(uniprot_accessions)
+            })
+            return [result.split(":")[0] for result in results] if results else []
         else:
             return []
 
@@ -240,8 +257,8 @@ class Target:
 
             A list of  :class:`.DatabaseLink` objects."""
 
-        json_data = get_json_from_gtop("targets/%i/%s" % (
-         self.target_id, DATABASE_PROPERTIES))
+        json_data = gtop.get_json_from_gtop("targets/%i/%s" % (
+         self.target_id, gtop.DATABASE_PROPERTIES))
         self.database_links = [
          DatabaseLink(link) for link in json_data] if json_data else []
 
@@ -253,8 +270,8 @@ class Target:
 
             A list of synonym :py:class:`str` objects."""
 
-        json_data = get_json_from_gtop("ligands/%i/%s" % (
-         self.target_id, SYNONYM_PROPERTIES))
+        json_data = gtop.get_json_from_gtop("ligands/%i/%s" % (
+         self.target_id, gtop.SYNONYM_PROPERTIES))
         self.synonyms = [
          synonym["name"] for synonym in json_data] if json_data else []
 
@@ -340,7 +357,7 @@ class SpeciesTarget(Target):
 
 
     def get_gtop_pdbs(self):
-        json_data = get_json_from_gtop("targets/%i/pdbStructure" % self.target_id)
+        json_data = gtop.get_json_from_gtop("targets/%i/pdbStructure" % self.target_id)
         if json_data:
             return [
              pdb["pdbCode"] for pdb in json_data if pdb["pdbCode"]

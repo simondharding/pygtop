@@ -27,7 +27,7 @@ def query_rcsb_advanced(query_type, criteria):
      data=query_xml.encode(),
      headers={"Content-Type": "application/x-www-form-urlencoded"}
     )
-    if "problem" not in response.text.lower():
+    if "problem" not in response.text.lower() and "null" not in response.text.lower():
         return response.text.split()
     else:
         return None

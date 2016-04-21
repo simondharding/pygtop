@@ -302,6 +302,14 @@ class TargetPdbs(unittest.TestCase):
         )
 
 
+    def test_target_can_find_pdbs_by_uniprot(self):
+        target = get_target_by_id(2)
+        uniprot_pdbs = target.find_pdbs_by_uniprot_accession()
+        self.assertIsInstance(uniprot_pdbs, list)
+        self.assertGreaterEqual(len(uniprot_pdbs), 1)
+        self.assertNotIn(":", "".join(uniprot_pdbs))
+
+
 
 
 if __name__ == "__main__":
