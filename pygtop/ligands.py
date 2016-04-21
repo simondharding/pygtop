@@ -84,6 +84,19 @@ def get_ligand_by_name(name):
         raise NoSuchLigandError
 
 
+def get_ligand_by_smiles(smiles, search_type="exact", cutoff=0.8):
+    query = "ligands/%s/smiles?smiles=%s%s" % (
+     search_type,
+     smiles,
+     "similarityGt=%f" % cutoff if search_type == "similarity" else ""
+    )
+    json_data = gtop.get_json_from_gtop(query)
+    if json_data:
+        return [Ligand(l) for l in json_data]
+    else:
+        return []
+
+
 
 class Ligand:
     """A Guide to PHARMACOLOGY ligand object.

@@ -272,6 +272,56 @@ class MultiLigands(LigandTest):
         )
 
 
+    def test_can_search_ligand_by_exact_smiles(self):
+        ligands = pygtop.get_ligand_by_smiles(
+         "CC(CN(C)C)CN1c2ccccc2Sc2ccccc12"
+        )
+        self.assertIsInstance(ligands, list)
+        for ligand in ligands:
+            self.assertIsInstance(ligand, Ligand)
+        self.assertEqual(
+         pygtop.get_ligand_by_smiles(
+          "NNNNNNNNNNNNNNNNN"
+         ),
+         []
+        )
+
+
+    def test_can_search_ligand_by_smiles_substructure(self):
+        ligands = pygtop.get_ligand_by_smiles(
+         "CC(CN(C)C)CN1c2ccccc2Sc2ccccc12",
+         search_type="substructure"
+        )
+        self.assertIsInstance(ligands, list)
+        for ligand in ligands:
+            self.assertIsInstance(ligand, Ligand)
+        self.assertEqual(
+         pygtop.get_ligand_by_smiles(
+          "NNNNNNNNNNNNNNNNN",
+          search_type="substructure"
+         ),
+         []
+        )
+
+
+    def test_can_search_ligand_by_smiles_similarity(self):
+        ligands = pygtop.get_ligand_by_smiles(
+         "CC(CN(C)C)CN1c2ccccc2Sc2ccccc12",
+         search_type="similarity",
+         cutoff=0.6
+        )
+        self.assertIsInstance(ligands, list)
+        for ligand in ligands:
+            self.assertIsInstance(ligand, Ligand)
+        self.assertEqual(
+         pygtop.get_ligand_by_smiles(
+          "NNNNNNNNNNNNNNNNN",
+          search_type="similarity",
+          cutoff=0.6
+         ),
+         []
+        )
+
 
 class LigandPdbs(unittest.TestCase):
 
