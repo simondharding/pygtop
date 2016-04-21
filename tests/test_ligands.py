@@ -295,7 +295,7 @@ class LigandPdbs(unittest.TestCase):
         self.assertGreaterEqual(len(smiles_pdbs), 1)
 
 
-    def test_ligand_can_find_pdbs_by_smiles(self):
+    def test_ligand_can_find_pdbs_by_inchi(self):
         ligand = get_ligand_by_name("paracetamol")
         inchi_pdbs = ligand.find_pdbs_by_inchi()
         self.assertIsInstance(inchi_pdbs, list)
