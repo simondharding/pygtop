@@ -309,11 +309,27 @@ class Ligand:
         return results if results else []
 
 
+    def find_pdbs_by_sequence(self):
+        if "one_letter_sequence" not in self.__dict__:
+            self.request_structural_properties()
+        if self.one_letter_sequence:
+            results = pdb.query_rcsb_advanced("SequenceQuery", {
+             "sequence": self.one_letter_sequence,
+             "eCutOff": "0.01",
+             "searchTool": "blast",
+             "sequenceIdentityCutoff": "100"
+            })
+            return results if results else []
+        else:
+            return []
+
+
     def find_all_external_pdbs(self):
         return list(set(
          self.find_pdbs_by_smiles() +
          self.find_pdbs_by_inchi() +
-         self.find_pdbs_by_name()
+         self.find_pdbs_by_name() +
+         self.find_pdbs_by_sequence()
         ))
 
 
