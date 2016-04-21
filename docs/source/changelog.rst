@@ -1,6 +1,18 @@
 Changelog
 ---------
 
+Release 0.4.0
+~~~~~~~~~~~~~
+
+`22 April 2016`
+
+* PDB functionality
+
+  * Access GtoP PDB annotations for ligands, targets and interactions
+  * Query RSCB PDB web services for PDBs of ligands, targets and interactions
+
+* Can now search for ligands by SMILES string
+
 Release 0.3.1
 ~~~~~~~~~~~~~
 
@@ -9,7 +21,7 @@ Release 0.3.1
 * Bug fixes:
 
   * Interactions with median affinity values no longer throw errors
-  * Interactions with string voltages no longer throw errors 
+  * Interactions with string voltages no longer throw errors
 
 Release 0.3.0
 ~~~~~~~~~~~~~
