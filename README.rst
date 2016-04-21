@@ -215,9 +215,60 @@ The interactions between a ligand and target, if any, can be obtained using:
     >>> pygtop.get_interactions_between(ligand, target)
     [<Interaction (1 --> Human 1)>]
 
+Structural Data
+~~~~~~~~~~~~~~~
+
+The Guide to PHARMACOLOGY has PDB codes annotated on some ligands and targets.
+These can be accessed as follows:
+
+    >>> ligand = pygtop.get_ligand_by_id(149)
+    >>> ligand.get_gtop_pdbs()
+    ['4IB4']
+    >>> target = pygtop.get_target_by_id(595)
+    >>> target.get_gtop_pdbs()
+    ['1NYX']
+
+In addition, ligands and targets can query the `RSCB PDB Web Services
+<http:/www.rcsb.org/pdb/software/rest.do>`_ to find other PDB codes
+(SpeciesTargets will only return PDBs relevant to that species):
+
+    >>> ligand.find_pdbs_by_smiles()
+    ['4IAR', '4IB4', '4NC3']
+    >>> target.find_pdbs_by_uniprot_accession()
+    ['1FM6', '1FM9', '1I7I', '1K74', '1KNU', '1NYX', '1PRG', '1RDT', '1WM0', '1Z
+    EO', '1ZGY', '2ATH', '2F4B', '2FVJ', '2G0G', '2G0H', '2GTK', '2HFP', '2HWQ',
+    '2HWR', '2I4J', '2I4P', '2I4Z', '2OM9', '2P4Y', '2POB', '2PRG', '2Q59', '2Q5
+    9', '2Q5P', '2Q5S', '2Q61', '2Q6R', '2Q6S', '2Q8S', '2QMV', '2VSR', '2VST',
+    '2VV0', '2VV1', '2VV1', '2VV2', '2VV3', '2VV4', '2VV4', '2XKW', '2YFE', '2ZK
+    0', '2ZK1', '2ZK2', '2ZK3', '2ZK4', '2ZK5', '2ZK6', '2ZNO', '2ZVT', '3ADS',
+    '3ADT', '3ADU', '3ADV', '3ADW', '3ADX', '3AN3', '3AN4', '3B0Q', '3B0R', '3B1
+    M', '3B3K', '3BC5', '3CDP', '3CDS', '3CS8', '3CWD', '3D6D', '3DZU', '3DZY',
+    '3E00', '3ET0', '3ET3', '3FEJ', '3FUR', '3G9E', '3GBK', '3H0A', '3HO0', '3HO
+    D', '3IA6', '3K8S', '3KMG', '3LMP', '3NOA', '3OSI', '3OSW', '3PBA', '3PO9',
+    '3PRG', '3QT0', '3R5N', '3R8A', '3R8I', '3S9S', '3SZ1', '3T03', '3TY0', '3U9
+    Q', '3V9T', '3V9V', '3V9Y', '3VJH', '3VJI', '3VN2', '3VSO', '3VSP', '3WJ4',
+    '3WJ5', '3WMH', '3X1H', '3X1I', '4A4V', '4A4W', '4CI5', '4E4K', '4E4Q', '4EM
+    9', '4EMA', '4F9M', '4FGY', '4HEE', '4JAZ', '4JL4', '4L96', '4L98', '4O8F',
+    '4OJ4', '4PRG', '4PVU', '4PWL', '4R06', '4R2U', '4R6S', '4XLD', '4XTA', '4XU
+    M', '4Y29', '4YT1']
+
+See the full documentation for a list of all the ways to search for PDB codes.
+
 
 Changelog
 ---------
+
+Release 0.4.0
+~~~~~~~~~~~~~
+
+`22 April 2016`
+
+* PDB functionality
+
+  * Access GtoP PDB annotations for ligands, targets and interactions
+  * Query RSCB PDB web services for PDBs of ligands, targets and interactions
+
+* Can now search for ligands by SMILES string
 
 Release 0.3.1
 ~~~~~~~~~~~~~
