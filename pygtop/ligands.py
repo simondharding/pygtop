@@ -271,6 +271,16 @@ class Ligand:
             return []
 
 
+    def find_pdbs_by_inchi(self):
+        if "inchi" not in self.__dict__:
+            self.request_structural_properties()
+        results = pdb.query_rcsb_advanced("ChemCompDescriptorQuery", {
+         "descriptor": self.inchi,
+         "descriptorType": "InChI"
+        })
+        return results if results else []
+
+
     def request_structural_properties(self):
         """Give ligand object structural properties:
 

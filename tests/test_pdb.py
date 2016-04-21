@@ -32,5 +32,13 @@ class GetXml(unittest.TestCase):
         self.assertEqual(xml, None)
 
 
+    def test_can_get_xml_advanced_search(self):
+        results = query_rcsb_advanced("ChemCompDescriptorQuery", {
+         "descriptor": "InChI=1S/C6H6/c1-2-4-6-5-3-1/h1-6H",
+         "descriptorType": "InChI"
+        })
+        self.assertIsInstance(results, list)
+
+
 if __name__ == "__main__":
     unittest.main()
