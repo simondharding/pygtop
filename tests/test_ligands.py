@@ -290,18 +290,16 @@ class LigandPdbs(unittest.TestCase):
 
     def test_ligand_can_find_pdbs_by_smiles(self):
         ligand = get_ligand_by_name("paracetamol")
-        self.assertIsInstance(
-         ligand.find_pdbs_by_smiles(),
-         list
-        )
+        smiles_pdbs = ligand.find_pdbs_by_smiles()
+        self.assertIsInstance(smiles_pdbs, list)
+        self.assertGreaterEqual(len(smiles_pdbs), 1)
 
 
     def test_ligand_can_find_pdbs_by_smiles(self):
         ligand = get_ligand_by_name("paracetamol")
-        self.assertIsInstance(
-         ligand.find_pdbs_by_inchi(),
-         list
-        )
+        inchi_pdbs = ligand.find_pdbs_by_inchi()
+        self.assertIsInstance(inchi_pdbs, list)
+        self.assertGreaterEqual(len(inchi_pdbs), 1)
 
 
 
