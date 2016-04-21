@@ -310,6 +310,13 @@ class TargetPdbs(unittest.TestCase):
         self.assertNotIn(":", "".join(uniprot_pdbs))
 
 
+    def test_target_can_find_all_pdbs(self):
+        target = get_target_by_id(2)
+        pdbs = target.find_all_pdbs()
+        self.assertIsInstance(pdbs, list)
+        self.assertGreaterEqual(len(pdbs), 1)
+
+
 
 
 if __name__ == "__main__":

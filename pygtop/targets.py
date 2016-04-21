@@ -250,6 +250,13 @@ class Target:
             return []
 
 
+    def find_all_pdbs(self):
+        return list(set(
+         self.get_gtop_pdbs() +
+         self.find_pdbs_by_uniprot_accession()
+        ))
+
+
     def request_database_properties(self):
         """Give target object database properties:
 
