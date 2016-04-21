@@ -302,6 +302,13 @@ class LigandPdbs(unittest.TestCase):
         self.assertGreaterEqual(len(inchi_pdbs), 1)
 
 
+    def test_ligand_can_find_pdbs_by_name(self):
+        ligand = get_ligand_by_name("ergotamine")
+        name_pdbs = ligand.find_pdbs_by_name()
+        self.assertIsInstance(name_pdbs, list)
+        self.assertGreaterEqual(len(name_pdbs), 1)
+
+
 
 
 

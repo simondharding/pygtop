@@ -281,6 +281,15 @@ class Ligand:
         return results if results else []
 
 
+    def find_pdbs_by_name(self, comparator="equals"):
+        results = pdb.query_rcsb_advanced("ChemCompNameQuery", {
+         "comparator": comparator.title(),
+         "name": self.name,
+         "polymericType": "Any"
+        })
+        return results if results else []
+
+
     def request_structural_properties(self):
         """Give ligand object structural properties:
 
