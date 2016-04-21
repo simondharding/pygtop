@@ -260,13 +260,16 @@ class Ligand:
     def find_pdbs_by_smiles(self, search_type="exact"):
         if "smiles" not in self.__dict__:
             self.request_structural_properties()
-        xml = pdb.query_rcsb("smilesQuery", {
-         "smiles": self.smiles,
-         "search_type": search_type
-        })
-        if xml:
-            ligand_elements = list(xml[0])
-            return [element.attrib["structureId"] for element in ligand_elements]
+        if self.smiles:
+            xml = pdb.query_rcsb("smilesQuery", {
+             "smiles": self.smiles,
+             "search_type": search_type
+            })
+            if xml:
+                ligand_elements = list(xml[0])
+                return [element.attrib["structureId"] for element in ligand_elements]
+            else:
+                return []
         else:
             return []
 
@@ -274,11 +277,14 @@ class Ligand:
     def find_pdbs_by_inchi(self):
         if "inchi" not in self.__dict__:
             self.request_structural_properties()
-        results = pdb.query_rcsb_advanced("ChemCompDescriptorQuery", {
-         "descriptor": self.inchi,
-         "descriptorType": "InChI"
-        })
-        return results if results else []
+        if self.inchi:
+            results = pdb.query_rcsb_advanced("ChemCompDescriptorQuery", {
+             "descriptor": self.inchi,
+             "descriptorType": "InChI"
+            })
+            return results if results else []
+        else:
+            return []
 
 
     def find_pdbs_by_name(self, comparator="equals"):
@@ -288,6 +294,21 @@ class Ligand:
          "polymericType": "Any"
         })
         return results if results else []
+
+
+    def find_all_external_pdbs(self):
+        return list(set(
+         self.find_pdbs_by_smiles() +
+         self.find_pdbs_by_inchi() +
+         self.find_pdbs_by_name()
+        ))
+
+
+    def find_all_pdbs(self):
+        return list(set(
+         self.get_gtop_pdbs() +
+         self.find_all_external_pdbs()
+        ))
 
 
     def request_structural_properties(self):
