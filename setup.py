@@ -25,5 +25,5 @@ setup(
  ],
  keywords="pharmacology drugs chemistry bioinformatics",
  packages=["pygtop"],
- install_requires=["requests"]
+ install_requires=["requests", "molecupy"]
 )
