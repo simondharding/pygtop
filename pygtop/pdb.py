@@ -2,6 +2,7 @@
 
 import requests
 import xml.etree.ElementTree as ElementTree
+import molecupy
 
 ROOT_URL = "http://www.rcsb.org/pdb/rest/"
 
@@ -45,3 +46,13 @@ def query_rcsb_advanced(query_type, criteria):
         return response.text.split()
     else:
         return None
+
+
+def ask_about_molecupy(func):
+    def new_func(*args, as_molecupy=False, **kwargs):
+        pdbs = func(*args, **kwargs)
+        if as_molecupy:
+            return [molecupy.get_pdb_remotely(pdb) for pdb in pdbs]
+        else:
+            return pdbs
+    return new_func

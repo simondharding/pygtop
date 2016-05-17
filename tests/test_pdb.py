@@ -4,6 +4,7 @@ import sys
 sys.path.append(".")
 from pygtop.pdb import *
 import xml.etree.ElementTree as ElementTree
+from molecupy.pdb import Pdb
 
 class GetXml(unittest.TestCase):
 
@@ -38,6 +39,23 @@ class GetXml(unittest.TestCase):
          "descriptorType": "InChI"
         })
         self.assertIsInstance(results, list)
+
+
+
+class MolecupyDecoratorTests(unittest.TestCase):
+
+    def setUp(self):
+        self.return_pdb = lambda: ["1LOL"]
+
+
+    def test_decorator_not_normally_noticable(self):
+        decorated_return_pdb = ask_about_molecupy(self.return_pdb)
+        self.assertEqual(decorated_return_pdb()[0], "1LOL")
+
+
+    def test_decorator_can_return_molecupy_object(self):
+        decorated_return_pdb = ask_about_molecupy(self.return_pdb)
+        self.assertIsInstance(decorated_return_pdb(as_molecupy=True)[0], Pdb)
 
 
 if __name__ == "__main__":
