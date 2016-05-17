@@ -1,5 +1,6 @@
 from __future__ import division
 from .gtop import *
+from . import pdb
 from .exceptions import NoSuchLigandError, NoSuchTargetError, NoSuchInteractionError
 
 def get_interactions_between(ligand, target):
@@ -144,6 +145,7 @@ class Interaction:
             return None
 
 
+    @pdb.ask_about_molecupy
     def get_gtop_pdbs(self):
         """Returns a list of PDBs which the Guide to PHARMACOLOGY says contain
         this interaction.
@@ -162,6 +164,7 @@ class Interaction:
             return []
 
 
+    @pdb.ask_about_molecupy
     def find_all_external_pdbs(self):
         """Queries the RSCB PDB database for PDBs containing this interaction
         by all parameters.
@@ -173,6 +176,7 @@ class Interaction:
         return [code for code in ligand_external_pdbs if code in target_external_pdbs]
 
 
+    @pdb.ask_about_molecupy
     def find_all_pdbs(self):
         """Get a list of PDB codes containing this interaction using all means
         available - annotated and external.
