@@ -1,8 +1,10 @@
 """Contains ligand-specific objects and functions."""
 
 import requests
+import math
 import json
 import random
+from collections import Counter
 from . import gtop
 from . import pdb
 from .exceptions import *
@@ -389,6 +391,45 @@ class Ligand:
          self.get_gtop_pdbs() +
          self.find_all_external_pdbs()
         ))
+
+
+    def find_in_pdb_by_smiles(self, molecupy_pdb):
+        self.request_structural_properties()
+        if self.smiles:
+            formula = Counter([char.upper() for char in self.smiles
+             if char.isalpha() and char.upper() != "H"])
+            for molecule in molecupy_pdb.model.small_molecules:
+                if molecule.get_formula() == formula:
+                    return molecule
+
+
+    def find_in_pdb_by_name(self, molecupy_pdb):
+        if self.name:
+            for molecule in molecupy_pdb.model.small_molecules:
+                molecule_name = molecupy_pdb.data_file.het_names.get(molecule.molecule_name)
+                if molecule_name and self.name.lower() == molecule_name.lower():
+                    return molecule
+
+
+    def find_in_pdb_by_mass(self, molecupy_pdb):
+        self.request_molecular_properties()
+        if self.molecular_weight:
+            molecules = sorted(
+             list(molecupy_pdb.model.small_molecules),
+             key=lambda k: abs(k.get_mass() - self.molecular_weight)
+            )
+            if molecules and -40 < (molecules[0].get_mass() - self.molecular_weight) < 40:
+                return molecules[0]
+
+
+    def find_in_pdb_by_peptide_string(self, molecupy_pdb):
+        if "inchi" not in self.__dict__: self.request_structural_properties()
+        if self.one_letter_sequence:
+            for chain in molecupy_pdb.model.chains:
+                if self.one_letter_sequence in chain.get_sequence_string() and 0.9 <= (
+                 len(self.one_letter_sequence) / len(chain.get_sequence_string())
+                ) <= 1:
+                    return chain
 
 
     def request_structural_properties(self):

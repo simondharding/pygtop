@@ -1,4 +1,6 @@
 import unittest
+from unittest.mock import patch
+import molecupy
 import json
 import sys
 sys.path.append(".")
@@ -380,7 +382,34 @@ class LigandPdbs(unittest.TestCase):
         self.assertGreaterEqual(len(sequence_pdbs), 1)
 
 
+class LigandInMolecupyTests(unittest.TestCase):
 
+    def setUp(self):
+        self.ligand = get_ligand_by_name("dihydroergotamine")
+        self.pdb = molecupy.get_pdb_remotely("4IAQ")
+
+
+    def test_can_identify_ligand_based_on_smiles(self):
+        het = self.ligand.find_in_pdb_by_smiles(self.pdb)
+        self.assertEqual(het.molecule_name, "2GM")
+
+
+    def test_can_identify_ligand_based_on_name(self):
+        het = self.ligand.find_in_pdb_by_name(self.pdb)
+        self.assertEqual(het.molecule_name, "2GM")
+
+
+    def test_can_identify_ligand_based_on_mass(self):
+        het = self.ligand.find_in_pdb_by_mass(self.pdb)
+        self.assertEqual(het.molecule_name, "2GM")
+
+
+    def test_can_identify_ligand_based_on_mass(self):
+        self.ligand.request_structural_properties()
+        self.ligand.one_letter_sequence = "HKLHQLQDS"
+        pdb = molecupy.get_pdb_remotely("2YJA")
+        chain = self.ligand.find_in_pdb_by_peptide_string(pdb)
+        self.assertEqual(chain.chain_id, "A")
 
 
 if __name__ == "__main__":
