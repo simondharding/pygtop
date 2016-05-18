@@ -6,7 +6,29 @@ pyGtoP is a Python wrapper for the `IUPHAR/BPS Guide to PHARMACOLOGY
 provides a Python interface for access to the GtoP database.
 
 
-.. include:: docs/source/installing.rst
+Installing
+----------
+
+pip
+~~~
+
+pyGtoP can be installed using pip:
+
+``$ pip3 install pygtop``
+
+pyGtoP is written for Python 3, and as of version 0.1.0 is incompatible with
+Python 2. Versions 0.4.1 and earlier will continue to support Python 2.
+
+
+Requirements
+~~~~~~~~~~~~
+
+PyGtoP requires the Python librares
+`requests <http://docs.python-requests.org/>`_ and
+`molecuPy <http://molecupy.readthedocs.io>`_. These will be installed
+automatically if pyGtoP is installed with pip.
+
+Otherwise pyGtoP has no external dependencies, and is pure Python.
 
 
 Overview
@@ -121,10 +143,10 @@ pertaining to that species will be obtained:
     >>> rat_variant.request_database_properties()
     >>> rat_variant.database_links
     [<Ensembl Gene link (ENSRNOG00000000559) for Rat>, <Entrez Gene link (64107)
-     for Rat>, <GPCRDB link (Q9EP86) for Rat>, <PhosphoSitePlus link (Q9EP86) fo
-     r Rat>, <Protein GI link (294661831) for Rat>, <RefSeq Nucleotide link (NM_
-     022291) for Rat>, <RefSeq Protein link (NP_071627) for Rat>, <UniProtKB lin
-     k (Q9EP86) for Rat>, <UniProtKB ID/Entry name link (NPFF1_RAT) for Rat>]
+    for Rat>, <GPCRDB link (Q9EP86) for Rat>, <PhosphoSitePlus link (Q9EP86) for
+    Rat>, <Protein GI link (294661831) for Rat>, <RefSeq Nucleotide link (NM_022
+    291) for Rat>, <RefSeq Protein link (NP_071627) for Rat>, <UniProtKB link (Q
+    9EP86) for Rat>, <UniProtKB ID/Entry name link (NPFF1_RAT) for Rat>]
 
 Interactions
 ~~~~~~~~~~~~
@@ -232,9 +254,34 @@ In addition, ligands and targets can query the `RSCB PDB Web Services
 
 See the full documentation for a list of all the ways to search for PDB codes.
 
+pyGtoP can now also use the `molecuPy <http://molecupy.readthedocs.io>`_ library
+to return PDBs as PDB objects. To do this, simply provide ``molecupy=True`` to
+any of the PDB requesting methods:
+
+    >>> ligand.find_pdbs_by_smiles(molecupy=True)
+    [<Pdb (4IAR)>, <Pdb (4IB4)>, <Pdb (4NC3)>]
+
+See the molecuPy documentation for a full accounting of the functionality this
+offers.
+
+
 
 Changelog
 ---------
+
+Release 1.0.0
+~~~~~~~~~~~~~
+
+`18 May 2016`
+
+* `molecuPy <http://molecupy.readthedocs.io>`_ integration
+
+    * PDB retrieval can now be by 4-char string, or molecuPy PDB object.
+    * Ligands now have methods for locating themselves in a PDB file.
+
+As molecuPy is a Python 3 package, this is the first version of pyGtoP to be
+incompatible with Python 2, hence the new major version number.
+
 
 Release 0.4.0
 ~~~~~~~~~~~~~
