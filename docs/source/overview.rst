@@ -220,3 +220,13 @@ In addition, ligands and targets can query the `RSCB PDB Web Services
     M', '4Y29', '4YT1']
 
 See the full documentation for a list of all the ways to search for PDB codes.
+
+pyGtoP can now also use the `molecuPy <http://molecupy.readthedocs.io>`_ library
+to return PDBs as PDB objects. To do this, simply provide ``molecupy=True`` to
+any of the PDB requesting methods:
+
+    >>> ligand.find_pdbs_by_smiles(molecupy=True)
+    [<Pdb (4IAR)>, <Pdb (4IB4)>, <Pdb (4NC3)>]
+
+See the molecuPy documentation for a full accounting of the functionality this
+offers.
