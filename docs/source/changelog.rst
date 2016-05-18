@@ -1,6 +1,20 @@
 Changelog
 ---------
 
+Release 1.0.0
+~~~~~~~~~~~~~
+
+`18 May 2016`
+
+* `molecuPy <http://molecupy.readthedocs.io>`_ integration
+
+    * PDB retrieval can now be by 4-char string, or molecuPy PDB object.
+    * Ligands now have methods for locating themselves in a PDB file.
+
+As molecuPy is a Python 3 package, this is the first version of pyGtoP to be 
+incompatible with Python 2, hence the new major version number.
+
+
 Release 0.4.0
 ~~~~~~~~~~~~~
 
