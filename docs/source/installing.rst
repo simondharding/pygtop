@@ -8,7 +8,7 @@ pyGtoP can be installed using pip:
 
 ``$ pip3 install pygtop``
 
-pyGtoP is written for Python 3, and as of version 0.1.0 is incompatible with
+pyGtoP is written for Python 3, and as of version 1.0.0 is incompatible with
 Python 2. Versions 0.4.1 and earlier will continue to support Python 2.
 
 
