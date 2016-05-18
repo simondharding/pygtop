@@ -49,10 +49,16 @@ def query_rcsb_advanced(query_type, criteria):
 
 
 def ask_about_molecupy(func):
+    """A decorator which, when applied to a function, will add a 'as_molecupy'
+    keyword argument - if set to True this will convert any PDB codes the
+    function returns to `molecuPy <http://molecupy.readthedocs.io>`_ PDB objects."""
+
     def new_func(*args, as_molecupy=False, **kwargs):
         pdbs = func(*args, **kwargs)
         if as_molecupy:
             return [molecupy.get_pdb_remotely(pdb) for pdb in pdbs]
         else:
             return pdbs
+    new_func.__name__ = func.__name__
+    new_func.__doc__ = func.__doc__
     return new_func

@@ -277,6 +277,8 @@ class Ligand:
         """Returns a list of PDBs which the Guide to PHARMACOLOGY says contain
         this ligand.
 
+        :param bool as_molecupy: Returns the PDBs as \
+        `molecuPy <http://molecupy.readthedocs.io>`_ PDB objects.
         :returns: list of ``str`` PDB codes"""
 
         pdbs = []
@@ -293,6 +295,8 @@ class Ligand:
 
         :param str search_type: The type of search to run - whether exact matches\
         only should be returned.
+        :param bool as_molecupy: Returns the PDBs as \
+        `molecuPy <http://molecupy.readthedocs.io>`_ PDB objects.
         :returns: list of ``str`` PDB codes"""
 
         if "smiles" not in self.__dict__:
@@ -315,6 +319,8 @@ class Ligand:
     def find_pdbs_by_inchi(self):
         """Queries the RSCB PDB database with the ligand's InChI string.
 
+        :param bool as_molecupy: Returns the PDBs as \
+        `molecuPy <http://molecupy.readthedocs.io>`_ PDB objects.
         :returns: list of ``str`` PDB codes"""
 
         if "inchi" not in self.__dict__:
@@ -335,6 +341,8 @@ class Ligand:
 
         :param str comparator: The type of search to run - whether exact matches\
         only should be returned, or substrings etc.
+        :param bool as_molecupy: Returns the PDBs as \
+        `molecuPy <http://molecupy.readthedocs.io>`_ PDB objects.
         :returns: list of ``str`` PDB codes"""
 
         results = pdb.query_rcsb_advanced("ChemCompNameQuery", {
@@ -350,6 +358,8 @@ class Ligand:
         """Queries the RSCB PDB database with the ligand's amino acid sequence,\
         if that ligand is a peptide.
 
+        :param bool as_molecupy: Returns the PDBs as \
+        `molecuPy <http://molecupy.readthedocs.io>`_ PDB objects.
         :returns: list of ``str`` PDB codes"""
 
         if "one_letter_sequence" not in self.__dict__:
@@ -370,6 +380,8 @@ class Ligand:
     def find_all_external_pdbs(self):
         """Queries the RSCB PDB database by all parameters.
 
+        :param bool as_molecupy: Returns the PDBs as \
+        `molecuPy <http://molecupy.readthedocs.io>`_ PDB objects.
         :returns: list of ``str`` PDB codes"""
 
         return list(set(
@@ -385,6 +397,8 @@ class Ligand:
         """Get a list of PDB codes using all means available - annotated and
         external.
 
+        :param bool as_molecupy: Returns the PDBs as \
+        `molecuPy <http://molecupy.readthedocs.io>`_ PDB objects.
         :returns: list of ``str`` PDB codes"""
 
         return list(set(

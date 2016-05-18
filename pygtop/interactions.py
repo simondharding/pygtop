@@ -150,6 +150,8 @@ class Interaction:
         """Returns a list of PDBs which the Guide to PHARMACOLOGY says contain
         this interaction.
 
+        :param bool as_molecupy: Returns the PDBs as \
+        `molecuPy <http://molecupy.readthedocs.io>`_ PDB objects.
         :returns: list of ``str`` PDB codes"""
 
         json_data = get_json_from_gtop("targets/%i/pdbStructure" % self._target_id)
@@ -169,6 +171,8 @@ class Interaction:
         """Queries the RSCB PDB database for PDBs containing this interaction
         by all parameters.
 
+        :param bool as_molecupy: Returns the PDBs as \
+        `molecuPy <http://molecupy.readthedocs.io>`_ PDB objects.
         :returns: list of ``str`` PDB codes"""
 
         ligand_external_pdbs = self.get_ligand().find_all_external_pdbs()
@@ -181,6 +185,8 @@ class Interaction:
         """Get a list of PDB codes containing this interaction using all means
         available - annotated and external.
 
+        :param bool as_molecupy: Returns the PDBs as \
+        `molecuPy <http://molecupy.readthedocs.io>`_ PDB objects.
         :returns: list of ``str`` PDB codes"""
 
         ligand_pdbs = self.get_ligand().find_all_pdbs()
