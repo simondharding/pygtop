@@ -1,6 +1,14 @@
 Changelog
 ---------
 
+Release 1.0.1
+~~~~~~~~~~~~~
+
+`19 May 2016`
+
+* Version number fix.
+
+
 Release 1.0.0
 ~~~~~~~~~~~~~
 
@@ -11,7 +19,7 @@ Release 1.0.0
     * PDB retrieval can now be by 4-char string, or molecuPy PDB object.
     * Ligands now have methods for locating themselves in a PDB file.
 
-As molecuPy is a Python 3 package, this is the first version of pyGtoP to be 
+As molecuPy is a Python 3 package, this is the first version of pyGtoP to be
 incompatible with Python 2, hence the new major version number.
 
 
