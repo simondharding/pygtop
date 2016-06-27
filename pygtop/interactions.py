@@ -24,7 +24,7 @@ def get_interaction_by_id(self, interaction_id):
     for interaction in self.get_interactions():
         if interaction.interaction_id == interaction_id:
             return interaction
-    raise NoSuchInteractionError
+    raise NoSuchInteractionError("%s has no interaction %i" % (str(self), interaction_id))
 
 
 
