@@ -1,6 +1,22 @@
 """Contains ligand-specific objects and functions."""
 
 from . import gtop
+from .exceptions import NoSuchLigandError
+
+def get_ligand_by_id(ligand_id):
+    """Returns a Ligand object of the ligand with the given ID.
+
+    :param int ligand_id: The GtoP ID of the Ligand desired.
+    :rtype: :py:class:`Ligand`
+    :raises: :class:`.NoSuchLigandError` if no such ligand exists in the database"""
+
+    if not isinstance(ligand_id, int):
+        raise TypeError("ligand_id must be int, not '%s'" % str(ligand_id))
+    json_data = gtop.get_json_from_gtop("ligands/%i" % ligand_id)
+    if json_data:
+        return Ligand(json_data)
+    else:
+        raise NoSuchLigandError("There is no ligand with ID %i" % ligand_id)
 
 class Ligand:
 
@@ -232,18 +248,7 @@ from .exceptions import *
 from .shared import *
 from . import interactions
 
-def get_ligand_by_id(ligand_id):
-    """Returns a Ligand object of the ligand with the given ID.
 
-    :param int ligand_id: The GtoP ID of the Ligand desired.
-    :rtype: :py:class:`Ligand`
-    :raises: :class:`.NoSuchLigandError` if no such ligand exists in the database"""
-
-    json_data = gtop.get_json_from_gtop("ligands/%i" % ligand_id)
-    if json_data:
-        return Ligand(json_data)
-    else:
-        raise NoSuchLigandError
 
 
 def get_random_ligand(ligand_type=None):

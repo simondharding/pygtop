@@ -1,7 +1,8 @@
 from unittest import TestCase
 import unittest.mock
 from unittest.mock import patch
-from pygtop.ligands import Ligand
+from pygtop.ligands import Ligand, get_ligand_by_id
+import pygtop.exceptions as exceptions
 
 class LigandTest(TestCase):
 
@@ -224,6 +225,31 @@ class LigandPropertyTests(LigandTest):
         self.assertEqual(ligand.population_pharmacokinetics_comments(), None)
         self.assertEqual(ligand.organ_function_impairments_comments(), None)
         self.assertEqual(ligand.mutations_and_pathophysiology_comments(), None)
+
+
+
+class LigandAccessTests(LigandTest):
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_can_get_ligand_by_id(self, mock_json_retriever):
+        mock_json_retriever.return_value = self.ligand_json
+        ligand = get_ligand_by_id(1)
+        self.assertIsInstance(ligand, Ligand)
+        self.assertEqual(ligand.name(), self.ligand_json["name"])
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_invalid_ligand_id_error(self, mock_json_retriever):
+        mock_json_retriever.return_value = None
+        with self.assertRaises(exceptions.NoSuchLigandError):
+            ligand = get_ligand_by_id(1)
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_ligand_id_must_be_int(self, mock_json_retriever):
+        mock_json_retriever.return_value = self.ligand_json
+        with self.assertRaises(TypeError):
+            ligand = get_ligand_by_id("1")
 
 
 '''import unittest
