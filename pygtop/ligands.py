@@ -1,6 +1,29 @@
 """Contains ligand-specific objects and functions."""
 
-import requests
+class Ligand:
+
+    def __init__(self, json_data):
+        self.json_data = json_data
+        self._ligand_id = json_data["ligandId"]
+        self._name = json_data["name"]
+        self._abbreviation = json_data["abbreviation"] if json_data["abbreviation"] else None
+        self._inn = json_data["inn"]
+        self._ligand_type = json_data["type"]
+        self._species = json_data["species"]
+        self._radioactive = json_data["radioactive"]
+        self._labelled = json_data["labelled"]
+        self._approved = json_data["approved"]
+        self._withdrawn = json_data["withdrawn"]
+        self._approval_source = json_data["approvalSource"]
+        self._subunit_ids = json_data["subunitIds"]
+        self._complex_ids = json_data["complexIds"]
+        self._prodrug_ids = json_data["prodrugIds"]
+        self._active_drug_ids = json_data["activeDrugIds"]
+
+
+
+
+'''import requests
 import math
 import json
 import random
@@ -159,24 +182,7 @@ class Ligand:
         The regulatory body which approved the drug.
     """
 
-    def __init__(self, json_data):
-        self.json_data = json_data
 
-        self.ligand_id = json_data["ligandId"]
-        self.name = json_data["name"]
-        self.abbreviation = json_data["abbreviation"] if json_data["abbreviation"] else None
-        self.inn = json_data["inn"]
-        self.ligand_type = json_data["type"]
-        self.species = json_data["species"]
-        self.radioactive = json_data["radioactive"]
-        self.labelled = json_data["labelled"]
-        self.approved = json_data["approved"]
-        self.withdrawn = json_data["withdrawn"]
-        self.approval_source = json_data["approvalSource"]
-        self._subunit_ids = json_data["subunitIds"]
-        self._complex_ids = json_data["complexIds"]
-        self._prodrug_ids = json_data["prodrugIds"]
-        self._active_drug_ids = json_data["activeDrugIds"]
 
 
     def __getattr__(self, key):
@@ -719,3 +725,4 @@ class Ligand:
     _precursor_properties = [
      "precursors"
     ]
+'''

@@ -1,4 +1,59 @@
-import unittest
+from unittest import TestCase
+import unittest.mock
+from unittest.mock import patch
+from pygtop.ligands import Ligand
+
+class LigandTest(TestCase):
+
+    def setUp(self):
+        self.ligand_json = {
+         "ligandId": 1,
+         "name": "flesinoxan",
+         "abbreviation": "flexo",
+         "inn": "flesinoxan",
+         "type": "Synthetic organic",
+         "species": None,
+         "radioactive": False,
+         "labelled": True,
+         "approved": True,
+         "withdrawn": False,
+         "approvalSource": "FDA (1997)",
+         "subunitIds": [2, 3],
+         "complexIds": [5],
+         "prodrugIds": [7],
+         "activeDrugIds": [9, 10]
+        }
+
+
+
+class LigandCreationTests(LigandTest):
+
+    def test_can_create_ligand(self):
+        ligand = Ligand(self.ligand_json)
+        self.assertEqual(ligand.json_data, self.ligand_json)
+        self.assertEqual(ligand._ligand_id, 1)
+        self.assertEqual(ligand._name, "flesinoxan")
+        self.assertEqual(ligand._abbreviation, "flexo")
+        self.assertEqual(ligand._inn, "flesinoxan")
+        self.assertEqual(ligand._ligand_type, "Synthetic organic")
+        self.assertEqual(ligand._species, None)
+        self.assertEqual(ligand._radioactive, False)
+        self.assertEqual(ligand._labelled, True)
+        self.assertEqual(ligand._approved, True)
+        self.assertEqual(ligand._withdrawn, False)
+        self.assertEqual(ligand._approval_source, "FDA (1997)")
+        self.assertEqual(ligand._subunit_ids, [2, 3])
+        self.assertEqual(ligand._complex_ids, [5])
+        self.assertEqual(ligand._prodrug_ids, [7])
+        self.assertEqual(ligand._active_drug_ids, [9, 10])
+
+
+    def test_missing_abbreviation_is_none(self):
+        self.ligand_json["abbreviation"] = ""
+        ligand = Ligand(self.ligand_json)
+        self.assertEqual(ligand._abbreviation, None)
+
+'''import unittest
 from unittest.mock import patch
 import molecupy
 import json
@@ -413,4 +468,4 @@ class LigandInMolecupyTests(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main()
+    unittest.main()'''
