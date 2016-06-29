@@ -182,6 +182,50 @@ class LigandPropertyTests(LigandTest):
         self.assertEqual(ligand.synonyms(), [])
 
 
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_comment_properties(self, mock_json_retriever):
+        mock_json_retriever.return_value = {
+         "comments": "AAA.",
+         "bioactivityComments": "BBB.",
+         "clinicalUse": "CCC.",
+         "mechanismOfAction": "DDD.",
+         "absorptionAndDistribution": "EEE.",
+         "metabolism": "FFF.",
+         "elimination": "GGG.",
+         "populationPharmacokinetics": "HHH.",
+         "organFunctionImpairment": "III.",
+         "mutationsAndPathophysiology": "JJJ."
+        }
+        ligand = Ligand(self.ligand_json)
+
+        self.assertEqual(ligand.general_comments(), "AAA.")
+        self.assertEqual(ligand.bioactivity_comments(), "BBB.")
+        self.assertEqual(ligand.clinical_use_comments(), "CCC.")
+        self.assertEqual(ligand.mechanism_of_action_comments(), "DDD.")
+        self.assertEqual(ligand.absorption_and_distribution_comments(), "EEE.")
+        self.assertEqual(ligand.metabolism_comments(), "FFF.")
+        self.assertEqual(ligand.elimination_comments(), "GGG.")
+        self.assertEqual(ligand.population_pharmacokinetics_comments(), "HHH.")
+        self.assertEqual(ligand.organ_function_impairments_comments(), "III.")
+        self.assertEqual(ligand.mutations_and_pathophysiology_comments(), "JJJ.")
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_comment_properties_when_no_json(self, mock_json_retriever):
+        mock_json_retriever.return_value = None
+        ligand = Ligand(self.ligand_json)
+        self.assertEqual(ligand.general_comments(), None)
+        self.assertEqual(ligand.bioactivity_comments(), None)
+        self.assertEqual(ligand.clinical_use_comments(), None)
+        self.assertEqual(ligand.mechanism_of_action_comments(), None)
+        self.assertEqual(ligand.absorption_and_distribution_comments(), None)
+        self.assertEqual(ligand.metabolism_comments(), None)
+        self.assertEqual(ligand.elimination_comments(), None)
+        self.assertEqual(ligand.population_pharmacokinetics_comments(), None)
+        self.assertEqual(ligand.organ_function_impairments_comments(), None)
+        self.assertEqual(ligand.mutations_and_pathophysiology_comments(), None)
+
+
 '''import unittest
 from unittest.mock import patch
 import molecupy

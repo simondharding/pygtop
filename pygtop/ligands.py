@@ -151,6 +151,46 @@ class Ligand:
         return [synonym["name"] for synonym in self._get_synonym_json()]
 
 
+    def general_comments(self):
+        return self._get_comments_json().get("comments")
+
+
+    def bioactivity_comments(self):
+        return self._get_molecular_json().get("bioactivityComments")
+
+
+    def clinical_use_comments(self):
+        return self._get_molecular_json().get("clinicalUse")
+
+
+    def mechanism_of_action_comments(self):
+        return self._get_molecular_json().get("mechanismOfAction")
+
+
+    def absorption_and_distribution_comments(self):
+        return self._get_molecular_json().get("absorptionAndDistribution")
+
+
+    def metabolism_comments(self):
+        return self._get_molecular_json().get("metabolism")
+
+
+    def elimination_comments(self):
+        return self._get_molecular_json().get("elimination")
+
+
+    def population_pharmacokinetics_comments(self):
+        return self._get_molecular_json().get("populationPharmacokinetics")
+
+
+    def organ_function_impairments_comments(self):
+        return self._get_molecular_json().get("organFunctionImpairment")
+
+
+    def mutations_and_pathophysiology_comments(self):
+        return self._get_molecular_json().get("mutationsAndPathophysiology")
+
+
     def _get_structure_json(self):
         json_object = gtop.get_json_from_gtop(
          "ligands/%i/structure" % self._ligand_id
@@ -170,6 +210,13 @@ class Ligand:
          "ligands/%i/synoynms" % self._ligand_id
         )
         return json_object if json_object else []
+
+
+    def _get_comments_json(self):
+        json_object = gtop.get_json_from_gtop(
+         "ligands/%i/comments" % self._ligand_id
+        )
+        return json_object if json_object else {}
 
 
 
