@@ -47,6 +47,23 @@ def get_ligands_by(criteria):
     else:
         return []
 
+
+def get_ligand_by_name(name):
+    """Returns the ligand which matches the name given.
+
+    :param str name: The name of the ligand to search for. Note that synonyms \
+    will not be searched.
+    :rtype: :py:class:`Ligand`
+    :raises:  :class:`.NoSuchLigandError` if no such ligand exists in the database."""
+
+    if not isinstance(name, str):
+        raise TypeError("name must be str, not '%s'" % str(name))
+    ligands = get_ligands_by({"name": name})
+    if ligands:
+        return ligands[0]
+    else:
+        raise NoSuchLigandError("There is no ligand with name %s" % name)
+
 class Ligand:
 
     def __init__(self, json_data):
@@ -280,55 +297,8 @@ from . import interactions
 
 
 
-def get_random_ligand(ligand_type=None):
-    """Returns a random ligand, with the option to specify the ligand type.
-    This can take a few seconds as it must first request *all* ligands.
-
-    :param str ligand_type: If not None, the function will pick a ligand from\
-     this category only.
-
-    :rtype: :py:class:`Ligand`
-    :raises: :class:`.NoSuchTypeError` if a ligand type is supplied which doesn't exist
-    """
-
-    if ligand_type:
-        json_data = gtop.get_json_from_gtop("ligands?type=%s" % ligand_type.lower())
-        if not json_data:
-            raise NoSuchTypeError("There are no ligands of type %s" % ligand_type)
-    else:
-        json_data = gtop.get_json_from_gtop("ligands")
-    return Ligand(random.choice(json_data))
 
 
-def get_ligands_by(criteria):
-    """Get all ligands which specify the criteria dictionary.
-
-    :param dict criteria: A dictionary of `field=value` pairs. See the\
-     `GtoP ligand web services page <http://www.guidetopharmacology.org/\
-     webServices.jsp#ligands>`_ for key/value pairs which can be supplied.
-    :returns: list of :py:class:`Ligand` objects."""
-
-    search_string = "&".join(["%s=%s" % (key, criteria[key]) for key in criteria])
-    json_data = gtop.get_json_from_gtop("ligands?%s" % search_string)
-    if json_data:
-        return [Ligand(l) for l in json_data]
-    else:
-        return []
-
-
-def get_ligand_by_name(name):
-    """Returns the ligand which matches the name given.
-
-    :param str name: The name of the ligand to search for. Note that synonyms \
-    will not be searched.
-    :rtype: :py:class:`Ligand`
-    :raises:  :class:`.NoSuchLigandError` if no such ligand exists in the database."""
-
-    ligands = get_ligands_by({"name": name})
-    if ligands:
-        return ligands[0]
-    else:
-        raise NoSuchLigandError
 
 
 def get_ligands_by_smiles(smiles, search_type="exact", cutoff=0.8):
