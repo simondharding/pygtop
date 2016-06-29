@@ -1,7 +1,7 @@
 from unittest import TestCase
 import unittest.mock
 from unittest.mock import patch
-from pygtop.ligands import Ligand, get_ligand_by_id
+from pygtop.ligands import Ligand, get_ligand_by_id, get_all_ligands
 import pygtop.exceptions as exceptions
 
 class LigandTest(TestCase):
@@ -250,6 +250,16 @@ class LigandAccessTests(LigandTest):
         mock_json_retriever.return_value = self.ligand_json
         with self.assertRaises(TypeError):
             ligand = get_ligand_by_id("1")
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_can_get_all_ligands(self, mock_json_retriever):
+        mock_json_retriever.return_value = [self.ligand_json, self.ligand_json]
+        ligands = get_all_ligands()
+        self.assertIsInstance(ligands, list)
+        self.assertEqual(len(ligands), 2)
+        self.assertIsInstance(ligands[0], Ligand)
+        self.assertIsInstance(ligands[1], Ligand)
 
 
 '''import unittest

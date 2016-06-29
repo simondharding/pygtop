@@ -18,6 +18,16 @@ def get_ligand_by_id(ligand_id):
     else:
         raise NoSuchLigandError("There is no ligand with ID %i" % ligand_id)
 
+
+def get_all_ligands():
+    """Returns a list of all ligands in the Guide to PHARMACOLOGY database. This
+    can take a few seconds.
+
+    :returns: list of :py:class:`Ligand` objects"""
+
+    json_data = gtop.get_json_from_gtop("ligands")
+    return [Ligand(l) for l in json_data]
+
 class Ligand:
 
     def __init__(self, json_data):
@@ -269,16 +279,6 @@ def get_random_ligand(ligand_type=None):
     else:
         json_data = gtop.get_json_from_gtop("ligands")
     return Ligand(random.choice(json_data))
-
-
-def get_all_ligands():
-    """Returns a list of all ligands in the Guide to PHARMACOLOGY database. This
-    can take a few seconds.
-
-    :returns: list of :py:class:`Ligand` objects"""
-
-    json_data = gtop.get_json_from_gtop("ligands")
-    return [Ligand(l) for l in json_data]
 
 
 def get_ligands_by(criteria):
