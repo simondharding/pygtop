@@ -163,6 +163,25 @@ class LigandPropertyTests(LigandTest):
         self.assertEqual(ligand.lipinski_rules_broken(), None)
 
 
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_synonym_properties(self, mock_json_retriever):
+        mock_json_retriever.return_value = [
+         {"name": "DU-29,373", "refs": []},
+         {"name": "(&plus;)-flesinoxan", "refs": []}
+        ]
+        ligand = Ligand(self.ligand_json)
+
+        self.assertEqual(ligand.synonyms(), ["DU-29,373", "(&plus;)-flesinoxan"])
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_synonym_properties_when_no_json(self, mock_json_retriever):
+        mock_json_retriever.return_value = None
+        ligand = Ligand(self.ligand_json)
+
+        self.assertEqual(ligand.synonyms(), [])
+
+
 '''import unittest
 from unittest.mock import patch
 import molecupy
@@ -173,24 +192,6 @@ import pygtop
 from pygtop.ligands import *
 from pygtop.exceptions import *
 
-
-
-
-    def check_ligand_molecular_properties(self, ligand):
-        if ligand.hydrogen_bond_acceptors:
-            self.assertIsInstance(ligand.hydrogen_bond_acceptors, int)
-        if ligand.hydrogen_bond_donors:
-            self.assertIsInstance(ligand.hydrogen_bond_donors, int)
-        if ligand.rotatable_bonds:
-            self.assertIsInstance(ligand.rotatable_bonds, int)
-        if ligand.topological_polar_surface_area:
-            self.assertIsInstance(ligand.topological_polar_surface_area, float)
-        if ligand.molecular_weight:
-            self.assertIsInstance(ligand.molecular_weight, float)
-        if ligand.log_p:
-            self.assertIsInstance(ligand.log_p, float)
-        if ligand.lipinksi_rules_broken:
-            self.assertIsInstance(ligand.lipinksi_rules_broken, int)
 
 
     def check_ligand_database_properties(self, ligand):

@@ -120,31 +120,35 @@ class Ligand:
 
 
     def hydrogen_bond_acceptors(self):
-        return self._get_structure_json().get("hydrogenBondAcceptors")
+        return self._get_molecular_json().get("hydrogenBondAcceptors")
 
 
     def hydrogen_bond_donors(self):
-        return self._get_structure_json().get("hydrogenBondDonors")
+        return self._get_molecular_json().get("hydrogenBondDonors")
 
 
     def rotatable_bonds(self):
-        return self._get_structure_json().get("rotatableBonds")
+        return self._get_molecular_json().get("rotatableBonds")
 
 
     def topological_polar_surface_area(self):
-        return self._get_structure_json().get("topologicalPolarSurfaceArea")
+        return self._get_molecular_json().get("topologicalPolarSurfaceArea")
 
 
     def molecular_weight(self):
-        return self._get_structure_json().get("molecularWeight")
+        return self._get_molecular_json().get("molecularWeight")
 
 
     def log_p(self):
-        return self._get_structure_json().get("logP")
+        return self._get_molecular_json().get("logP")
 
 
     def lipinski_rules_broken(self):
-        return self._get_structure_json().get("lipinskisRuleOfFive")
+        return self._get_molecular_json().get("lipinskisRuleOfFive")
+
+
+    def synonyms(self):
+        return [synonym["name"] for synonym in self._get_synonym_json()]
 
 
     def _get_structure_json(self):
@@ -154,11 +158,18 @@ class Ligand:
         return json_object if json_object else {}
 
 
-    def _get_structure_json(self):
+    def _get_molecular_json(self):
         json_object = gtop.get_json_from_gtop(
          "ligands/%i/molecularProperties" % self._ligand_id
         )
         return json_object if json_object else {}
+
+
+    def _get_synonym_json(self):
+        json_object = gtop.get_json_from_gtop(
+         "ligands/%i/synoynms" % self._ligand_id
+        )
+        return json_object if json_object else []
 
 
 
@@ -785,84 +796,5 @@ class Ligand:
         self.precursors = [Precursor(p) for p in json_data] if json_data else []
 
 
-    def request_all_properties(self):
-        """Give ligand object all extra properties."""
 
-        self.request_structural_properties()
-        self.request_molecular_properties()
-        self.request_database_properties()
-        self.request_synonym_properties()
-        self.request_comment_properties()
-        self.request_precursor_properties()
-
-
-    def _get_missing_attribute_error_message(self, attribute):
-        message = "'%s' is a %s property and needs to be requested with %s()"
-        values = []
-
-        if attribute in self._structural_properties:
-            values = ["structural", "request_structural_properties"]
-        elif attribute in self._molecular_properties:
-            values = ["molecular", "request_molecular_properties"]
-        elif attribute in self._database_properties:
-            values = ["database", "request_database_properties"]
-        elif attribute in self._synonym_properties:
-            values = ["synonym", "request_synonym_properties"]
-        elif attribute in self._comment_properties:
-            values = ["comment", "request_common_properties"]
-        elif attribute in self._precursor_properties:
-            values = ["precursor", "request_precursor_properties"]
-
-        if values:
-            values = [attribute] + values
-            return (message % tuple(values))
-        else:
-            return None
-
-
-    _structural_properties = [
-     "iupac_name",
-     "smiles",
-     "inchi",
-     "inchi_key",
-     "one_letter_sequence",
-     "three_letter_sequence",
-     "post_translational_modifications",
-     "chemical_modifications"
-    ]
-
-    _molecular_properties = [
-     "hydrogen_bond_acceptors",
-     "hydrogen_bond_donors",
-     "rotatable_bonds",
-     "topological_polar_surface_area",
-     "molecular_weight",
-     "log_p",
-     "lipinksi_rules_broken"
-    ]
-
-    _database_properties = [
-     "database_links"
-    ]
-
-    _synonym_properties = [
-     "synonyms"
-    ]
-
-    _comment_properties = [
-     "general_comments",
-     "bioactivity_comments",
-     "clinical_use_comments",
-     "mechanism_of_action_comments",
-     "absorption_and_distribution_comments",
-     "metabolism_comments",
-     "elimination_comments",
-     "population_pharmacokinetics_comments",
-     "organ_function_impairments_comments",
-     "mutations_and_pathophysiology_comments"
-    ]
-
-    _precursor_properties = [
-     "precursors"
-    ]
 '''
