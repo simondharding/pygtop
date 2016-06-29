@@ -21,6 +21,10 @@ class Ligand:
         self._active_drug_ids = json_data["activeDrugIds"]
 
 
+    def __repr__(self):
+        return "<Ligand %i (%s)>" % (self._ligand_id, self._name)
+
+
     def ligand_id(self):
         return self._ligand_id
 

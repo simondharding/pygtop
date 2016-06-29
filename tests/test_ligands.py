@@ -54,6 +54,11 @@ class LigandCreationTests(LigandTest):
         self.assertEqual(ligand._abbreviation, None)
 
 
+    def test_ligand_repr(self):
+        ligand = Ligand(self.ligand_json)
+        self.assertEqual(str(ligand), "<Ligand 1 (flesinoxan)>")
+
+
 
 class LigandPropertyTests(LigandTest):
 
