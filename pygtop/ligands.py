@@ -119,9 +119,44 @@ class Ligand:
         return self._get_structure_json().get("chemicalModifications")
 
 
+    def hydrogen_bond_acceptors(self):
+        return self._get_structure_json().get("hydrogenBondAcceptors")
+
+
+    def hydrogen_bond_donors(self):
+        return self._get_structure_json().get("hydrogenBondDonors")
+
+
+    def rotatable_bonds(self):
+        return self._get_structure_json().get("rotatableBonds")
+
+
+    def topological_polar_surface_area(self):
+        return self._get_structure_json().get("topologicalPolarSurfaceArea")
+
+
+    def molecular_weight(self):
+        return self._get_structure_json().get("molecularWeight")
+
+
+    def log_p(self):
+        return self._get_structure_json().get("logP")
+
+
+    def lipinski_rules_broken(self):
+        return self._get_structure_json().get("lipinskisRuleOfFive")
+
+
     def _get_structure_json(self):
         json_object = gtop.get_json_from_gtop(
          "ligands/%i/structure" % self._ligand_id
+        )
+        return json_object if json_object else {}
+
+
+    def _get_structure_json(self):
+        json_object = gtop.get_json_from_gtop(
+         "ligands/%i/molecularProperties" % self._ligand_id
         )
         return json_object if json_object else {}
 

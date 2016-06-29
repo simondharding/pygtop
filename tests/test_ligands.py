@@ -127,6 +127,42 @@ class LigandPropertyTests(LigandTest):
         self.assertIs(ligand.post_translational_modifications(), None)
         self.assertIs(ligand.chemical_modifications(), None)
 
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_molecular_properties(self, mock_json_retriever):
+        mock_json_retriever.return_value = {
+         "hydrogenBondAcceptors": 5,
+         "hydrogenBondDonors": 2,
+         "rotatableBonds": 7,
+         "topologicalPolarSurfaceArea": 74.27,
+         "molecularWeight": 415.19073474,
+         "logP": 1.84,
+         "lipinskisRuleOfFive": 0
+        }
+        ligand = Ligand(self.ligand_json)
+
+        self.assertEqual(ligand.hydrogen_bond_acceptors(), 5)
+        self.assertEqual(ligand.hydrogen_bond_donors(), 2)
+        self.assertEqual(ligand.rotatable_bonds(), 7)
+        self.assertEqual(ligand.topological_polar_surface_area(), 74.27)
+        self.assertEqual(ligand.molecular_weight(), 415.19073474)
+        self.assertEqual(ligand.log_p(), 1.84)
+        self.assertEqual(ligand.lipinski_rules_broken(), 0)
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_molecular_properties_when_no_json(self, mock_json_retriever):
+        mock_json_retriever.return_value = None
+        ligand = Ligand(self.ligand_json)
+        self.assertEqual(ligand.hydrogen_bond_acceptors(), None)
+        self.assertEqual(ligand.hydrogen_bond_donors(), None)
+        self.assertEqual(ligand.rotatable_bonds(), None)
+        self.assertEqual(ligand.topological_polar_surface_area(), None)
+        self.assertEqual(ligand.molecular_weight(), None)
+        self.assertEqual(ligand.log_p(), None)
+        self.assertEqual(ligand.lipinski_rules_broken(), None)
+
+
 '''import unittest
 from unittest.mock import patch
 import molecupy
