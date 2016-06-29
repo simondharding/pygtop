@@ -75,9 +75,24 @@ class RetryTests(TestCase):
 
 
     @patch("requests.get")
-    def test_attempts_must_be_int(self, mock_get):
+    def test_attempts_must_be_positive(self, mock_get):
         mock_get.return_value = self.mock_response
         with self.assertRaises(ValueError):
             get_json_from_gtop("ligands/x/", attempts=-1)
         with self.assertRaises(ValueError):
             get_json_from_gtop("ligands/x/", attempts=0)
+
+
+    @patch("requests.get")
+    def test_can_get_correct_value_on_last_attempt(self, mock_get):
+        ok_response = unittest.mock.Mock()
+        ok_response.status_code = 200
+        ok_response.text = '{"name": "superdrug", "ligandId": 1}'
+        mock_get.side_effect = [
+         self.mock_response, self.mock_response, self.mock_response, ok_response
+        ]
+        self.assertEqual(
+         get_json_from_gtop("/ligands/x/"),
+         {"name": "superdrug", "ligandId": 1}
+        )
+        self.assertEqual(mock_get.call_count, 4)
