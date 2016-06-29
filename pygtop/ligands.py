@@ -28,6 +28,25 @@ def get_all_ligands():
     json_data = gtop.get_json_from_gtop("ligands")
     return [Ligand(l) for l in json_data]
 
+
+def get_ligands_by(criteria):
+    """Get all ligands which specify the criteria dictionary.
+
+    :param dict criteria: A dictionary of `field=value` pairs. See the\
+     `GtoP ligand web services page <http://www.guidetopharmacology.org/\
+     webServices.jsp#ligands>`_ for key/value pairs which can be supplied.
+    :returns: list of :py:class:`Ligand` objects."""
+
+    if not isinstance(criteria, dict):
+        raise TypeError("criteria must be dict, not '%s'" % str(criteria))
+
+    search_string = "&".join(["%s=%s" % (key, criteria[key]) for key in criteria])
+    json_data = gtop.get_json_from_gtop("ligands?%s" % search_string)
+    if json_data:
+        return [Ligand(l) for l in json_data]
+    else:
+        return []
+
 class Ligand:
 
     def __init__(self, json_data):

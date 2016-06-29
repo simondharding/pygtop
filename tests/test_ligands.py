@@ -1,7 +1,7 @@
 from unittest import TestCase
 import unittest.mock
 from unittest.mock import patch
-from pygtop.ligands import Ligand, get_ligand_by_id, get_all_ligands
+from pygtop.ligands import Ligand, get_ligand_by_id, get_all_ligands, get_ligands_by
 import pygtop.exceptions as exceptions
 
 class LigandTest(TestCase):
@@ -260,6 +260,30 @@ class LigandAccessTests(LigandTest):
         self.assertEqual(len(ligands), 2)
         self.assertIsInstance(ligands[0], Ligand)
         self.assertIsInstance(ligands[1], Ligand)
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_can_get_ligand_by_query(self, mock_json_retriever):
+        mock_json_retriever.return_value = [self.ligand_json, self.ligand_json]
+        ligands = get_ligands_by({"type": "superdrug"})
+        self.assertIsInstance(ligands, list)
+        self.assertEqual(len(ligands), 2)
+        self.assertIsInstance(ligands[0], Ligand)
+        self.assertIsInstance(ligands[1], Ligand)
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_invalid_ligand_query_error(self, mock_json_retriever):
+        mock_json_retriever.return_value = None
+        ligands = get_ligands_by({"type": "superdrug"})
+        self.assertEqual(ligands, [])
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_ligand_query_must_be_dict(self, mock_json_retriever):
+        mock_json_retriever.return_value = [self.ligand_json, self.ligand_json]
+        with self.assertRaises(TypeError):
+            ligand = get_ligands_by("astring")
 
 
 '''import unittest
