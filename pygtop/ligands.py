@@ -1,5 +1,7 @@
 """Contains ligand-specific objects and functions."""
 
+from . import gtop
+
 class Ligand:
 
     def __init__(self, json_data):
@@ -83,6 +85,44 @@ class Ligand:
 
     def active_drug_ids(self):
         return self._active_drug_ids
+
+
+    def iupac_name(self):
+        return self._get_structure_json().get("iupacName")
+
+
+    def smiles(self):
+        return self._get_structure_json().get("smiles")
+
+
+    def inchi(self):
+        return self._get_structure_json().get("inchi")
+
+
+    def inchi_key(self):
+        return self._get_structure_json().get("inchiKey")
+
+
+    def one_letter_sequence(self):
+        return self._get_structure_json().get("oneLetterSeq")
+
+
+    def three_letter_sequence(self):
+        return self._get_structure_json().get("threeLetterSeq")
+
+
+    def post_translational_modifications(self):
+        return self._get_structure_json().get("postTranslationalModifications")
+
+
+    def chemical_modifications(self):
+        return self._get_structure_json().get("chemicalModifications")
+
+
+    def _get_structure_json(self):
+        return gtop.get_json_from_gtop(
+         "ligands/%i/structure" % self._ligand_id
+        )
 
 
 

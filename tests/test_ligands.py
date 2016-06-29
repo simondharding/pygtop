@@ -80,6 +80,40 @@ class LigandPropertyTests(LigandTest):
         self.assertIs(ligand._prodrug_ids, ligand.prodrug_ids())
         self.assertIs(ligand._active_drug_ids, ligand.active_drug_ids())
 
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_structural_properties(self, mock_json_retriever):
+        structure_json = {
+         "iupacName": "2,3-dihydro-1,4-benzodioxin",
+         "smiles": "OC[C@H]1COc2c(O1)cccc2N1CCN(CC1)CCNC(=O)c1ccc(cc1)F",
+         "inchi": "InChI=1S/C22H26FN3O4/c23-17-6-4-16(5-7-17)22(28)24-8-9-25-10",
+         "inchiKey": "NYSDRDDQELAVKP-SFHVURJKSA-N",
+         "oneLetterSeq": "ILK",
+         "threeLetterSeq": "Ile-Leu-Lys",
+         "postTranslationalModifications": "Glycosylation",
+         "chemicalModifications": "Methylation"
+        }
+        mock_json_retriever.return_value = structure_json
+        ligand = Ligand(self.ligand_json)
+
+        self.assertEqual(ligand.iupac_name(), "2,3-dihydro-1,4-benzodioxin")
+        self.assertEqual(
+         ligand.smiles(),
+         "OC[C@H]1COc2c(O1)cccc2N1CCN(CC1)CCNC(=O)c1ccc(cc1)F"
+        )
+        self.assertEqual(
+         ligand.inchi(),
+         "InChI=1S/C22H26FN3O4/c23-17-6-4-16(5-7-17)22(28)24-8-9-25-10"
+        )
+        self.assertEqual(ligand.inchi_key(), "NYSDRDDQELAVKP-SFHVURJKSA-N")
+        self.assertEqual(ligand.one_letter_sequence(), "ILK")
+        self.assertEqual(ligand.three_letter_sequence(), "Ile-Leu-Lys")
+        self.assertEqual(
+         ligand.post_translational_modifications(),
+         "Glycosylation"
+        )
+        self.assertEqual(ligand.chemical_modifications(), "Methylation")
+
 '''import unittest
 from unittest.mock import patch
 import molecupy
