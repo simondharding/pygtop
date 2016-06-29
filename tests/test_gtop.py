@@ -6,16 +6,38 @@ from pygtop.gtop import get_json_from_gtop
 class JsonTests(TestCase):
 
     def setUp(self):
-        self.valid_response = unittest.mock.Mock()
-        self.valid_response.text = '{"name": "superdrug", "ligandId": 1}'
-        self.valid_response.status_code = 200
+        self.mock_response = unittest.mock.Mock()
+        self.mock_response.text = '{"name": "superdrug", "ligandId": 1}'
+        self.mock_response.status_code = 200
 
 
     @patch("requests.get")
     def test_can_process_json(self, mock_get):
-        mock_get.return_value = self.valid_response
+        mock_get.return_value = self.mock_response
         result = get_json_from_gtop("ligands/1/")
         self.assertIsInstance(result, dict)
+        self.assertEqual(result, {"name": "superdrug", "ligandId": 1})
+
+
+    @patch("requests.get")
+    def test_can_process_json_with_strange_response(self, mock_get):
+        self.mock_response.text = ""
+        mock_get.return_value = self.mock_response
+        result = get_json_from_gtop("ligands/1/")
+        self.assertIs(result, None)
+        self.mock_response.text = "A non-JSON sentence"
+        result = get_json_from_gtop("ligands/1/")
+        self.assertIs(result, None)
+
+
+    @patch("requests.get")
+    def test_can_process_json_500_error(self, mock_get):
+        self.mock_response.status_code = 500
+        mock_get.return_value = self.mock_response
+        result = get_json_from_gtop("ligands/1/")
+        self.assertIs(result, None)
+
+
 
 
 '''import unittest
