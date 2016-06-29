@@ -21,6 +21,66 @@ class Ligand:
         self._active_drug_ids = json_data["activeDrugIds"]
 
 
+    def ligand_id(self):
+        return self._ligand_id
+
+
+    def name(self):
+        return self._name
+
+
+    def abbreviation(self):
+        return self._abbreviation
+
+
+    def inn(self):
+        return self._inn
+
+
+    def ligand_type(self):
+        return self._ligand_type
+
+
+    def species(self):
+        return self._species
+
+
+    def radioactive(self):
+        return self._radioactive
+
+
+    def labelled(self):
+        return self._labelled
+
+
+    def approved(self):
+        return self._approved
+
+
+    def withdrawn(self):
+        return self._withdrawn
+
+
+    def approval_source(self):
+        return self._approval_source
+
+
+    def subunit_ids(self):
+        return self._subunit_ids
+
+
+    def complex_ids(self):
+        return self._complex_ids
+
+
+    def prodrug_ids(self):
+        return self._prodrug_ids
+
+
+    def active_drug_ids(self):
+        return self._active_drug_ids
+
+
 
 
 '''import requests

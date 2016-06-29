@@ -53,6 +53,28 @@ class LigandCreationTests(LigandTest):
         ligand = Ligand(self.ligand_json)
         self.assertEqual(ligand._abbreviation, None)
 
+
+
+class LigandPropertyTests(LigandTest):
+
+    def test_basic_property_methods(self):
+        ligand = Ligand(self.ligand_json)
+        self.assertIs(ligand._ligand_id, ligand.ligand_id())
+        self.assertIs(ligand._name, ligand.name())
+        self.assertIs(ligand._abbreviation, ligand.abbreviation())
+        self.assertIs(ligand._inn, ligand.inn())
+        self.assertIs(ligand._ligand_type, ligand.ligand_type())
+        self.assertIs(ligand._species, ligand.species())
+        self.assertIs(ligand._radioactive, ligand.radioactive())
+        self.assertIs(ligand._labelled, ligand.labelled())
+        self.assertIs(ligand._approved, ligand.approved())
+        self.assertIs(ligand._withdrawn, ligand.withdrawn())
+        self.assertIs(ligand._approval_source, ligand.approval_source())
+        self.assertIs(ligand._subunit_ids, ligand.subunit_ids())
+        self.assertIs(ligand._complex_ids, ligand.complex_ids())
+        self.assertIs(ligand._prodrug_ids, ligand.prodrug_ids())
+        self.assertIs(ligand._active_drug_ids, ligand.active_drug_ids())
+
 '''import unittest
 from unittest.mock import patch
 import molecupy
