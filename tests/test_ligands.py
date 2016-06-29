@@ -83,7 +83,7 @@ class LigandPropertyTests(LigandTest):
 
     @patch("pygtop.gtop.get_json_from_gtop")
     def test_structural_properties(self, mock_json_retriever):
-        structure_json = {
+        mock_json_retriever.return_value = {
          "iupacName": "2,3-dihydro-1,4-benzodioxin",
          "smiles": "OC[C@H]1COc2c(O1)cccc2N1CCN(CC1)CCNC(=O)c1ccc(cc1)F",
          "inchi": "InChI=1S/C22H26FN3O4/c23-17-6-4-16(5-7-17)22(28)24-8-9-25-10",
@@ -93,7 +93,6 @@ class LigandPropertyTests(LigandTest):
          "postTranslationalModifications": "Glycosylation",
          "chemicalModifications": "Methylation"
         }
-        mock_json_retriever.return_value = structure_json
         ligand = Ligand(self.ligand_json)
 
         self.assertEqual(ligand.iupac_name(), "2,3-dihydro-1,4-benzodioxin")
@@ -114,6 +113,20 @@ class LigandPropertyTests(LigandTest):
         )
         self.assertEqual(ligand.chemical_modifications(), "Methylation")
 
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_structural_properties_when_no_json(self, mock_json_retriever):
+        mock_json_retriever.return_value = None
+        ligand = Ligand(self.ligand_json)
+        self.assertIs(ligand.iupac_name(), None)
+        self.assertIs(ligand.smiles(), None)
+        self.assertIs(ligand.inchi(), None)
+        self.assertIs(ligand.inchi_key(), None)
+        self.assertIs(ligand.one_letter_sequence(), None)
+        self.assertIs(ligand.three_letter_sequence(), None)
+        self.assertIs(ligand.post_translational_modifications(), None)
+        self.assertIs(ligand.chemical_modifications(), None)
+
 '''import unittest
 from unittest.mock import patch
 import molecupy
@@ -125,50 +138,6 @@ from pygtop.ligands import *
 from pygtop.exceptions import *
 
 
-string = str
-
-
-class LigandTest(unittest.TestCase):
-
-    def check_ligand_basic_properties(self, ligand):
-        self.assertIsInstance(ligand, Ligand)
-        self.assertIsInstance(ligand.name, string)
-        if ligand.abbreviation: self.assertIsInstance(ligand.abbreviation, string)
-        self.assertIsInstance(ligand.inn, string)
-        if ligand.species: self.assertIsInstance(ligand.species, string)
-        self.assertIsInstance(ligand.ligand_type, string)
-        self.assertIsInstance(ligand.radioactive, bool)
-        self.assertIsInstance(ligand.labelled, bool)
-        self.assertIsInstance(ligand.approved, bool)
-        self.assertIsInstance(ligand.withdrawn, bool)
-        self.assertIsInstance(ligand.approval_source, string)
-        self.assertIsInstance(ligand._subunit_ids, list)
-        if ligand._subunit_ids: self.assertIsInstance(ligand._subunit_ids[0], int)
-        self.assertIsInstance(ligand._complex_ids, list)
-        if ligand._complex_ids: self.assertIsInstance(ligand._complex_ids[0], int)
-        self.assertIsInstance(ligand._prodrug_ids, list)
-        if ligand._prodrug_ids: self.assertIsInstance(ligand._prodrug_ids[0], int)
-        self.assertIsInstance(ligand._active_drug_ids, list)
-        if ligand._active_drug_ids: self.assertIsInstance(ligand._active_drug_ids[0], int)
-
-
-    def check_ligand_structural_properties(self, ligand):
-        if ligand.iupac_name:
-            self.assertIsInstance(ligand.iupac_name, string)
-        if ligand.smiles:
-            self.assertIsInstance(ligand.smiles, string)
-        if ligand.inchi:
-            self.assertIsInstance(ligand.inchi, string)
-        if ligand.inchi_key:
-            self.assertIsInstance(ligand.inchi_key, string)
-        if ligand.one_letter_sequence:
-            self.assertIsInstance(ligand.one_letter_sequence, string)
-        if ligand.three_letter_sequence:
-            self.assertIsInstance(ligand.three_letter_sequence, string)
-        if ligand.post_translational_modifications:
-            self.assertIsInstance(ligand.post_translational_modifications, string)
-        if ligand.chemical_modifications:
-            self.assertIsInstance(ligand.chemical_modifications, string)
 
 
     def check_ligand_molecular_properties(self, ligand):

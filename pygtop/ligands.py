@@ -120,9 +120,10 @@ class Ligand:
 
 
     def _get_structure_json(self):
-        return gtop.get_json_from_gtop(
+        json_object = gtop.get_json_from_gtop(
          "ligands/%i/structure" % self._ligand_id
         )
+        return json_object if json_object else {}
 
 
 
