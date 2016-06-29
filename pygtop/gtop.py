@@ -1,23 +1,11 @@
-"""Functions for interacting with the Guide to PHARMACOLOGY web services.
-
-Also contains GtoP constants, such as the root URL."""
+"""Functions for interacting with the Guide to PHARMACOLOGY web services."""
 
 import json
 import requests
-import warnings
-warnings.filterwarnings("ignore")
 
 ROOT_URL = "http://www.guidetopharmacology.org/services/"
 
-STRUCTURAL_PROPERTIES = "structure"
-MOLECULAR_PROPERTIES = "molecularProperties"
-DATABASE_PROPERTIES = "databaseLinks"
-SYNONYM_PROPERTIES = "synonyms"
-COMMENT_PROPERTIES = "comments"
-PRECURSOR_PROPERTIES = "precursors"
-
-
-def get_json_from_gtop(query):
+def get_json_from_gtop(query, attempts=5):
     """Issues a query to the GtoP web services, and returns the resulting JSON.
 
     If it does not get a valid response, it will try again, and if it still
@@ -26,21 +14,23 @@ def get_json_from_gtop(query):
     :param str query: The query to append to the base URL.
     :return: JSON object or None"""
 
-    warnings.filterwarnings("ignore")
-    response = requests.get("%s%s" % (ROOT_URL, query))
+    if not isinstance(attempts, int):
+        raise TypeError(
+         "attempts must be an integer greater than zero, not %s", str(attempts)
+        )
+    if attempts < 1:
+        raise ValueError(
+         "attempts must be an integer greater than zero, not %s", str(attempts)
+        )
 
-    try:
-        if response.status_code == 200 and len(response.text) > 1:
-            return json.loads(response.text)
-        else:
-            raise ValueError
-    except:
-        return None
-    '''if response.status_code == 200 and len(response.text) > 1:
-        return json.loads(response.text)
-    else:
-        # Try ONE more time...
-        warnings.filterwarnings("ignore")
+    try_count = 0
+    while try_count < attempts:
         response = requests.get("%s%s" % (ROOT_URL, query))
-        if response.status_code == 200 and len(response.text) > 1:
-            return json.loads(response.text)'''
+        try:
+            if response.status_code == 200 and len(response.text) > 1:
+                return json.loads(response.text)
+            else:
+                raise ValueError
+        except ValueError:
+            try_count += 1
+    return None

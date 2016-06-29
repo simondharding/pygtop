@@ -14,7 +14,7 @@ class JsonTests(TestCase):
     @patch("requests.get")
     def test_can_process_json(self, mock_get):
         mock_get.return_value = self.mock_response
-        result = get_json_from_gtop("ligands/1/")
+        result = get_json_from_gtop("ligands/x/")
         self.assertIsInstance(result, dict)
         self.assertEqual(result, {"name": "superdrug", "ligandId": 1})
 
@@ -26,7 +26,7 @@ class JsonTests(TestCase):
         result = get_json_from_gtop("ligands/1/")
         self.assertIs(result, None)
         self.mock_response.text = "A non-JSON sentence"
-        result = get_json_from_gtop("ligands/1/")
+        result = get_json_from_gtop("ligands/x/")
         self.assertIs(result, None)
 
 
@@ -34,56 +34,50 @@ class JsonTests(TestCase):
     def test_can_process_json_500_error(self, mock_get):
         self.mock_response.status_code = 500
         mock_get.return_value = self.mock_response
-        result = get_json_from_gtop("ligands/1/")
+        result = get_json_from_gtop("ligands/x/")
         self.assertIs(result, None)
 
 
 
+class RetryTests(TestCase):
 
-'''import unittest
-import json
-import sys
-sys.path.append(".")
-from pygtop.gtop import *
-
-class GetJson(unittest.TestCase):
-
-    def test_can_get_json(self):
-        json_data = get_json_from_gtop("/ligands/1")
-        self.assertIsInstance(json_data, dict)
+    def setUp(self):
+        self.mock_response = unittest.mock.Mock()
+        self.mock_response.text = ""
+        self.mock_response.status_code = 500
 
 
-    def test_invalid_query_returns_none(self):
-        json_data = get_json_from_gtop("/ligands/0")
-        self.assertEqual(json_data, None)
+    @patch("requests.get")
+    def test_json_retriever_will_try_five_times(self, mock_get):
+        mock_get.return_value = self.mock_response
+        result = get_json_from_gtop("ligands/x/")
+        self.assertEqual(mock_get.call_count, 5)
 
 
-    def test_gtop_constants_are_valid(self):
-        self.assertIsInstance(
-         get_json_from_gtop("/ligands/1/%s" % STRUCTURAL_PROPERTIES),
-         dict
-        )
-        self.assertIsInstance(
-         get_json_from_gtop("/ligands/1/%s" % MOLECULAR_PROPERTIES),
-         dict
-        )
-        self.assertIsInstance(
-         get_json_from_gtop("/ligands/1/%s" % DATABASE_PROPERTIES),
-         list
-        )
-        self.assertIsInstance(
-         get_json_from_gtop("/ligands/1/%s" % SYNONYM_PROPERTIES),
-         list
-        )
-        self.assertIsInstance(
-         get_json_from_gtop("/ligands/121/%s" % COMMENT_PROPERTIES),
-         dict
-        )
-        self.assertIsInstance(
-         get_json_from_gtop("/ligands/4890/%s" % PRECURSOR_PROPERTIES),
-         list
-        )
+    @patch("requests.get")
+    def test_json_retriever_attempt_number_can_be_varied(self, mock_get):
+        mock_get.return_value = self.mock_response
+        result = get_json_from_gtop("ligands/x/", attempts=3)
+        self.assertEqual(mock_get.call_count, 3)
+        result = get_json_from_gtop("ligands/x/", attempts=1)
+        self.assertEqual(mock_get.call_count, 1 + 3)
+        result = get_json_from_gtop("ligands/x/", attempts=9)
+        self.assertEqual(mock_get.call_count, 9 + 1 + 3)
 
 
-if __name__ == "__main__":
-    unittest.main()'''
+    @patch("requests.get")
+    def test_attempts_must_be_int(self, mock_get):
+        mock_get.return_value = self.mock_response
+        with self.assertRaises(TypeError):
+            get_json_from_gtop("ligands/x/", attempts=1.5)
+        with self.assertRaises(TypeError):
+            get_json_from_gtop("ligands/x/", attempts="x")
+
+
+    @patch("requests.get")
+    def test_attempts_must_be_int(self, mock_get):
+        mock_get.return_value = self.mock_response
+        with self.assertRaises(ValueError):
+            get_json_from_gtop("ligands/x/", attempts=-1)
+        with self.assertRaises(ValueError):
+            get_json_from_gtop("ligands/x/", attempts=0)
