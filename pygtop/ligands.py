@@ -64,6 +64,42 @@ def get_ligand_by_name(name):
     else:
         raise NoSuchLigandError("There is no ligand with name %s" % name)
 
+
+
+def get_ligands_by_smiles(smiles, search_type="exact", cutoff=0.8):
+    """Search for ligands by SMILES string.
+
+    :param str smiles: The SMILES string to search with.
+    :param str search_type: The type of search. Viable options are ``"exact"``, \
+    ``"substructure"`` or ``"similarity"``.
+    :param float cutoff: If performing a similarity search, this is the cutoff \
+    used for similarity. The default is 0.8 and the maximum is 1.
+    :returns: list of :py:class:`Ligand` objects."""
+
+    if not isinstance(smiles, str):
+        raise TypeError("smiles must be str, not '%s'" % str(smiles))
+    if not isinstance(search_type, str):
+        raise TypeError("search_type must be str, not '%s'" % str(search_type))
+    if search_type not in ["exact", "substructure", "similarity"]:
+        raise ValueError("'%s' is not a valud search type" % search_type)
+    if not isinstance(cutoff, int) and not isinstance(cutoff, float):
+        raise TypeError("cutoff must be numeric, not '%s'" % str(cutoff))
+    if not 0 <= cutoff <= 1:
+        raise ValueError("cutoff must be between 0 and 1, not %s" % (str(cutoff)))
+
+    query = "ligands/%s/smiles?smiles=%s%s" % (
+     search_type,
+     smiles,
+     "similarityGt=%f" % cutoff if search_type == "similarity" else ""
+    )
+    json_data = gtop.get_json_from_gtop(query)
+    if json_data:
+        return [Ligand(l) for l in json_data]
+    else:
+        return []
+
+
+
 class Ligand:
 
     def __init__(self, json_data):
@@ -283,44 +319,9 @@ class Ligand:
 
 
 
-'''import requests
-import math
-import json
-import random
-from collections import Counter
-from . import gtop
-from . import pdb
-from .exceptions import *
-from .shared import *
-from . import interactions
+'''
 
 
-
-
-
-
-
-
-def get_ligands_by_smiles(smiles, search_type="exact", cutoff=0.8):
-    """Search for ligands by SMILES string.
-
-    :param str smiles: The SMILES string to search with.
-    :param str search_type: The type of search. Viable options are ``"exact"``, \
-    ``"substructure"`` or ``"similarity"``.
-    :param float cutoff: If performing a similarity search, this is the cutoff \
-    used for similarity. The default is 0.8 and the maximum is 1.
-    :returns: list of :py:class:`Ligand` objects."""
-
-    query = "ligands/%s/smiles?smiles=%s%s" % (
-     search_type,
-     smiles,
-     "similarityGt=%f" % cutoff if search_type == "similarity" else ""
-    )
-    json_data = gtop.get_json_from_gtop(query)
-    if json_data:
-        return [Ligand(l) for l in json_data]
-    else:
-        return []
 
 
 

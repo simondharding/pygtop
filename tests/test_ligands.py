@@ -1,7 +1,8 @@
 from unittest import TestCase
 import unittest.mock
 from unittest.mock import patch
-from pygtop.ligands import Ligand, get_ligand_by_id, get_all_ligands, get_ligands_by, get_ligand_by_name
+from pygtop.ligands import Ligand, get_ligand_by_id, get_all_ligands
+from pygtop.ligands import get_ligands_by, get_ligand_by_name, get_ligands_by_smiles
 import pygtop.exceptions as exceptions
 
 class LigandTest(TestCase):
@@ -308,6 +309,116 @@ class LigandAccessTests(LigandTest):
             ligand = get_ligand_by_name(1)
 
 
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_can_search_ligand_by_exact_smiles(self, mock_json_retriever):
+        mock_json_retriever.return_value = [self.ligand_json]
+        ligands = get_ligands_by_smiles(
+         "CC(CN(C)C)CN1c2ccccc2Sc2ccccc12"
+        )
+        self.assertIsInstance(ligands, list)
+        for ligand in ligands:
+            self.assertIsInstance(ligand, Ligand)
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_can_search_ligands_by_exact_but_incorrect_smiles(self, mock_json_retriever):
+        mock_json_retriever.return_value = None
+        self.assertEqual(
+         get_ligands_by_smiles(
+          "NNNNNNNNNNNNNNNNN"
+         ),
+         []
+        )
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_can_search_ligand_by_smiles_substructure(self, mock_json_retriever):
+        mock_json_retriever.return_value = [self.ligand_json]
+        ligands = get_ligands_by_smiles(
+         "CC(CN(C)C)CN1c2ccccc2Sc2ccccc12",
+         search_type="substructure"
+        )
+        self.assertIsInstance(ligands, list)
+        for ligand in ligands:
+            self.assertIsInstance(ligand, Ligand)
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_can_search_ligands_by_incorrect_substructure_smiles(self, mock_json_retriever):
+        mock_json_retriever.return_value = None
+        self.assertEqual(
+         get_ligands_by_smiles(
+          "NNNNNNNNNNNNNNNNN",
+          search_type="substructure"
+         ),
+         []
+        )
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_can_search_ligand_by_smiles_similarity(self, mock_json_retriever):
+        mock_json_retriever.return_value = [self.ligand_json]
+        ligands = get_ligands_by_smiles(
+         "CC(CN(C)C)CN1c2ccccc2Sc2ccccc12",
+         search_type="similarity",
+         cutoff=0.6
+        )
+        self.assertIsInstance(ligands, list)
+        for ligand in ligands:
+            self.assertIsInstance(ligand, Ligand)
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_can_search_ligands_by_incorrect_substructure_similarity_smiles(self, mock_json_retriever):
+        mock_json_retriever.return_value = None
+        self.assertEqual(
+         get_ligands_by_smiles(
+          "NNNNNNNNNNNNNNNNN",
+          search_type="similarity",
+          cutoff=0.6
+         ),
+         []
+        )
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_smiles_must_be_string(self, mock_json_retriever):
+        mock_json_retriever.return_value = [self.ligand_json]
+        with self.assertRaises(TypeError):
+             get_ligands_by_smiles(100)
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_search_type_must_be_string(self, mock_json_retriever):
+         mock_json_retriever.return_value = [self.ligand_json]
+         with self.assertRaises(TypeError):
+              get_ligands_by_smiles("CCC", search_type=100)
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_search_type_must_be_valid(self, mock_json_retriever):
+        mock_json_retriever.return_value = [self.ligand_json]
+        with self.assertRaises(ValueError):
+             get_ligands_by_smiles("CCC", search_type="goodness")
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_similarity_must_be_numeric(self, mock_json_retriever):
+        mock_json_retriever.return_value = [self.ligand_json]
+        with self.assertRaises(TypeError):
+             get_ligands_by_smiles("CCC", search_type="similarity", cutoff="1")
+        get_ligands_by_smiles("CCC", search_type="similarity", cutoff=1)
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_similarity_must_be_valid(self, mock_json_retriever):
+        mock_json_retriever.return_value = [self.ligand_json]
+        with self.assertRaises(ValueError):
+            get_ligands_by_smiles("CCC", search_type="similarity", cutoff=-0.5)
+        with self.assertRaises(ValueError):
+            get_ligands_by_smiles("CCC", search_type="similarity", cutoff=1.5)
+
 '''import unittest
 from unittest.mock import patch
 import molecupy
@@ -522,55 +633,6 @@ class MultiLigands(LigandTest):
         )
 
 
-    def test_can_search_ligand_by_exact_smiles(self):
-        ligands = pygtop.get_ligands_by_smiles(
-         "CC(CN(C)C)CN1c2ccccc2Sc2ccccc12"
-        )
-        self.assertIsInstance(ligands, list)
-        for ligand in ligands:
-            self.assertIsInstance(ligand, Ligand)
-        self.assertEqual(
-         pygtop.get_ligands_by_smiles(
-          "NNNNNNNNNNNNNNNNN"
-         ),
-         []
-        )
-
-
-    def test_can_search_ligand_by_smiles_substructure(self):
-        ligands = pygtop.get_ligands_by_smiles(
-         "CC(CN(C)C)CN1c2ccccc2Sc2ccccc12",
-         search_type="substructure"
-        )
-        self.assertIsInstance(ligands, list)
-        for ligand in ligands:
-            self.assertIsInstance(ligand, Ligand)
-        self.assertEqual(
-         pygtop.get_ligands_by_smiles(
-          "NNNNNNNNNNNNNNNNN",
-          search_type="substructure"
-         ),
-         []
-        )
-
-
-    def test_can_search_ligand_by_smiles_similarity(self):
-        ligands = pygtop.get_ligands_by_smiles(
-         "CC(CN(C)C)CN1c2ccccc2Sc2ccccc12",
-         search_type="similarity",
-         cutoff=0.6
-        )
-        self.assertIsInstance(ligands, list)
-        for ligand in ligands:
-            self.assertIsInstance(ligand, Ligand)
-        self.assertEqual(
-         pygtop.get_ligands_by_smiles(
-          "NNNNNNNNNNNNNNNNN",
-          search_type="similarity",
-          cutoff=0.6
-         ),
-         []
-        )
 
 
 class LigandPdbs(unittest.TestCase):
