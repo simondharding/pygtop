@@ -1,4 +1,25 @@
-import unittest
+from unittest import TestCase
+import unittest.mock
+from unittest.mock import patch
+from pygtop.targets import Target
+import pygtop.exceptions as exceptions
+from pygtop.shared import DatabaseLink
+
+class TargetTest(TestCase):
+
+    def setUp(self):
+        self.target_json = {
+         "targetId": 1,
+         "name": "5-HT<sub>1A</sub> receptor",
+         "abbreviation": "5-HT",
+         "systematicName": None,
+         "type": "GPCR",
+         "familyIds": [1],
+         "subunitIds": [2, 3],
+         "complexIds": [4]
+        }
+
+'''import unittest
 import json
 import sys
 sys.path.append(".")
@@ -321,3 +342,4 @@ class TargetPdbs(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+'''

@@ -1,6 +1,8 @@
 """Contains target-specific objects and functions."""
 
-from .exceptions import *
+class Target:
+    pass
+'''from .exceptions import *
 from . import pdb
 from . import gtop
 from .shared import *
@@ -467,4 +469,4 @@ class TargetFamily:
 
         :returns: list of :py:class:`TargetFamily` objects"""
 
-        return [get_family_by_id(i) for i in self._sub_family_ids]
+        return [get_family_by_id(i) for i in self._sub_family_ids]'''
