@@ -326,7 +326,7 @@ class Ligand:
 
     def _get_synonym_json(self):
         json_object = gtop.get_json_from_gtop(
-         "ligands/%i/synoynms" % self._ligand_id
+         "ligands/%i/synonyms" % self._ligand_id
         )
         return json_object if json_object else []
 
