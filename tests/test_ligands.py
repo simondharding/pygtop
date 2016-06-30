@@ -228,6 +228,49 @@ class LigandPropertyTests(LigandTest):
         self.assertEqual(ligand.mutations_and_pathophysiology_comments(), None)
 
 
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_can_get_subunits(self, mock_json_retriever):
+        mock_json_retriever.return_value = self.ligand_json
+        ligand = Ligand(self.ligand_json)
+        subunits = ligand.subunits()
+        self.assertIsInstance(subunits, list)
+        self.assertEqual(len(subunits), len(self.ligand_json["subunitIds"]))
+        for subunit in subunits:
+            self.assertIsInstance(subunit, Ligand)
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_can_get_complexes(self, mock_json_retriever):
+        mock_json_retriever.return_value = self.ligand_json
+        ligand = Ligand(self.ligand_json)
+        complexes = ligand.complexes()
+        self.assertIsInstance(complexes, list)
+        self.assertEqual(len(complexes), len(self.ligand_json["complexIds"]))
+        for complex_ in complexes:
+            self.assertIsInstance(complex_, Ligand)
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_can_get_prodrugs(self, mock_json_retriever):
+        mock_json_retriever.return_value = self.ligand_json
+        ligand = Ligand(self.ligand_json)
+        prodrugs = ligand.prodrugs()
+        self.assertIsInstance(prodrugs, list)
+        self.assertEqual(len(prodrugs), len(self.ligand_json["prodrugIds"]))
+        for prodrug in prodrugs:
+            self.assertIsInstance(prodrug, Ligand)
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_can_get_active_drugs(self, mock_json_retriever):
+        mock_json_retriever.return_value = self.ligand_json
+        ligand = Ligand(self.ligand_json)
+        active_drugs = ligand.active_drugs()
+        self.assertIsInstance(active_drugs, list)
+        self.assertEqual(len(active_drugs), len(self.ligand_json["activeDrugIds"]))
+        for active_drug in active_drugs:
+            self.assertIsInstance(active_drug, Ligand)
+
 
 class LigandAccessTests(LigandTest):
 

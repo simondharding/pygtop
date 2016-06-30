@@ -173,16 +173,32 @@ class Ligand:
         return self._subunit_ids
 
 
+    def subunits(self):
+        return [get_ligand_by_id(id_) for id_ in self._subunit_ids]
+
+
     def complex_ids(self):
         return self._complex_ids
+
+
+    def complexes(self):
+        return [get_ligand_by_id(id_) for id_ in self._complex_ids]
 
 
     def prodrug_ids(self):
         return self._prodrug_ids
 
 
+    def prodrugs(self):
+        return [get_ligand_by_id(id_) for id_ in self._prodrug_ids]
+
+
     def active_drug_ids(self):
         return self._active_drug_ids
+
+
+    def active_drugs(self):
+        return [get_ligand_by_id(id_) for id_ in self._active_drug_ids]
 
 
     def iupac_name(self):
