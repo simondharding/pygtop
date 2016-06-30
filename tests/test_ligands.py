@@ -4,6 +4,7 @@ from unittest.mock import patch
 from pygtop.ligands import Ligand, get_ligand_by_id, get_all_ligands
 from pygtop.ligands import get_ligands_by, get_ligand_by_name, get_ligands_by_smiles
 import pygtop.exceptions as exceptions
+from pygtop.shared import DatabaseLink
 
 class LigandTest(TestCase):
 
@@ -226,6 +227,39 @@ class LigandPropertyTests(LigandTest):
         self.assertEqual(ligand.population_pharmacokinetics_comments(), None)
         self.assertEqual(ligand.organ_function_impairments_comments(), None)
         self.assertEqual(ligand.mutations_and_pathophysiology_comments(), None)
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_database_properties(self, mock_json_retriever):
+        mock_json_retriever.return_value = [
+        {
+          "accession": "CHEMBL1742477",
+          "database": "ChEMBL Ligand",
+          "url": "http://www.ebi.ac.uk/chembldb/index.php/compound/inspect/CHEMBL1742477",
+          "species": "None"
+         },
+         {
+          "accession": "57347",
+          "database": "PubChem CID",
+          "url": "http://pubchem.ncbi.nlm.nih.gov/summary/summary.cgi?cid=57347",
+          "species": "None"
+         }
+        ]
+        ligand = Ligand(self.ligand_json)
+
+        self.assertEqual(len(ligand.database_links()), 2)
+        self.assertIsInstance(ligand.database_links()[0], DatabaseLink)
+        self.assertIsInstance(ligand.database_links()[1], DatabaseLink)
+        self.assertEqual(ligand.database_links()[0].accession, "CHEMBL1742477")
+        self.assertEqual(ligand.database_links()[1].accession, "57347")
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_database_properties_when_no_json(self, mock_json_retriever):
+        mock_json_retriever.return_value = None
+        ligand = Ligand(self.ligand_json)
+
+        self.assertEqual(ligand.database_links(), [])
 
 
     @patch("pygtop.gtop.get_json_from_gtop")

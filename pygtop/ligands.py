@@ -2,6 +2,7 @@
 
 from . import gtop
 from .exceptions import NoSuchLigandError
+from .shared import DatabaseLink
 
 def get_ligand_by_id(ligand_id):
     """Returns a Ligand object of the ligand with the given ID.
@@ -305,6 +306,10 @@ class Ligand:
         return self._get_molecular_json().get("mutationsAndPathophysiology")
 
 
+    def database_links(self):
+        return [DatabaseLink(link_json) for link_json in self._get_database_json()]
+
+
     def _get_structure_json(self):
         json_object = gtop.get_json_from_gtop(
          "ligands/%i/structure" % self._ligand_id
@@ -331,6 +336,13 @@ class Ligand:
          "ligands/%i/comments" % self._ligand_id
         )
         return json_object if json_object else {}
+
+
+    def _get_database_json(self):
+        json_object = gtop.get_json_from_gtop(
+         "ligands/%i/databaseLinks" % self._ligand_id
+        )
+        return json_object if json_object else []
 
 
 
