@@ -88,10 +88,10 @@ def get_ligands_by_smiles(smiles, search_type="exact", cutoff=0.8):
     if not 0 <= cutoff <= 1:
         raise ValueError("cutoff must be between 0 and 1, not %s" % (str(cutoff)))
 
-    query = "ligands/%s/smiles?smiles=%s%s" % (
+    query = "ligands/%s?smiles=%s%s" % (
      search_type,
      smiles,
-     "similarityGt=%f" % cutoff if search_type == "similarity" else ""
+     ("&similarityGt=%i" % (cutoff * 100)) if search_type == "similarity" else ""
     )
     json_data = gtop.get_json_from_gtop(query)
     if json_data:

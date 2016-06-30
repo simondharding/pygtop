@@ -32,3 +32,24 @@ class LigandAccessTests(TestCase):
         self.assertIsInstance(ligands, list)
         self.assertIsInstance(ligands[0], Ligand)
         self.assertGreater(len(ligands), 5000)
+
+
+
+class LigandSearchTests(TestCase):
+
+    def test_can_get_peptides(self):
+        peptides = pygtop.get_ligands_by({"type": "peptide"})
+        self.assertIsInstance(peptides, list)
+        self.assertIsInstance(peptides[0], Ligand)
+        self.assertGreater(len(peptides), 100)
+
+
+    def test_can_search_by_smiles(self):
+        ligands = pygtop.get_ligands_by_smiles(
+         "CC(CN(C)C)CN1c2ccccc2Sc2ccccc12",
+         search_type="similarity",
+         cutoff=0.3
+        )
+        self.assertIsInstance(ligands, list)
+        self.assertIsInstance(ligands[0], Ligand)
+        self.assertGreater(len(ligands), 1)
