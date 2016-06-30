@@ -392,52 +392,6 @@ class Ligand:
     """
 
 
-
-
-    def __getattr__(self, key):
-        error_message = self._get_missing_attribute_error_message(key)
-        if error_message:
-            raise PropertyNotRequestedYetError(error_message)
-        else:
-            raise AttributeError("Ligand object has no attribute '%s'" % key)
-
-
-    def __repr__(self):
-        return "<'%s' Ligand (%s)>" % (self.name, self.ligand_type)
-
-
-    def get_subunits(self):
-        """Returns a list of all ligands which are subunits of this ligand.
-
-        :returns: list of :py:class:`Ligand` objects"""
-
-        return [get_ligand_by_id(i) for i in self._subunit_ids]
-
-
-    def get_complexes(self):
-        """Returns a list of all ligands of which this ligand is a subunit.
-
-        :returns: list of :py:class:`Ligand` objects"""
-
-        return [get_ligand_by_id(i) for i in self._complex_ids]
-
-
-    def get_prodrugs(self):
-        """Returns a list of all ligands which are prodrugs of this ligand.
-
-        :returns: list of :py:class:`Ligand` objects"""
-
-        return [get_ligand_by_id(i) for i in self._prodrug_ids]
-
-
-    def get_active_drugs(self):
-        """Returns a list of all ligands which are active equivalents of this ligand.
-
-        :returns: list of :py:class:`Ligand` objects"""
-
-        return [get_ligand_by_id(i) for i in self._active_drug_ids]
-
-
     def get_interactions(self):
         """Returns a list of all interactions which this ligand is involved in.
 
