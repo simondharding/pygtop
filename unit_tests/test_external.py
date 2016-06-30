@@ -1,4 +1,6 @@
 from unittest import TestCase
+import unittest.mock
+from unittest.mock import patch
 from pygtop.shared import DatabaseLink
 
 
