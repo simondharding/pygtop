@@ -9,7 +9,7 @@ class Interaction:
         self._species = json_data["targetSpecies"]
         self._primary_target = json_data["primaryTarget"]
         self._endogenous = json_data["endogenous"]
-        self._type = json_data["type"]
+        self._interaction_type = json_data["type"]
         self._action = json_data["action"]
         affinity_values = "".join(
          [char for char in json_data["affinity"] if char in "0123456789. "]
@@ -26,6 +26,50 @@ class Interaction:
          self._species,
          self._target_id
         )
+
+
+    def interaction_id(self):
+        return self._interaction_id
+
+
+    def ligand_id(self):
+        return self._ligand_id
+
+
+    def target_id(self):
+        return self._target_id
+
+
+    def species(self):
+        return self._species
+
+
+    def primary_target(self):
+        return self._primary_target
+
+
+    def endogenous(self):
+        return self._endogenous
+
+
+    def interaction_type(self):
+        return self._interaction_type
+
+
+    def action(self):
+        return self._action
+
+
+    def affinity_low(self):
+        return self._affinity_low
+
+
+    def affinity_high(self):
+        return self._affinity_high
+
+
+    def affinity_type(self):
+        return self._affinity_type
 
 '''from __future__ import division
 from .gtop import *

@@ -51,7 +51,7 @@ class InteractionCreationTests(InteractionTest):
         self.assertEqual(interaction._species, "Human")
         self.assertEqual(interaction._primary_target, False)
         self.assertEqual(interaction._endogenous, False)
-        self.assertEqual(interaction._type, "Agonist")
+        self.assertEqual(interaction._interaction_type, "Agonist")
         self.assertEqual(interaction._action, "Agonist")
         self.assertEqual(interaction._affinity_low, 7.2)
         self.assertEqual(interaction._affinity_high, 7.2)
@@ -75,6 +75,24 @@ class InteractionCreationTests(InteractionTest):
     def test_interaction_repr(self):
         interaction = Interaction(self.interaction_json)
         self.assertEqual(str(interaction), "<Interaction (7191 --> Human 1)>")
+
+
+
+class InteractionPropertyTests(InteractionTest):
+
+    def test_basic_property_methods(self):
+        interaction = Interaction(self.interaction_json)
+        self.assertIs(interaction._interaction_id, interaction.interaction_id())
+        self.assertIs(interaction._ligand_id, interaction.ligand_id())
+        self.assertIs(interaction._target_id, interaction.target_id())
+        self.assertIs(interaction._species, interaction.species())
+        self.assertIs(interaction._primary_target, interaction.primary_target())
+        self.assertIs(interaction._endogenous, interaction.endogenous())
+        self.assertIs(interaction._interaction_type, interaction.interaction_type())
+        self.assertIs(interaction._action, interaction.action())
+        self.assertIs(interaction._affinity_low, interaction.affinity_low())
+        self.assertIs(interaction._affinity_high, interaction.affinity_high())
+        self.assertIs(interaction._affinity_type, interaction.affinity_type())
 
 
 '''import unittest
