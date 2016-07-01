@@ -170,8 +170,11 @@ class Target:
         return [synonym["name"] for synonym in self._get_synonym_json()]
 
 
-    def database_links(self):
-        return [DatabaseLink(link_json) for link_json in self._get_database_json()]
+    def database_links(self, species=None):
+        if species:
+            return [DatabaseLink(link_json) for link_json in self._get_database_json() if link_json["species"] and link_json["species"].lower() == species.lower()]
+        else:
+            return [DatabaseLink(link_json) for link_json in self._get_database_json()]
 
 
     def _get_synonym_json(self):
@@ -281,14 +284,6 @@ class Target:
 
         The target's systematic name.
     """
-
-
-    def get_families(self):
-        """Returns a list of all target families of which this target is a member.
-
-        :returns: list of :py:class:`TargetFamily` objects"""
-
-        return [get_family_by_id(i) for i in self._family_ids]
 
 
     def get_interactions(self):
@@ -485,34 +480,4 @@ class SpeciesTarget(Target):
          link for link in self.database_links
           if link.species.lower() == self.species.lower()
         ]
-
-
-class TargetFamily:
-    """A Guide to PHARMACOLOGY target family object.
-
-    :param json_data: A dictionary obtained from the web services.
-
-    .. py:attribute:: family_id:
-
-        The family's GtoP ID.
-
-    .. py:attribute:: name:
-
-        The family's name.
-    """
-
-    def __init__(self, json_data):
-        self.json_data = json_data
-
-        self.family_id = json_data["familyId"]
-        self.name = json_data["name"]
-        self._target_ids = json_data["targetIds"]
-        self._parent_family_ids = json_data["parentFamilyIds"]
-        self._sub_family_ids = json_data["subFamilyIds"]
-
-
-    def __repr__(self):
-        return "<'%s' TargetFamily>" % self.name
-
-
     '''

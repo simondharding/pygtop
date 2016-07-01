@@ -20,6 +20,21 @@ class TargetTest(TestCase):
          "complexIds": [4]
         }
 
+        self.database_json = [
+         {
+          "accession": "10576",
+          "database": "ChEMBL Target",
+          "url": "http://www.ebi.ac.uk/chembldb/index.php/target/inspect/10576",
+          "species": "Rat"
+         },
+         {
+          "accession": "11863",
+          "database": "ChEMBL Target",
+          "url": "http://www.ebi.ac.uk/chembldb/index.php/target/inspect/11863",
+          "species": "Mouse"
+         }
+        ]
+
 
 
 class TargetCreationTests(TargetTest):
@@ -78,20 +93,7 @@ class TargetPropertyTests(TargetTest):
 
     @patch("pygtop.gtop.get_json_from_gtop")
     def test_database_properties(self, mock_json_retriever):
-        mock_json_retriever.return_value = [
-         {
-          "accession": "10576",
-          "database": "ChEMBL Target",
-          "url": "http://www.ebi.ac.uk/chembldb/index.php/target/inspect/10576",
-          "species": "Rat"
-         },
-         {
-          "accession": "11863",
-          "database": "ChEMBL Target",
-          "url": "http://www.ebi.ac.uk/chembldb/index.php/target/inspect/11863",
-          "species": "Mouse"
-         }
-        ]
+        mock_json_retriever.return_value = self.database_json
         target = Target(self.target_json)
 
         self.assertEqual(len(target.database_links()), 2)
@@ -109,6 +111,18 @@ class TargetPropertyTests(TargetTest):
         target = Target(self.target_json)
 
         self.assertEqual(target.database_links(), [])
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_species_database_properties(self, mock_json_retriever):
+        mock_json_retriever.return_value = self.database_json
+        target = Target(self.target_json)
+
+        links = target.database_links(species="mouse")
+        self.assertEqual(len(links), 1)
+        self.assertIsInstance(links[0], DatabaseLink)
+        self.assertEqual(links[0].accession, "11863")
+        self.assertEqual(links[0].species, "Mouse")
 
 
     @patch("pygtop.gtop.get_json_from_gtop")
