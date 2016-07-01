@@ -65,6 +65,8 @@ def get_target_by_name(name):
     else:
         raise NoSuchTargetError("There is no target with name %s" % name)
 
+
+
 class Target:
 
     def __init__(self, json_data):
@@ -151,6 +153,23 @@ class Target:
          "targets/%i/databaseLinks" % self._target_id
         )
         return json_object if json_object else []
+
+
+
+class TargetFamily:
+
+    def __init__(self, json_data):
+        self.json_data = json_data
+
+        self._family_id = json_data["familyId"]
+        self._name = json_data["name"]
+        self._target_ids = json_data["targetIds"]
+        self._parent_family_ids = json_data["parentFamilyIds"]
+        self._sub_family_ids = json_data["subFamilyIds"]
+
+
+    def __repr__(self):
+        return "<'%s' TargetFamily>" % self._name
 
 
 '''
