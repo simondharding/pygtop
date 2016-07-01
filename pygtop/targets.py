@@ -1,6 +1,7 @@
 """Contains target-specific objects and functions."""
 
 from . import gtop
+from .interactions import Interaction
 from .exceptions import NoSuchTargetError, NoSuchTargetFamilyError
 from .shared import DatabaseLink
 
@@ -177,6 +178,23 @@ class Target:
             return [DatabaseLink(link_json) for link_json in self._get_database_json()]
 
 
+    def interactions(self):
+        return [Interaction(interaction_json) for interaction_json in self._get_interactions_json()]
+
+
+    def ligands(self):
+        """Returns a list of all ligands which this target interacts with.
+
+        :returns: list of :py:class:`.Ligand` objects"""
+
+        ligands = []
+        for interaction in self.interactions():
+            ligand = interaction.ligand()
+            if ligand not in ligands:
+                ligands.append(ligand)
+        return ligands
+
+
     def _get_synonym_json(self):
         json_object = gtop.get_json_from_gtop(
          "targets/%i/synonyms" % self._target_id
@@ -187,6 +205,13 @@ class Target:
     def _get_database_json(self):
         json_object = gtop.get_json_from_gtop(
          "targets/%i/databaseLinks" % self._target_id
+        )
+        return json_object if json_object else []
+
+
+    def _get_interactions_json(self):
+        json_object = gtop.get_json_from_gtop(
+         "targets/%i/interactions" % self._target_id
         )
         return json_object if json_object else []
 

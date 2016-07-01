@@ -3,6 +3,8 @@ import unittest.mock
 from unittest.mock import patch
 from pygtop.targets import Target, get_target_by_id, get_all_targets, get_targets_by
 from pygtop.targets import get_target_by_name, TargetFamily
+from pygtop.interactions import Interaction
+from pygtop.ligands import Ligand
 import pygtop.exceptions as exceptions
 from pygtop.shared import DatabaseLink
 
@@ -34,6 +36,55 @@ class TargetTest(TestCase):
           "species": "Mouse"
          }
         ]
+
+        self.interaction_json = {
+         "interactionId": 79397,
+         "targetId": 1,
+         "ligandAsTargetId": 0,
+         "targetSpecies": "Human",
+         "primaryTarget": False,
+         "targetBindingSite": "",
+         "ligandId": 7191,
+         "ligandContext": "",
+         "endogenous": False,
+         "type": "Agonist",
+         "action": "Agonist",
+         "actionComment": "",
+         "selectivity": "None",
+         "concentrationRange": "-",
+         "affinity": "7.2",
+         "affinityType": "pKi",
+         "originalAffinity": "6x10<sup>-8</sup>",
+         "originalAffinityType": "Ki",
+         "originalAffinityRelation": "",
+         "assayDescription": "",
+         "assayConditions": "",
+         "useDependent": False,
+         "voltageDependent": False,
+         "voltage": "-",
+         "physiologicalVoltage": False,
+         "conciseView": False,
+         "dataPoints": [],
+         "refs": []
+        }
+
+        self.ligand_json = {
+         "ligandId": 1,
+         "name": "flesinoxan",
+         "abbreviation": "flexo",
+         "inn": "flesinoxan",
+         "type": "Synthetic organic",
+         "species": None,
+         "radioactive": False,
+         "labelled": True,
+         "approved": True,
+         "withdrawn": False,
+         "approvalSource": "FDA (1997)",
+         "subunitIds": [2, 3],
+         "complexIds": [5],
+         "prodrugIds": [7],
+         "activeDrugIds": [9, 10]
+        }
 
 
 
@@ -162,6 +213,37 @@ class TargetPropertyTests(TargetTest):
         self.assertEqual(len(complexes), len(self.target_json["complexIds"]))
         for complex_ in complexes:
             self.assertIsInstance(complex_, Target)
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_can_get_interactions(self, mock_json_retriever):
+        mock_json_retriever.return_value = [self.interaction_json, self.interaction_json]
+        target = Target(self.target_json)
+        interactions = target.interactions()
+        self.assertIsInstance(interactions, list)
+        self.assertEqual(len(interactions), 2)
+        for interaction in interactions:
+            self.assertIsInstance(interaction, Interaction)
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_interactions_when_no_json(self, mock_json_retriever):
+        mock_json_retriever.return_value = None
+        target = Target(self.target_json)
+        self.assertEqual(target.interactions(), [])
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_can_get_ligands(self, mock_json_retriever):
+        mock_json_retriever.side_effect = [
+         [self.interaction_json, self.interaction_json], self.ligand_json, self.ligand_json
+        ]
+        target = Target(self.target_json)
+        ligands = target.ligands()
+        self.assertIsInstance(ligands, list)
+        self.assertEqual(len(ligands), 2)
+        for ligand in ligands:
+            self.assertIsInstance(ligand, Ligand)
 
 
 
