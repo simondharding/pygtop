@@ -1,7 +1,7 @@
 """Contains target-specific objects and functions."""
 
 from . import gtop
-from .exceptions import NoSuchTargetError
+from .exceptions import NoSuchTargetError, NoSuchTargetFamilyError
 from .shared import DatabaseLink
 
 def get_target_by_id(target_id):
@@ -64,6 +64,31 @@ def get_target_by_name(name):
         return targets[0]
     else:
         raise NoSuchTargetError("There is no target with name %s" % name)
+
+
+def get_target_family_by_id(family_id):
+    """Returns a TargetFamily object of the family with the given ID.
+
+    :param int family_id: The GtoP ID of the TargetFamily desired.
+    :rtype: :py:class:`TargetFamily`
+    :raises: :class:`.NoSuchTargetFamilyError`: if no such family exists in the database"""
+
+    if not isinstance(family_id, int):
+        raise TypeError("family_id must be int, not '%s'" % str(family_id))
+    json_data = gtop.get_json_from_gtop("targets/families/%i" % family_id)
+    if json_data:
+        return TargetFamily(json_data)
+    else:
+        raise NoSuchTargetFamilyError("There is no Target Family with ID %i" % family_id)
+
+
+def get_all_target_families():
+    """Returns a list of all target families in the Guide to PHARMACOLOGY database.
+
+    :returns: list of :py:class:`TargetFamily` objects"""
+
+    json_data = gtop.get_json_from_gtop("targets/families")
+    return [TargetFamily(f) for f in json_data]
 
 
 
@@ -193,27 +218,7 @@ class TargetFamily:
 
 
 '''
-def get_family_by_id(family_id):
-    """Returns a TargetFamily object of the family with the given ID.
 
-    :param int family_id: The GtoP ID of the TargetFamily desired.
-    :rtype: :py:class:`TargetFamily`
-    :raises: :class:`.NoSuchFamilyError`: if no such family exists in the database"""
-
-    json_data = gtop.get_json_from_gtop("targets/families/%i" % family_id)
-    if json_data:
-        return TargetFamily(json_data)
-    else:
-        raise NoSuchFamilyError
-
-
-def get_all_families():
-    """Returns a list of all target families in the Guide to PHARMACOLOGY database.
-
-    :returns: list of :py:class:`TargetFamily` objects"""
-
-    json_data = gtop.get_json_from_gtop("targets/families")
-    return [TargetFamily(f) for f in json_data]
 
 
 

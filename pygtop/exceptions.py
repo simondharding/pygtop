@@ -14,7 +14,7 @@ class NoSuchTargetError(Exception):
 
 
 
-class NoSuchFamilyError(Exception):
+class NoSuchTargetFamilyError(Exception):
     """The exception raised if a specific target family is requested which does not
     exist."""
     pass
