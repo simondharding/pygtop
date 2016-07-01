@@ -232,7 +232,7 @@ class LigandPropertyTests(LigandTest):
     @patch("pygtop.gtop.get_json_from_gtop")
     def test_database_properties(self, mock_json_retriever):
         mock_json_retriever.return_value = [
-        {
+         {
           "accession": "CHEMBL1742477",
           "database": "ChEMBL Ligand",
           "url": "http://www.ebi.ac.uk/chembldb/index.php/compound/inspect/CHEMBL1742477",

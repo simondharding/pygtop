@@ -1,6 +1,7 @@
 """Contains target-specific objects and functions."""
 
 from . import gtop
+from .shared import DatabaseLink
 
 class Target:
 
@@ -56,9 +57,20 @@ class Target:
         return [synonym["name"] for synonym in self._get_synonym_json()]
 
 
+    def database_links(self):
+        return [DatabaseLink(link_json) for link_json in self._get_database_json()]
+
+
     def _get_synonym_json(self):
         json_object = gtop.get_json_from_gtop(
          "targets/%i/synonyms" % self._target_id
+        )
+        return json_object if json_object else []
+
+
+    def _get_database_json(self):
+        json_object = gtop.get_json_from_gtop(
+         "targets/%i/databaseLinks" % self._target_id
         )
         return json_object if json_object else []
 

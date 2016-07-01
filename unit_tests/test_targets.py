@@ -74,6 +74,41 @@ class TargetPropertyTests(TargetTest):
 
         self.assertEqual(target.synonyms(), [])
 
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_database_properties(self, mock_json_retriever):
+        mock_json_retriever.return_value = [
+         {
+          "accession": "10576",
+          "database": "ChEMBL Target",
+          "url": "http://www.ebi.ac.uk/chembldb/index.php/target/inspect/10576",
+          "species": "Rat"
+         },
+         {
+          "accession": "11863",
+          "database": "ChEMBL Target",
+          "url": "http://www.ebi.ac.uk/chembldb/index.php/target/inspect/11863",
+          "species": "Mouse"
+         }
+        ]
+        target = Target(self.target_json)
+
+        self.assertEqual(len(target.database_links()), 2)
+        self.assertIsInstance(target.database_links()[0], DatabaseLink)
+        self.assertIsInstance(target.database_links()[1], DatabaseLink)
+        self.assertEqual(target.database_links()[0].accession, "10576")
+        self.assertEqual(target.database_links()[1].accession, "11863")
+        self.assertEqual(target.database_links()[0].species, "Rat")
+        self.assertEqual(target.database_links()[1].species, "Mouse")
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_database_properties_when_no_json(self, mock_json_retriever):
+        mock_json_retriever.return_value = None
+        target = Target(self.target_json)
+
+        self.assertEqual(target.database_links(), [])
+
 '''import unittest
 import json
 import sys
