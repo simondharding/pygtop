@@ -1,7 +1,23 @@
 """Contains target-specific objects and functions."""
 
 class Target:
-    pass
+
+    def __init__(self, json_data):
+        self.json_data = json_data
+        self._target_id = json_data["targetId"]
+        self._name = json_data["name"]
+        self._abbreviation = json_data["abbreviation"]
+        self._systematic_name = json_data["systematicName"]
+        self._target_type = json_data["type"]
+        self._family_ids = json_data["familyIds"]
+        self._subunit_ids = json_data["subunitIds"]
+        self._complex_ids = json_data["complexIds"]
+
+
+    def __repr__(self):
+        return "<Target %i (%s)>" % (self._target_id, self._name)
+
+
 '''from .exceptions import *
 from . import pdb
 from . import gtop
@@ -140,32 +156,6 @@ class Target:
 
         The target's systematic name.
     """
-
-    def __init__(self, json_data):
-        self.json_data = json_data
-
-        self.target_id = json_data["targetId"]
-        self.name = json_data["name"].strip()
-        self.abbreviation = json_data["abbreviation"]\
-         if json_data["abbreviation"] else None
-        self.systematic_name = json_data["systematicName"]\
-         if json_data["systematicName"] else None
-        self.target_type = json_data["type"]
-        self._family_ids = json_data["familyIds"]
-        self._subunit_ids = json_data["subunitIds"]
-        self._complex_ids = json_data["complexIds"]
-
-
-    def __getattr__(self, key):
-        error_message = self._get_missing_attribute_error_message(key)
-        if error_message:
-            raise PropertyNotRequestedYetError(error_message)
-        else:
-            raise AttributeError("Target object has no attribute '%s'" % key)
-
-
-    def __repr__(self):
-        return "<'%s' Target (%s)>" % (self.name, self.target_type)
 
 
     def get_subunits(self):

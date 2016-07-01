@@ -19,6 +19,27 @@ class TargetTest(TestCase):
          "complexIds": [4]
         }
 
+
+
+class LigandCreationTests(TargetTest):
+
+    def test_can_create_target(self):
+        target = Target(self.target_json)
+        self.assertEqual(target.json_data, self.target_json)
+        self.assertEqual(target._target_id, 1)
+        self.assertEqual(target._name, "5-HT<sub>1A</sub> receptor")
+        self.assertEqual(target._abbreviation, "5-HT")
+        self.assertEqual(target._systematic_name, None)
+        self.assertEqual(target._target_type, "GPCR")
+        self.assertEqual(target._family_ids, [1])
+        self.assertEqual(target._subunit_ids, [2, 3])
+        self.assertEqual(target._complex_ids, [4])
+
+
+    def test_target_repr(self):
+        target = Target(self.target_json)
+        self.assertEqual(str(target), "<Target 1 (5-HT<sub>1A</sub> receptor)>")
+
 '''import unittest
 import json
 import sys
