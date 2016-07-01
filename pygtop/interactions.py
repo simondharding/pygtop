@@ -1,5 +1,6 @@
 from .ligands import get_ligand_by_id
-from .exceptions import NoSuchLigandError
+from .targets import get_target_by_id
+from .exceptions import NoSuchLigandError, NoSuchTargetError
 
 class Interaction:
 
@@ -48,6 +49,13 @@ class Interaction:
 
     def target_id(self):
         return self._target_id
+
+
+    def target(self):
+        try:
+            return get_target_by_id(self._target_id)
+        except NoSuchTargetError:
+            return None
 
 
     def species(self):

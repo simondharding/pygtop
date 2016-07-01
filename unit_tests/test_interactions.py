@@ -3,6 +3,7 @@ import unittest.mock
 from unittest.mock import patch
 from pygtop.interactions import Interaction
 from pygtop.ligands import Ligand
+from pygtop.targets import Target
 import pygtop.exceptions as exceptions
 
 class InteractionTest(TestCase):
@@ -55,6 +56,17 @@ class InteractionTest(TestCase):
          "complexIds": [5],
          "prodrugIds": [7],
          "activeDrugIds": [9, 10]
+        }
+
+        self.target_json = {
+         "targetId": 1,
+         "name": "5-HT<sub>1A</sub> receptor",
+         "abbreviation": "5-HT",
+         "systematicName": None,
+         "type": "GPCR",
+         "familyIds": [1],
+         "subunitIds": [2, 3],
+         "complexIds": [4]
         }
 
 
@@ -128,6 +140,22 @@ class InteractionPropertyTests(InteractionTest):
         mock_json_retriever.return_value = None
         interaction = Interaction(self.interaction_json)
         self.assertEqual(interaction.ligand(), None)
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_can_get_target(self, mock_json_retriever):
+        mock_json_retriever.return_value = self.target_json
+        interaction = Interaction(self.interaction_json)
+        target = interaction.target()
+        self.assertIsInstance(target, Target)
+        self.assertEqual(target.target_id(), self.target_json["targetId"])
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_target_when_no_json(self, mock_json_retriever):
+        mock_json_retriever.return_value = None
+        interaction = Interaction(self.interaction_json)
+        self.assertEqual(interaction.target(), None)
 
 
 '''import unittest
