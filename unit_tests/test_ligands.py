@@ -4,6 +4,7 @@ from unittest.mock import patch
 from pygtop.ligands import Ligand, get_ligand_by_id, get_all_ligands
 from pygtop.ligands import get_ligands_by, get_ligand_by_name, get_ligands_by_smiles
 from pygtop.interactions import Interaction
+from pygtop.targets import Target
 import pygtop.exceptions as exceptions
 from pygtop.shared import DatabaseLink
 
@@ -57,6 +58,17 @@ class LigandTest(TestCase):
          "conciseView": False,
          "dataPoints": [],
          "refs": []
+        }
+
+        self.target_json = {
+         "targetId": 1,
+         "name": "5-HT<sub>1A</sub> receptor",
+         "abbreviation": "5-HT",
+         "systematicName": None,
+         "type": "GPCR",
+         "familyIds": [1],
+         "subunitIds": [2, 3],
+         "complexIds": [4]
         }
 
 
@@ -354,6 +366,19 @@ class LigandPropertyTests(LigandTest):
         mock_json_retriever.return_value = None
         ligand = Ligand(self.ligand_json)
         self.assertEqual(ligand.interactions(), [])
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_can_get_targets(self, mock_json_retriever):
+        mock_json_retriever.side_effect = [
+         [self.interaction_json, self.interaction_json], self.target_json, self.target_json
+        ]
+        ligand = Ligand(self.ligand_json)
+        targets = ligand.targets()
+        self.assertIsInstance(targets, list)
+        self.assertEqual(len(targets), 2)
+        for target in targets:
+            self.assertIsInstance(target, Target)
 
 
 class LigandAccessTests(LigandTest):

@@ -315,6 +315,19 @@ class Ligand:
         return [Interaction(interaction_json) for interaction_json in self._get_interactions_json()]
 
 
+    def targets(self):
+        """Returns a list of all targets which this ligand interacts with.
+
+        :returns: list of :py:class:`.Target` objects"""
+
+        targets = []
+        for interaction in self.interactions():
+            target = interaction.target()
+            if target not in targets:
+                targets.append(target)
+        return targets
+
+
     def _get_structure_json(self):
         json_object = gtop.get_json_from_gtop(
          "ligands/%i/structure" % self._ligand_id
@@ -440,16 +453,6 @@ class Ligand:
 
 
     def get_targets(self):
-        """Returns a list of all targets which this ligand interacts with.
-
-        :returns: list of :py:class:`.Target` objects"""
-
-        targets = []
-        for interaction in self.get_interactions():
-            target = interaction.get_target()
-            if target not in targets:
-                targets.append(target)
-        return targets
 
 
     def get_species_targets(self):
