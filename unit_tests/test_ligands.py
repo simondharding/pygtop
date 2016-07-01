@@ -3,6 +3,7 @@ import unittest.mock
 from unittest.mock import patch
 from pygtop.ligands import Ligand, get_ligand_by_id, get_all_ligands
 from pygtop.ligands import get_ligands_by, get_ligand_by_name, get_ligands_by_smiles
+from pygtop.interactions import Interaction
 import pygtop.exceptions as exceptions
 from pygtop.shared import DatabaseLink
 
@@ -25,6 +26,37 @@ class LigandTest(TestCase):
          "complexIds": [5],
          "prodrugIds": [7],
          "activeDrugIds": [9, 10]
+        }
+
+        self.interaction_json = {
+         "interactionId": 79397,
+         "targetId": 1,
+         "ligandAsTargetId": 0,
+         "targetSpecies": "Human",
+         "primaryTarget": False,
+         "targetBindingSite": "",
+         "ligandId": 7191,
+         "ligandContext": "",
+         "endogenous": False,
+         "type": "Agonist",
+         "action": "Agonist",
+         "actionComment": "",
+         "selectivity": "None",
+         "concentrationRange": "-",
+         "affinity": "7.2",
+         "affinityType": "pKi",
+         "originalAffinity": "6x10<sup>-8</sup>",
+         "originalAffinityType": "Ki",
+         "originalAffinityRelation": "",
+         "assayDescription": "",
+         "assayConditions": "",
+         "useDependent": False,
+         "voltageDependent": False,
+         "voltage": "-",
+         "physiologicalVoltage": False,
+         "conciseView": False,
+         "dataPoints": [],
+         "refs": []
         }
 
 
@@ -304,6 +336,24 @@ class LigandPropertyTests(LigandTest):
         self.assertEqual(len(active_drugs), len(self.ligand_json["activeDrugIds"]))
         for active_drug in active_drugs:
             self.assertIsInstance(active_drug, Ligand)
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_can_get_interactions(self, mock_json_retriever):
+        mock_json_retriever.return_value = [self.interaction_json, self.interaction_json]
+        ligand = Ligand(self.ligand_json)
+        interactions = ligand.interactions()
+        self.assertIsInstance(interactions, list)
+        self.assertEqual(len(interactions), 2)
+        for interaction in interactions:
+            self.assertIsInstance(interaction, Interaction)
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_interactions_when_no_json(self, mock_json_retriever):
+        mock_json_retriever.return_value = None
+        ligand = Ligand(self.ligand_json)
+        self.assertEqual(ligand.interactions(), [])
 
 
 class LigandAccessTests(LigandTest):

@@ -1,5 +1,3 @@
-from .ligands import get_ligand_by_id
-from .targets import get_target_by_id
 from .exceptions import NoSuchLigandError, NoSuchTargetError
 
 class Interaction:
@@ -41,6 +39,11 @@ class Interaction:
 
 
     def ligand(self):
+        """Returns the Ligand object for this interaction.
+
+        :rtype: :py:class:`.Ligand`"""
+
+        from .ligands import get_ligand_by_id
         try:
             return get_ligand_by_id(self._ligand_id)
         except NoSuchLigandError:
@@ -52,6 +55,11 @@ class Interaction:
 
 
     def target(self):
+        """Returns the Target object for this interaction.
+
+        :rtype: :py:class:`.Target`"""
+
+        from .targets import get_target_by_id
         try:
             return get_target_by_id(self._target_id)
         except NoSuchTargetError:
@@ -170,35 +178,6 @@ class Interaction:
 
         A list of academic paper titles as strings which constitute the references for this interaction.
     """
-
-
-
-
-
-    def get_ligand(self):
-        """Returns the Ligand object for this interaction.
-
-        :rtype: :py:class:`.Ligand`"""
-
-        from .ligands import get_ligand_by_id
-        try:
-            return get_ligand_by_id(self._ligand_id)
-        except NoSuchLigandError:
-            return None
-
-
-    def get_target(self):
-        """Returns the Target object for this interaction.
-
-        :rtype: :py:class:`.Target`"""
-
-        from .targets import get_target_by_id
-        try:
-            return get_target_by_id(self._target_id)
-        except NoSuchTargetError:
-            return None
-
-
     @pdb.ask_about_molecupy
     def get_gtop_pdbs(self):
         """Returns a list of PDBs which the Guide to PHARMACOLOGY says contain
