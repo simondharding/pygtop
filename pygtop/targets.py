@@ -1,7 +1,69 @@
 """Contains target-specific objects and functions."""
 
 from . import gtop
+from .exceptions import NoSuchTargetError
 from .shared import DatabaseLink
+
+def get_target_by_id(target_id):
+    """Returns a Target object of the target with the given ID.
+
+    :param int target_id: The GtoP ID of the Target desired.
+    :rtype: :py:class:`Target`
+    :raises: :class:`.NoSuchTargetError`: if no such target exists in the database"""
+
+    if not isinstance(target_id, int):
+        raise TypeError("target_id must be int, not '%s'" % str(target_id))
+    json_data = gtop.get_json_from_gtop("targets/%i" % target_id)
+    if json_data:
+        return Target(json_data)
+    else:
+        raise NoSuchTargetError("There is no target with ID %i" % target_id)
+
+
+def get_all_targets():
+    """Returns a list of all targets in the Guide to PHARMACOLOGY database. This
+    can take a few seconds.
+
+    :returns: list of :py:class:`Target` objects"""
+
+    json_data = gtop.get_json_from_gtop("targets")
+    return [Target(t) for t in json_data]
+
+
+def get_targets_by(criteria):
+    """Get all targets which specify the criteria dictionary.
+
+    :param dict criteria: A dictionary of `field=value` pairs. See the\
+     `GtoP target web services page <http://www.guidetopharmacology.org/\
+     webServices.jsp#targets>`_ for key/value pairs which can be supplied.
+    :returns: list of :py:class:`Target` objects."""
+
+    if not isinstance(criteria, dict):
+        raise TypeError("criteria must be dict, not '%s'" % str(criteria))
+
+    search_string = "&".join(["%s=%s" % (key, criteria[key]) for key in criteria])
+    json_data = gtop.get_json_from_gtop("targets?%s" % search_string)
+    if json_data:
+        return [Target(t) for t in json_data]
+    else:
+        return []
+
+
+def get_target_by_name(name):
+    """Returns the target which matches the name given.
+
+    :param str name: The name of the target to search for. Note that synonyms \
+    will not be searched.
+    :rtype: :py:class:`Target`
+    :raises:  :class:`.NoSuchTargetError`: if no such target exists in the database."""
+
+    if not isinstance(name, str):
+        raise TypeError("name must be str, not '%s'" % str(name))
+    targets = get_targets_by({"name": name})
+    if targets:
+        return targets[0]
+    else:
+        raise NoSuchTargetError("There is no target with name %s" % name)
 
 class Target:
 
@@ -75,87 +137,7 @@ class Target:
         return json_object if json_object else []
 
 
-'''from .exceptions import *
-from . import pdb
-from . import gtop
-from .shared import *
-from . import interactions
-import random
-
-
-def get_target_by_id(target_id):
-    """Returns a Target object of the target with the given ID.
-
-    :param int target_id: The GtoP ID of the Target desired.
-    :rtype: :py:class:`Target`
-    :raises: :class:`.NoSuchTargetError`: if no such target exists in the database"""
-
-    json_data = gtop.get_json_from_gtop("targets/%i" % target_id)
-    if json_data:
-        return Target(json_data)
-    else:
-        raise NoSuchTargetError
-
-
-def get_random_target(target_type=None):
-    """Returns a random target, with the option to specify the target type.
-    This can take a few seconds as it must first request *all* targets.
-
-    :param str target_type: If not None, the function will pick a target from\
-     this category only.
-
-    :rtype: :py:class:`Target`
-    :raises: :class:`.NoSuchTypeError`: if a target type is supplied which doesn't exist"""
-    if target_type:
-        json_data = gtop.get_json_from_gtop("targets?type=%s" % target_type.lower())
-        if not json_data:
-            raise NoSuchTypeError("There are no targets of type %s" % target_type)
-    else:
-        json_data = gtop.get_json_from_gtop("targets")
-    return Target(random.choice(json_data))
-
-
-def get_all_targets():
-    """Returns a list of all targets in the Guide to PHARMACOLOGY database. This
-    can take a few seconds.
-
-    :returns: list of :py:class:`Target` objects"""
-
-    json_data = gtop.get_json_from_gtop("targets")
-    return [Target(t) for t in json_data]
-
-
-def get_targets_by(criteria):
-    """Get all targets which specify the criteria dictionary.
-
-    :param dict criteria: A dictionary of `field=value` pairs. See the\
-     `GtoP target web services page <http://www.guidetopharmacology.org/\
-     webServices.jsp#targets>`_ for key/value pairs which can be supplied.
-    :returns: list of :py:class:`Target` objects."""
-
-    search_string = "&".join(["%s=%s" % (key, criteria[key]) for key in criteria])
-    json_data = gtop.get_json_from_gtop("targets?%s" % search_string)
-    if json_data:
-        return [Target(t) for t in json_data]
-    else:
-        return []
-
-
-def get_target_by_name(name):
-    """Returns the target which matches the name given.
-
-    :param str name: The name of the target to search for. Note that synonyms \
-    will not be searched.
-    :rtype: :py:class:`Target`
-    :raises:  :class:`.NoSuchTargetError`: if no such target exists in the database."""
-
-    targets = get_targets_by({"name": name})
-    if targets:
-        return targets[0]
-    else:
-        raise NoSuchTargetError
-
-
+'''
 def get_family_by_id(family_id):
     """Returns a TargetFamily object of the family with the given ID.
 
@@ -262,17 +244,17 @@ class Target:
     :raises: :class:`.NoSuchInteractionError`: if no such interaction exists in the database."""
 
 
-    def get_ligands(self):
-        """Returns a list of all ligands which this target interacts with.
+    def get_targets(self):
+        """Returns a list of all targets which this target interacts with.
 
-        :returns: list of :py:class:`.Ligand` objects"""
+        :returns: list of :py:class:`.Target` objects"""
 
-        ligands = []
+        targets = []
         for interaction in self.get_interactions():
-            ligand = interaction.get_ligand()
-            if ligand not in ligands:
-                ligands.append(ligand)
-        return ligands
+            target = interaction.get_target()
+            if target not in targets:
+                targets.append(target)
+        return targets
 
 
     @pdb.ask_about_molecupy
@@ -349,7 +331,7 @@ class Target:
 
             A list of synonym :py:class:`str` objects."""
 
-        json_data = gtop.get_json_from_gtop("ligands/%i/%s" % (
+        json_data = gtop.get_json_from_gtop("targets/%i/%s" % (
          self.target_id, gtop.SYNONYM_PROPERTIES))
         self.synonyms = [
          synonym["name"] for synonym in json_data] if json_data else []

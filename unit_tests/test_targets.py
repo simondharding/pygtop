@@ -1,7 +1,8 @@
 from unittest import TestCase
 import unittest.mock
 from unittest.mock import patch
-from pygtop.targets import Target
+from pygtop.targets import Target, get_target_by_id, get_all_targets, get_targets_by
+from pygtop.targets import get_target_by_name
 import pygtop.exceptions as exceptions
 from pygtop.shared import DatabaseLink
 
@@ -108,6 +109,87 @@ class TargetPropertyTests(TargetTest):
         target = Target(self.target_json)
 
         self.assertEqual(target.database_links(), [])
+
+
+
+class TargetAccessTests(TargetTest):
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_can_get_target_by_id(self, mock_json_retriever):
+        mock_json_retriever.return_value = self.target_json
+        target = get_target_by_id(1)
+        self.assertIsInstance(target, Target)
+        self.assertEqual(target.name(), self.target_json["name"])
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_invalid_target_id_error(self, mock_json_retriever):
+        mock_json_retriever.return_value = None
+        with self.assertRaises(exceptions.NoSuchTargetError):
+            target = get_target_by_id(1)
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_target_id_must_be_int(self, mock_json_retriever):
+        mock_json_retriever.return_value = self.target_json
+        with self.assertRaises(TypeError):
+            target = get_target_by_id("1")
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_can_get_all_targets(self, mock_json_retriever):
+        mock_json_retriever.return_value = [self.target_json, self.target_json]
+        targets = get_all_targets()
+        self.assertIsInstance(targets, list)
+        self.assertEqual(len(targets), 2)
+        self.assertIsInstance(targets[0], Target)
+        self.assertIsInstance(targets[1], Target)
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_can_get_target_by_query(self, mock_json_retriever):
+        mock_json_retriever.return_value = [self.target_json, self.target_json]
+        targets = get_targets_by({"type": "gpcr"})
+        self.assertIsInstance(targets, list)
+        self.assertEqual(len(targets), 2)
+        self.assertIsInstance(targets[0], Target)
+        self.assertIsInstance(targets[1], Target)
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_invalid_target_query_error(self, mock_json_retriever):
+        mock_json_retriever.return_value = None
+        targets = get_targets_by({"type": "gcpr"})
+        self.assertEqual(targets, [])
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_target_query_must_be_dict(self, mock_json_retriever):
+        mock_json_retriever.return_value = [self.target_json, self.target_json]
+        with self.assertRaises(TypeError):
+            target = get_targets_by("astring")
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_can_get_target_by_name(self, mock_json_retriever):
+        mock_json_retriever.return_value = [self.target_json]
+        target = get_target_by_name("actin")
+        self.assertIsInstance(target, Target)
+        self.assertEqual(target.target_id(), self.target_json["targetId"])
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_invalid_target_name_error(self, mock_json_retriever):
+        mock_json_retriever.return_value = None
+        with self.assertRaises(exceptions.NoSuchTargetError):
+            target = get_target_by_name("fauxprot")
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_target_name_must_be_str(self, mock_json_retriever):
+        mock_json_retriever.return_value = [self.target_json]
+        with self.assertRaises(TypeError):
+            target = get_target_by_name(1)
 
 '''import unittest
 import json
