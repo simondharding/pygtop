@@ -2,7 +2,7 @@ from unittest import TestCase
 import unittest.mock
 from unittest.mock import patch
 from pygtop.targets import Target, get_target_by_id, get_all_targets, get_targets_by
-from pygtop.targets import get_target_by_name
+from pygtop.targets import get_target_by_name, TargetFamily
 import pygtop.exceptions as exceptions
 from pygtop.shared import DatabaseLink
 
@@ -109,6 +109,23 @@ class TargetPropertyTests(TargetTest):
         target = Target(self.target_json)
 
         self.assertEqual(target.database_links(), [])
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_can_get_families(self, mock_json_retriever):
+        mock_json_retriever.return_value = {
+         "familyId": 1,
+         "name": "5-Hydroxytryptamine receptors",
+         "targetIds": [1, 2, 5],
+         "parentFamilyIds": [694],
+         "subFamilyIds": [9]
+        }
+        target = Target(self.target_json)
+        families = target.families()
+        self.assertIsInstance(families, list)
+        self.assertEqual(len(families), len(self.target_json["familyIds"]))
+        for family in families:
+            self.assertIsInstance(family, TargetFamily)
 
 
     @patch("pygtop.gtop.get_json_from_gtop")

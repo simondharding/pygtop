@@ -134,6 +134,14 @@ class Target:
         return self._family_ids
 
 
+    def families(self):
+        """Returns a list of all target families of which this target is a member.
+
+        :returns: list of :py:class:`TargetFamily` objects"""
+
+        return [get_target_family_by_id(i) for i in self._family_ids]
+
+
     def subunit_ids(self):
         return self._subunit_ids
 
