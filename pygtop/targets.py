@@ -217,12 +217,38 @@ class TargetFamily:
         return self._target_ids
 
 
+    def targets(self):
+        """Returns a list of all targets in this family. Note that only
+        immediate children are shown - if a family has subfamilies then it will
+        not return any targets here - you must look in the sub-families.
+
+        :returns: list of :py:class:`Target` objects"""
+
+        return [get_target_by_id(i) for i in self._target_ids]
+
+
     def parent_family_ids(self):
         return self._parent_family_ids
 
 
+    def parent_families(self):
+        """Returns a list of all target families of which this family is a member.
+
+        :returns: list of :py:class:`TargetFamily` objects"""
+
+        return [get_target_family_by_id(i) for i in self._parent_family_ids]
+
+
     def sub_family_ids(self):
         return self._sub_family_ids
+
+
+    def sub_families(self):
+        """Returns a list of all target families which are a member of this family.
+
+        :returns: list of :py:class:`TargetFamily` objects"""
+
+        return [get_target_family_by_id(i) for i in self._sub_family_ids]
 
 
 '''
@@ -489,27 +515,4 @@ class TargetFamily:
         return "<'%s' TargetFamily>" % self.name
 
 
-    def get_targets(self):
-        """Returns a list of all targets in this family. Note that only
-        immediate children are shown - if a family has subfamilies then it will
-        not return any targets here - you must look in the sub-families.
-
-        :returns: list of :py:class:`Target` objects"""
-
-        return [get_target_by_id(i) for i in self._target_ids]
-
-
-    def get_parent_families(self):
-        """Returns a list of all target families of which this family is a member.
-
-        :returns: list of :py:class:`TargetFamily` objects"""
-
-        return [get_family_by_id(i) for i in self._parent_family_ids]
-
-
-    def get_subfamilies(self):
-        """Returns a list of all target families which are a member of this family.
-
-        :returns: list of :py:class:`TargetFamily` objects"""
-
-        return [get_family_by_id(i) for i in self._sub_family_ids]'''
+    '''

@@ -1,7 +1,8 @@
 from unittest import TestCase
 import unittest.mock
 from unittest.mock import patch
-from pygtop.targets import TargetFamily, get_target_family_by_id, get_all_target_families
+from pygtop.targets import TargetFamily, get_target_family_by_id
+from pygtop.targets import get_all_target_families, Target
 import pygtop.exceptions as exceptions
 
 class TargetFamilyTest(TestCase):
@@ -13,6 +14,17 @@ class TargetFamilyTest(TestCase):
          "targetIds": [1, 2, 5],
          "parentFamilyIds": [694],
          "subFamilyIds": [9]
+        }
+
+        self.target_json = {
+         "targetId": 1,
+         "name": "5-HT<sub>1A</sub> receptor",
+         "abbreviation": "5-HT",
+         "systematicName": None,
+         "type": "GPCR",
+         "familyIds": [1],
+         "subunitIds": [2, 3],
+         "complexIds": [4]
         }
 
 
@@ -44,6 +56,39 @@ class TargetFamilyPropertyTests(TargetFamilyTest):
         self.assertIs(family._target_ids, family.target_ids())
         self.assertIs(family._parent_family_ids, family.parent_family_ids())
         self.assertIs(family._sub_family_ids, family.sub_family_ids())
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_can_get_targets(self, mock_json_retriever):
+        mock_json_retriever.return_value = self.target_json
+        family = TargetFamily(self.family_json)
+        targets = family.targets()
+        self.assertIsInstance(targets, list)
+        self.assertEqual(len(targets), len(self.family_json["targetIds"]))
+        for target in targets:
+            self.assertIsInstance(target, Target)
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_can_get_parent_families(self, mock_json_retriever):
+        mock_json_retriever.return_value = self.family_json
+        family = TargetFamily(self.family_json)
+        parents = family.parent_families()
+        self.assertIsInstance(parents, list)
+        self.assertEqual(len(parents), len(self.family_json["parentFamilyIds"]))
+        for parent in parents:
+            self.assertIsInstance(parent, TargetFamily)
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_can_get_sub_families(self, mock_json_retriever):
+        mock_json_retriever.return_value = self.family_json
+        family = TargetFamily(self.family_json)
+        children = family.sub_families()
+        self.assertIsInstance(children, list)
+        self.assertEqual(len(children), len(self.family_json["subFamilyIds"]))
+        for child in children:
+            self.assertIsInstance(child, TargetFamily)
 
 
 
