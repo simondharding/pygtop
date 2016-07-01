@@ -11,7 +11,12 @@ class Interaction:
         self._endogenous = json_data["endogenous"]
         self._type = json_data["type"]
         self._action = json_data["action"]
-        self._affinity_values = (float(json_data["affinity"]),)
+        affinity_values = "".join(
+         [char for char in json_data["affinity"] if char in "0123456789. "]
+        ).split()
+        affinity_values = tuple(sorted([float(val) for val in affinity_values]))
+        self._affinity_low = affinity_values[0]
+        self._affinity_high = affinity_values[-1]
         self._affinity_type = json_data["affinityType"]
 
 
@@ -128,18 +133,6 @@ class Interaction:
         from .targets import get_target_by_id
         try:
             return get_target_by_id(self._target_id)
-        except NoSuchTargetError:
-            return None
-
-
-    def get_species_target(self):
-        """Returns the species-specific Target object for this interaction.
-
-        :rtype: :py:class:`.SpeciesTarget`"""
-
-        from .targets import SpeciesTarget
-        try:
-            return SpeciesTarget(self._target_id, self.species)
         except NoSuchTargetError:
             return None
 

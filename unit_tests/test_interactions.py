@@ -53,8 +53,23 @@ class InteractionCreationTests(InteractionTest):
         self.assertEqual(interaction._endogenous, False)
         self.assertEqual(interaction._type, "Agonist")
         self.assertEqual(interaction._action, "Agonist")
-        self.assertEqual(interaction._affinity_values, (7.2,))
+        self.assertEqual(interaction._affinity_low, 7.2)
+        self.assertEqual(interaction._affinity_high, 7.2)
         self.assertEqual(interaction._affinity_type, "pKi")
+
+
+    def test_can_process_affinity_range(self):
+        self.interaction_json["affinity"] = "9.4 &ndash; 10.3"
+        interaction = Interaction(self.interaction_json)
+        self.assertEqual(interaction._affinity_low, 9.4)
+        self.assertEqual(interaction._affinity_high, 10.3)
+
+
+    def test_can_process_affinity_range_with_median(self):
+        self.interaction_json["affinity"] = "7.7 &ndash; 9.0 (median: 8.6)"
+        interaction = Interaction(self.interaction_json)
+        self.assertEqual(interaction._affinity_low, 7.7)
+        self.assertEqual(interaction._affinity_high, 9.0)
 
 
     def test_interaction_repr(self):
