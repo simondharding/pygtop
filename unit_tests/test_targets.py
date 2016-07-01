@@ -40,6 +40,21 @@ class LigandCreationTests(TargetTest):
         target = Target(self.target_json)
         self.assertEqual(str(target), "<Target 1 (5-HT<sub>1A</sub> receptor)>")
 
+
+
+class TargetPropertyTests(TargetTest):
+
+    def test_basic_property_methods(self):
+        target = Target(self.target_json)
+        self.assertIs(target._target_id, target.target_id())
+        self.assertIs(target._name, target.name())
+        self.assertIs(target._abbreviation, target.abbreviation())
+        self.assertIs(target._systematic_name, target.systematic_name())
+        self.assertIs(target._target_type, target.target_type())
+        self.assertIs(target._family_ids, target.family_ids())
+        self.assertIs(target._subunit_ids, target.subunit_ids())
+        self.assertIs(target._complex_ids, target.complex_ids())
+
 '''import unittest
 import json
 import sys

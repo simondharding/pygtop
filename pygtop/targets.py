@@ -18,6 +18,38 @@ class Target:
         return "<Target %i (%s)>" % (self._target_id, self._name)
 
 
+    def target_id(self):
+        return self._target_id
+
+
+    def name(self):
+        return self._name
+
+
+    def abbreviation(self):
+        return self._abbreviation
+
+
+    def systematic_name(self):
+        return self._systematic_name
+
+
+    def target_type(self):
+        return self._target_type
+
+
+    def family_ids(self):
+        return self._family_ids
+
+
+    def subunit_ids(self):
+        return self._subunit_ids
+
+
+    def complex_ids(self):
+        return self._complex_ids
+
+
 '''from .exceptions import *
 from . import pdb
 from . import gtop
