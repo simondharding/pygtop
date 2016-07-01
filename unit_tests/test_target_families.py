@@ -30,3 +30,15 @@ class TargetFamilyreationTests(TargetFamilyTest):
     def test_target_family_repr(self):
         family = TargetFamily(self.family_json)
         self.assertEqual(str(family), "<'5-Hydroxytryptamine receptors' TargetFamily>")
+
+
+
+class TargetFamilyPropertyTests(TargetFamilyTest):
+
+    def test_basic_property_methods(self):
+        family = TargetFamily(self.family_json)
+        self.assertIs(family._family_id, family.family_id())
+        self.assertIs(family._name, family.name())
+        self.assertIs(family._target_ids, family.target_ids())
+        self.assertIs(family._parent_family_ids, family.parent_family_ids())
+        self.assertIs(family._sub_family_ids, family.sub_family_ids())

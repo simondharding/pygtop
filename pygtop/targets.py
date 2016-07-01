@@ -172,6 +172,26 @@ class TargetFamily:
         return "<'%s' TargetFamily>" % self._name
 
 
+    def family_id(self):
+        return self._family_id
+
+
+    def name(self):
+        return self._name
+
+
+    def target_ids(self):
+        return self._target_ids
+
+
+    def parent_family_ids(self):
+        return self._parent_family_ids
+
+
+    def sub_family_ids(self):
+        return self._sub_family_ids
+
+
 '''
 def get_family_by_id(family_id):
     """Returns a TargetFamily object of the family with the given ID.
@@ -194,14 +214,6 @@ def get_all_families():
 
     json_data = gtop.get_json_from_gtop("targets/families")
     return [TargetFamily(f) for f in json_data]
-
-
-def get_random_family():
-    """Returns a random target, with the option to specify the target type.
-
-    :rtype: :py:class:`TargetFamily`"""
-    json_data = gtop.get_json_from_gtop("targets/families")
-    return TargetFamily(random.choice(json_data))
 
 
 
