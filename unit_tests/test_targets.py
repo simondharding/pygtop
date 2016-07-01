@@ -22,7 +22,7 @@ class TargetTest(TestCase):
 
 
 
-class LigandCreationTests(TargetTest):
+class TargetCreationTests(TargetTest):
 
     def test_can_create_target(self):
         target = Target(self.target_json)
@@ -109,6 +109,28 @@ class TargetPropertyTests(TargetTest):
         target = Target(self.target_json)
 
         self.assertEqual(target.database_links(), [])
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_can_get_subunits(self, mock_json_retriever):
+        mock_json_retriever.return_value = self.target_json
+        target = Target(self.target_json)
+        subunits = target.subunits()
+        self.assertIsInstance(subunits, list)
+        self.assertEqual(len(subunits), len(self.target_json["subunitIds"]))
+        for subunit in subunits:
+            self.assertIsInstance(subunit, Target)
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_can_get_complexes(self, mock_json_retriever):
+        mock_json_retriever.return_value = self.target_json
+        target = Target(self.target_json)
+        complexes = target.complexes()
+        self.assertIsInstance(complexes, list)
+        self.assertEqual(len(complexes), len(self.target_json["complexIds"]))
+        for complex_ in complexes:
+            self.assertIsInstance(complex_, Target)
 
 
 

@@ -111,8 +111,24 @@ class Target:
         return self._subunit_ids
 
 
+    def subunits(self):
+        """Returns a list of all targets which are subunits of this target.
+
+        :returns: list of :py:class:`Target` objects"""
+
+        return [get_target_by_id(id_) for id_ in self._subunit_ids]
+
+
     def complex_ids(self):
         return self._complex_ids
+
+
+    def complexes(self):
+        """Returns a list of all targets of which this target is a subunit.
+
+        :returns: list of :py:class:`Target` objects"""
+
+        return [get_target_by_id(id_) for id_ in self._complex_ids]
 
 
     def synonyms(self):
@@ -195,22 +211,6 @@ class Target:
 
         The target's systematic name.
     """
-
-
-    def get_subunits(self):
-        """Returns a list of all targets which are subunits of this target.
-
-        :returns: list of :py:class:`Target` objects"""
-
-        return [get_target_by_id(i) for i in self._subunit_ids]
-
-
-    def get_complexes(self):
-        """Returns a list of all targets of which this target is a subunit.
-
-        :returns: list of :py:class:`Target` objects"""
-
-        return [get_target_by_id(i) for i in self._complex_ids]
 
 
     def get_families(self):
@@ -337,36 +337,6 @@ class Target:
          synonym["name"] for synonym in json_data] if json_data else []
 
 
-    def request_all_properties(self):
-        """Give target object all extra properties."""
-
-        self.request_database_properties()
-        self.request_synonym_properties()
-
-
-    def _get_missing_attribute_error_message(self, attribute):
-        message = "'%s' is a %s property and needs to be requested with %s()"
-        values = []
-
-        if attribute in self._database_properties:
-            values = ["database", "request_database_properties"]
-        elif attribute in self._synonym_properties:
-            values = ["synonym", "request_synonym_properties"]
-
-        if values:
-            values = [attribute] + values
-            return (message % tuple(values))
-        else:
-            return None
-
-
-    _database_properties = [
-     "database_links"
-    ]
-
-    _synonym_properties = [
-     "synonyms"
-    ]
 
 
 
