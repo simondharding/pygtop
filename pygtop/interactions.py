@@ -1,4 +1,28 @@
-from __future__ import division
+class Interaction:
+
+    def __init__(self, json_data):
+        self.json_data = json_data
+
+        self._interaction_id = json_data["interactionId"]
+        self._ligand_id = json_data["ligandId"]
+        self._target_id = json_data["targetId"]
+        self._species = json_data["targetSpecies"]
+        self._primary_target = json_data["primaryTarget"]
+        self._endogenous = json_data["endogenous"]
+        self._type = json_data["type"]
+        self._action = json_data["action"]
+        self._affinity_values = (float(json_data["affinity"]),)
+        self._affinity_type = json_data["affinityType"]
+
+
+    def __repr__(self):
+        return "<Interaction (%i --> %s %i)>" % (
+         self._ligand_id,
+         self._species,
+         self._target_id
+        )
+
+'''from __future__ import division
 from .gtop import *
 from . import pdb
 from .exceptions import NoSuchLigandError, NoSuchTargetError, NoSuchInteractionError
@@ -80,33 +104,8 @@ class Interaction:
         A list of academic paper titles as strings which constitute the references for this interaction.
     """
 
-    def __init__(self, json_data):
-        self.json_data = json_data
-
-        self.interaction_id = json_data["interactionId"]
-        self._target_id = json_data["targetId"]
-        self._ligand_id = json_data["ligandId"]
-        self.species = json_data["targetSpecies"]
-        self.type = json_data["type"]
-        self.action = json_data["action"]
-        self.affinity_range, self.affinity_value = value_string_to_tuple_value(json_data["affinity"])
-        self.affinity_type = json_data["affinityType"] if self.affinity_value else None
-        self.is_voltage_dependent = json_data["voltageDependent"]
-        self.voltage_range, self.voltage_value = value_string_to_tuple_value(json_data["voltage"])
-        self.ligand_primary_target = json_data["primaryTarget"]
-        self.references = [
-         "(%s) %s" % (
-          str(ref["year"]) if ref["year"] else "????", ref["articleTitle"]
-         ) for ref in json_data["refs"]
-        ]
 
 
-    def __repr__(self):
-        return "<Interaction (%i --> %s %i)>" % (
-         self._ligand_id,
-         self.species,
-         self._target_id
-        )
 
 
     def get_ligand(self):
@@ -203,4 +202,4 @@ def value_string_to_tuple_value(s):
         range_ = tuple([float(val) for val in s.split(" &ndash; ")]
          ) if "&" in s else (float(s),)
         value = range_[0] if len(range_) == 1 else (sum(range_) / len(range_))
-        return range_, value
+        return range_, value'''

@@ -1,4 +1,68 @@
-import unittest
+from unittest import TestCase
+import unittest.mock
+from unittest.mock import patch
+from pygtop.interactions import Interaction
+import pygtop.exceptions as exceptions
+
+class InteractionTest(TestCase):
+
+    def setUp(self):
+        self.interaction_json = {
+         "interactionId": 79397,
+         "targetId": 1,
+         "ligandAsTargetId": 0,
+         "targetSpecies": "Human",
+         "primaryTarget": False,
+         "targetBindingSite": "",
+         "ligandId": 7191,
+         "ligandContext": "",
+         "endogenous": False,
+         "type": "Agonist",
+         "action": "Agonist",
+         "actionComment": "",
+         "selectivity": "None",
+         "concentrationRange": "-",
+         "affinity": "7.2",
+         "affinityType": "pKi",
+         "originalAffinity": "6x10<sup>-8</sup>",
+         "originalAffinityType": "Ki",
+         "originalAffinityRelation": "",
+         "assayDescription": "",
+         "assayConditions": "",
+         "useDependent": False,
+         "voltageDependent": False,
+         "voltage": "-",
+         "physiologicalVoltage": False,
+         "conciseView": False,
+         "dataPoints": [],
+         "refs": []
+        }
+
+
+
+class InteractionCreationTests(InteractionTest):
+
+    def test_can_create_interaction(self):
+        interaction = Interaction(self.interaction_json)
+        self.assertEqual(interaction.json_data, self.interaction_json)
+        self.assertEqual(interaction._interaction_id, 79397)
+        self.assertEqual(interaction._ligand_id, 7191)
+        self.assertEqual(interaction._target_id, 1)
+        self.assertEqual(interaction._species, "Human")
+        self.assertEqual(interaction._primary_target, False)
+        self.assertEqual(interaction._endogenous, False)
+        self.assertEqual(interaction._type, "Agonist")
+        self.assertEqual(interaction._action, "Agonist")
+        self.assertEqual(interaction._affinity_values, (7.2,))
+        self.assertEqual(interaction._affinity_type, "pKi")
+
+
+    def test_interaction_repr(self):
+        interaction = Interaction(self.interaction_json)
+        self.assertEqual(str(interaction), "<Interaction (7191 --> Human 1)>")
+
+
+'''import unittest
 import json
 import sys
 sys.path.append(".")
@@ -195,4 +259,4 @@ class InteractionPdbs(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main()
+    unittest.main()'''
