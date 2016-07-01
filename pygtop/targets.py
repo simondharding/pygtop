@@ -1,5 +1,7 @@
 """Contains target-specific objects and functions."""
 
+from . import gtop
+
 class Target:
 
     def __init__(self, json_data):
@@ -48,6 +50,17 @@ class Target:
 
     def complex_ids(self):
         return self._complex_ids
+
+
+    def synonyms(self):
+        return [synonym["name"] for synonym in self._get_synonym_json()]
+
+
+    def _get_synonym_json(self):
+        json_object = gtop.get_json_from_gtop(
+         "targets/%i/synonyms" % self._target_id
+        )
+        return json_object if json_object else []
 
 
 '''from .exceptions import *

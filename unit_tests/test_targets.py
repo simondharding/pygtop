@@ -55,6 +55,25 @@ class TargetPropertyTests(TargetTest):
         self.assertIs(target._subunit_ids, target.subunit_ids())
         self.assertIs(target._complex_ids, target.complex_ids())
 
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_synonym_properties(self, mock_json_retriever):
+        mock_json_retriever.return_value = [
+         {"name": "ADRBRL1", "refs": []},
+         {"name": "5-HT1A", "refs": []}
+        ]
+        target = Target(self.target_json)
+
+        self.assertEqual(target.synonyms(), ["ADRBRL1", "5-HT1A"])
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_synonym_properties_when_no_json(self, mock_json_retriever):
+        mock_json_retriever.return_value = None
+        target = Target(self.target_json)
+
+        self.assertEqual(target.synonyms(), [])
+
 '''import unittest
 import json
 import sys
