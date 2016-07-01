@@ -2,6 +2,7 @@ from unittest import TestCase
 import unittest.mock
 from unittest.mock import patch
 from pygtop.interactions import Interaction
+from pygtop.ligands import Ligand
 import pygtop.exceptions as exceptions
 
 class InteractionTest(TestCase):
@@ -36,6 +37,24 @@ class InteractionTest(TestCase):
          "conciseView": False,
          "dataPoints": [],
          "refs": []
+        }
+
+        self.ligand_json = {
+         "ligandId": 1,
+         "name": "flesinoxan",
+         "abbreviation": "flexo",
+         "inn": "flesinoxan",
+         "type": "Synthetic organic",
+         "species": None,
+         "radioactive": False,
+         "labelled": True,
+         "approved": True,
+         "withdrawn": False,
+         "approvalSource": "FDA (1997)",
+         "subunitIds": [2, 3],
+         "complexIds": [5],
+         "prodrugIds": [7],
+         "activeDrugIds": [9, 10]
         }
 
 
@@ -93,6 +112,22 @@ class InteractionPropertyTests(InteractionTest):
         self.assertIs(interaction._affinity_low, interaction.affinity_low())
         self.assertIs(interaction._affinity_high, interaction.affinity_high())
         self.assertIs(interaction._affinity_type, interaction.affinity_type())
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_can_get_ligand(self, mock_json_retriever):
+        mock_json_retriever.return_value = self.ligand_json
+        interaction = Interaction(self.interaction_json)
+        ligand = interaction.ligand()
+        self.assertIsInstance(ligand, Ligand)
+        self.assertEqual(ligand.ligand_id(), self.ligand_json["ligandId"])
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_ligand_when_no_json(self, mock_json_retriever):
+        mock_json_retriever.return_value = None
+        interaction = Interaction(self.interaction_json)
+        self.assertEqual(interaction.ligand(), None)
 
 
 '''import unittest

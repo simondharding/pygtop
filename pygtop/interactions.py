@@ -1,3 +1,6 @@
+from .ligands import get_ligand_by_id
+from .exceptions import NoSuchLigandError
+
 class Interaction:
 
     def __init__(self, json_data):
@@ -34,6 +37,13 @@ class Interaction:
 
     def ligand_id(self):
         return self._ligand_id
+
+
+    def ligand(self):
+        try:
+            return get_ligand_by_id(self._ligand_id)
+        except NoSuchLigandError:
+            return None
 
 
     def target_id(self):
@@ -229,14 +239,4 @@ class Interaction:
         target_pdbs = self.get_species_target().find_all_pdbs()
         return [code for code in ligand_pdbs if code in target_pdbs]
 
-
-def value_string_to_tuple_value(s):
-    if s == "-":
-        return ((), None)
-    else:
-        if "median" in s:
-            s = s.split()[0]
-        range_ = tuple([float(val) for val in s.split(" &ndash; ")]
-         ) if "&" in s else (float(s),)
-        value = range_[0] if len(range_) == 1 else (sum(range_) / len(range_))
-        return range_, value'''
+'''
