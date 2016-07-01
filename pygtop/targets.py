@@ -1,7 +1,7 @@
 """Contains target-specific objects and functions."""
 
 from . import gtop
-from .interactions import Interaction
+from .interactions import Interaction, get_interaction_by_id
 from .exceptions import NoSuchTargetError, NoSuchTargetFamilyError
 from .shared import DatabaseLink
 
@@ -182,6 +182,14 @@ class Target:
         return [Interaction(interaction_json) for interaction_json in self._get_interactions_json()]
 
 
+    get_interaction_by_id = get_interaction_by_id
+    """Returns an Interaction object of a given ID belonging to the target.
+
+    :param int interaction_id: The interactions's ID.
+    :rtype: :py:class:`.Interaction`
+    :raises: :class:`.NoSuchInteractionError`: if no such interaction exists in the database."""
+
+
     def ligands(self):
         """Returns a list of all ligands which this target interacts with.
 
@@ -324,14 +332,6 @@ class Target:
             return [Interaction(json) for json in interactions_json]
         else:
             return []
-
-
-    get_interaction_by_id = interactions.get_interaction_by_id
-    """Returns an Interaction object of a given ID belonging to the target.
-
-    :param int interaction_id: The interactions's ID.
-    :rtype: :py:class:`.Interaction`
-    :raises: :class:`.NoSuchInteractionError`: if no such interaction exists in the database."""
 
 
     def get_targets(self):

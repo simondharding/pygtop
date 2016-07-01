@@ -234,6 +234,30 @@ class TargetPropertyTests(TargetTest):
 
 
     @patch("pygtop.gtop.get_json_from_gtop")
+    def test_can_get_interaction_by_id(self, mock_json_retriever):
+        mock_json_retriever.return_value = [self.interaction_json, self.interaction_json]
+        target = Target(self.target_json)
+        interaction = target.get_interaction_by_id(self.interaction_json["interactionId"])
+        self.assertIsInstance(interaction, Interaction)
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_cannot_get_interaction_by_invalid_id(self, mock_json_retriever):
+        mock_json_retriever.return_value = None
+        target = Target(self.target_json)
+        with self.assertRaises(exceptions.NoSuchInteractionError):
+            interaction = target.get_interaction_by_id(0)
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_interaction_id_id_must_be_int(self, mock_json_retriever):
+        mock_json_retriever.return_value =[self.interaction_json, self.interaction_json]
+        target = Target(self.target_json)
+        with self.assertRaises(TypeError):
+            target.get_interaction_by_id("1")
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
     def test_can_get_ligands(self, mock_json_retriever):
         mock_json_retriever.side_effect = [
          [self.interaction_json, self.interaction_json], self.ligand_json, self.ligand_json

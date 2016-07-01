@@ -1,7 +1,7 @@
 """Contains ligand-specific objects and functions."""
 
 from . import gtop
-from .interactions import Interaction
+from .interactions import Interaction, get_interaction_by_id
 from .exceptions import NoSuchLigandError
 from .shared import DatabaseLink
 
@@ -313,6 +313,14 @@ class Ligand:
 
     def interactions(self):
         return [Interaction(interaction_json) for interaction_json in self._get_interactions_json()]
+
+
+    get_interaction_by_id = get_interaction_by_id
+    """Returns an Interaction object of a given ID belonging to the ligand.
+
+    :param int interaction_id: The interactions's ID.
+    :rtype: :py:class:`.Interaction`
+    :raises: :class:`.NoSuchInteractionError`: if no such interaction exists in the database."""
 
 
     def targets(self):

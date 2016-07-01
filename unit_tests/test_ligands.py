@@ -362,6 +362,30 @@ class LigandPropertyTests(LigandTest):
 
 
     @patch("pygtop.gtop.get_json_from_gtop")
+    def test_can_get_interaction_by_id(self, mock_json_retriever):
+        mock_json_retriever.return_value = [self.interaction_json, self.interaction_json]
+        ligand = Ligand(self.ligand_json)
+        interaction = ligand.get_interaction_by_id(self.interaction_json["interactionId"])
+        self.assertIsInstance(interaction, Interaction)
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_cannot_get_interaction_by_invalid_id(self, mock_json_retriever):
+        mock_json_retriever.return_value = None
+        ligand = Ligand(self.ligand_json)
+        with self.assertRaises(exceptions.NoSuchInteractionError):
+            interaction = ligand.get_interaction_by_id(0)
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_interaction_id_id_must_be_int(self, mock_json_retriever):
+        mock_json_retriever.return_value =[self.interaction_json, self.interaction_json]
+        ligand = Ligand(self.ligand_json)
+        with self.assertRaises(TypeError):
+            ligand.get_interaction_by_id("1")
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
     def test_interactions_when_no_json(self, mock_json_retriever):
         mock_json_retriever.return_value = None
         ligand = Ligand(self.ligand_json)

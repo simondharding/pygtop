@@ -1,4 +1,13 @@
-from .exceptions import NoSuchLigandError, NoSuchTargetError
+from .exceptions import NoSuchLigandError, NoSuchTargetError, NoSuchInteractionError
+
+def get_interaction_by_id(self, interaction_id):
+    if not isinstance(interaction_id, int):
+        raise TypeError("interaction_id must be int, not '%s'" % str(interaction_id))
+    for interaction in self.interactions():
+        if interaction.interaction_id() == interaction_id:
+            return interaction
+    raise NoSuchInteractionError("%s has no interaction %i" % (str(self), interaction_id))
+
 
 class Interaction:
 
@@ -119,11 +128,7 @@ def get_interactions_between(ligand, target):
     return mutual_interactions
 
 
-def get_interaction_by_id(self, interaction_id):
-    for interaction in self.get_interactions():
-        if interaction.interaction_id == interaction_id:
-            return interaction
-    raise NoSuchInteractionError("%s has no interaction %i" % (str(self), interaction_id))
+
 
 
 
