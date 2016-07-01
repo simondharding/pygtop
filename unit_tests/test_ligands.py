@@ -373,18 +373,17 @@ class LigandAccessTests(LigandTest):
 
 
     @patch("pygtop.gtop.get_json_from_gtop")
-    def test_invalid_ligand_id_error(self, mock_json_retriever):
+    def test_invalid_ligand_name_error(self, mock_json_retriever):
         mock_json_retriever.return_value = None
         with self.assertRaises(exceptions.NoSuchLigandError):
             ligand = get_ligand_by_name("lolalol")
 
 
     @patch("pygtop.gtop.get_json_from_gtop")
-    def test_ligand_id_must_be_str(self, mock_json_retriever):
+    def test_ligand_name_must_be_str(self, mock_json_retriever):
         mock_json_retriever.return_value = [self.ligand_json]
         with self.assertRaises(TypeError):
             ligand = get_ligand_by_name(1)
-
 
 
     @patch("pygtop.gtop.get_json_from_gtop")
