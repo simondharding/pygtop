@@ -70,6 +70,40 @@ class InteractionTest(TestCase):
         }
 
 
+        self.pdb_json = [
+         {
+          "targetId" : 2,
+          "ligandId" : 121,
+          "endogenous" : False,
+          "pdbCode" : "4IAQ",
+          "description" : "Crystal structure of the chimeric protein of 5-HT1B-BRIL in complex with dihydroergotamine",
+          "resolution" : 2.8,
+          "species" : "Human",
+          "refs" : []
+         }, {
+          "targetId" : 2,
+          "ligandId" : 149,
+          "endogenous" : False,
+          "pdbCode" : "4IAR",
+          "description" : "Crystal structure of the chimeric protein of 5-HT1B-BRIL in complex with ergotamine",
+          "resolution" : 2.7,
+          "species" : "Human",
+          "refs" : []
+         }, {
+          "targetId" : 2,
+          "ligandId" : 149,
+          "endogenous" : False,
+          "pdbCode" : "4xxx",
+          "description" : "Crystal structure of the chimeric protein of 5-HT1B-BRIL in complex with ergotamine",
+          "resolution" : 2.7,
+          "species" : "Rat",
+          "refs" : []
+         }
+        ]
+
+
+
+
 
 class InteractionCreationTests(InteractionTest):
 
@@ -156,6 +190,15 @@ class InteractionPropertyTests(InteractionTest):
         mock_json_retriever.return_value = None
         interaction = Interaction(self.interaction_json)
         self.assertEqual(interaction.target(), None)
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_can_get_gtop_pdbs(self, mock_json_retriever):
+        mock_json_retriever.return_value = self.pdb_json
+        self.interaction_json["ligandId"] = 149
+        interaction = Interaction(self.interaction_json)
+        pdbs = interaction.gtop_pdbs()
+        self.assertEqual(pdbs, ["4IAR"])
 
 
 '''import unittest

@@ -1,4 +1,5 @@
 from .exceptions import NoSuchLigandError, NoSuchTargetError, NoSuchInteractionError
+from . import gtop
 
 def get_interaction_by_id(self, interaction_id):
     if not isinstance(interaction_id, int):
@@ -73,6 +74,26 @@ class Interaction:
             return get_target_by_id(self._target_id)
         except NoSuchTargetError:
             return None
+
+
+    def gtop_pdbs(self):
+        """Returns a list of PDBs which the Guide to PHARMACOLOGY says contain
+        this interaction.
+
+        :param bool as_molecupy: Returns the PDBs as \
+        `molecuPy <http://molecupy.readthedocs.io>`_ PDB objects.
+        :returns: list of ``str`` PDB codes"""
+
+        json_data = gtop.get_json_from_gtop("targets/%i/pdbStructure" % self._target_id)
+        if json_data:
+            return [
+             pdb["pdbCode"] for pdb in json_data
+              if pdb["species"].lower() == self._species.lower()
+               and pdb["ligandId"] == self._ligand_id
+                and pdb["pdbCode"]
+            ]
+        else:
+            return []
 
 
     def species(self):
@@ -185,23 +206,6 @@ class Interaction:
     """
     @pdb.ask_about_molecupy
     def get_gtop_pdbs(self):
-        """Returns a list of PDBs which the Guide to PHARMACOLOGY says contain
-        this interaction.
-
-        :param bool as_molecupy: Returns the PDBs as \
-        `molecuPy <http://molecupy.readthedocs.io>`_ PDB objects.
-        :returns: list of ``str`` PDB codes"""
-
-        json_data = get_json_from_gtop("targets/%i/pdbStructure" % self._target_id)
-        if json_data:
-            return [
-             pdb["pdbCode"] for pdb in json_data
-              if pdb["species"].lower() == self.species.lower()
-               and pdb["ligandId"] == self._ligand_id
-                and pdb["pdbCode"]
-            ]
-        else:
-            return []
 
 
     @pdb.ask_about_molecupy
