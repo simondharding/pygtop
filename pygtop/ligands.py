@@ -336,6 +336,22 @@ class Ligand:
         return targets
 
 
+    def gtop_pdbs(self):
+        """Returns a list of PDBs which the Guide to PHARMACOLOGY says contain
+        this ligand.
+
+        :param bool as_molecupy: Returns the PDBs as \
+        `molecuPy <http://molecupy.readthedocs.io>`_ PDB objects.
+        :returns: list of ``str`` PDB codes"""
+
+        pdbs = []
+        for interaction in self.interactions():
+            for pdb in interaction.gtop_pdbs():
+                if pdb not in pdbs:
+                    pdbs.append(pdb)
+        return pdbs
+
+
     def _get_structure_json(self):
         json_object = gtop.get_json_from_gtop(
          "ligands/%i/structure" % self._ligand_id
