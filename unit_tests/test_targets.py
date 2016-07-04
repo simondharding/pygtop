@@ -87,6 +87,29 @@ class TargetTest(TestCase):
         }
 
 
+        self.pdb_json = [
+         {
+          "targetId" : 2,
+          "ligandId" : 121,
+          "endogenous" : False,
+          "pdbCode" : "4IAQ",
+          "description" : "Crystal structure of the chimeric protein of 5-HT1B-BRIL in complex with dihydroergotamine",
+          "resolution" : 2.8,
+          "species" : "Human",
+          "refs" : []
+         }, {
+          "targetId" : 2,
+          "ligandId" : 149,
+          "endogenous" : False,
+          "pdbCode" : "4IAR",
+          "description" : "Crystal structure of the chimeric protein of 5-HT1B-BRIL in complex with ergotamine",
+          "resolution" : 2.7,
+          "species" : "Human",
+          "refs" : []
+         }
+        ]
+
+
 
 class TargetCreationTests(TargetTest):
 
@@ -268,6 +291,14 @@ class TargetPropertyTests(TargetTest):
         self.assertEqual(len(ligands), 2)
         for ligand in ligands:
             self.assertIsInstance(ligand, Ligand)
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_can_get_gtop_pdbs(self, mock_json_retriever):
+        mock_json_retriever.return_value = self.pdb_json
+        target = Target(self.target_json)
+        pdbs = target.gtop_pdbs()
+        self.assertEqual(pdbs, ["4IAQ", "4IAR"])
 
 
 

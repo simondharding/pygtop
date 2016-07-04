@@ -203,6 +203,17 @@ class Target:
         return ligands
 
 
+    def gtop_pdbs(self):
+        """Returns a list of PDBs which the Guide to PHARMACOLOGY says contain
+        this target.
+
+        :param bool as_molecupy: Returns the PDBs as \
+        `molecuPy <http://molecupy.readthedocs.io>`_ PDB objects.
+        :returns: list of ``str`` PDB codes"""
+
+        return [pdb["pdbCode"] for pdb in self._get_pdb_json() if pdb["pdbCode"]]
+
+
     def _get_synonym_json(self):
         json_object = gtop.get_json_from_gtop(
          "targets/%i/synonyms" % self._target_id
@@ -220,6 +231,13 @@ class Target:
     def _get_interactions_json(self):
         json_object = gtop.get_json_from_gtop(
          "targets/%i/interactions" % self._target_id
+        )
+        return json_object if json_object else []
+
+
+    def _get_pdb_json(self):
+        json_object = gtop.get_json_from_gtop(
+         "targets/%i/pdbStructure" % self._target_id
         )
         return json_object if json_object else []
 
