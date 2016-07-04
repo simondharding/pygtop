@@ -301,6 +301,13 @@ class TargetPropertyTests(TargetTest):
         self.assertEqual(pdbs, ["4IAQ", "4IAR"])
 
 
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_gtop_pdbs_when_no_json(self, mock_json_retriever):
+        mock_json_retriever.return_value = None
+        target = Target(self.target_json)
+        self.assertEqual(target.gtop_pdbs(), [])
+
+
 
 class TargetAccessTests(TargetTest):
 

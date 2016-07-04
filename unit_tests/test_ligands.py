@@ -437,6 +437,13 @@ class LigandPropertyTests(LigandTest):
         self.assertEqual(pdbs, ["4IAR"])
 
 
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_gtop_pdbs_when_no_json(self, mock_json_retriever):
+        mock_json_retriever.return_value = None
+        ligand = Ligand(self.ligand_json)
+        self.assertEqual(ligand.gtop_pdbs(), [])
+
+
 class LigandAccessTests(LigandTest):
 
     @patch("pygtop.gtop.get_json_from_gtop")

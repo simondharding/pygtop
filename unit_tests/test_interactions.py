@@ -201,6 +201,13 @@ class InteractionPropertyTests(InteractionTest):
         self.assertEqual(pdbs, ["4IAR"])
 
 
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_gtop_pdbs_when_no_json(self, mock_json_retriever):
+        mock_json_retriever.return_value = None
+        interaction = Interaction(self.interaction_json)
+        self.assertEqual(interaction.gtop_pdbs(), [])
+
+
 '''import unittest
 import json
 import sys
