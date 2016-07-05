@@ -104,7 +104,7 @@ class TargetTest(TestCase):
           "pdbCode" : "4IAR",
           "description" : "Crystal structure of the chimeric protein of 5-HT1B-BRIL in complex with ergotamine",
           "resolution" : 2.7,
-          "species" : "Human",
+          "species" : "Rat",
           "refs" : []
          }
         ]
@@ -306,6 +306,14 @@ class TargetPropertyTests(TargetTest):
         mock_json_retriever.return_value = None
         target = Target(self.target_json)
         self.assertEqual(target.gtop_pdbs(), [])
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_can_get_gtop_pdbs_by_species(self, mock_json_retriever):
+        mock_json_retriever.return_value = self.pdb_json
+        target = Target(self.target_json)
+        pdbs = target.gtop_pdbs(species="rat")
+        self.assertEqual(pdbs, ["4IAR"])
 
 
     @patch("pygtop.gtop.get_json_from_gtop")

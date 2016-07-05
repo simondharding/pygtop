@@ -204,7 +204,7 @@ class Target:
         return ligands
 
 
-    def gtop_pdbs(self):
+    def gtop_pdbs(self, species=None):
         """Returns a list of PDBs which the Guide to PHARMACOLOGY says contain
         this target.
 
@@ -212,7 +212,11 @@ class Target:
         `molecuPy <http://molecupy.readthedocs.io>`_ PDB objects.
         :returns: list of ``str`` PDB codes"""
 
-        return [pdb["pdbCode"] for pdb in self._get_pdb_json() if pdb["pdbCode"]]
+        if species is None:
+            return [pdb["pdbCode"] for pdb in self._get_pdb_json() if pdb["pdbCode"]]
+        else:
+            return [pdb["pdbCode"] for pdb in self._get_pdb_json()
+             if pdb["pdbCode"] and pdb["species"].lower() == species.lower()]
 
 
     def uniprot_pdbs(self):
