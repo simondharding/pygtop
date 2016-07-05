@@ -308,6 +308,30 @@ class TargetPropertyTests(TargetTest):
         self.assertEqual(target.gtop_pdbs(), [])
 
 
+    @patch("pygtop.gtop.get_json_from_gtop")
+    @patch("pygtop.pdb.query_rcsb_advanced")
+    def test_can_get_uniprot_pdbs(self, mock_xml_retriever, mock_json_retriever):
+        mock_json_retriever.return_value = [
+         {"accession": "10576", "database": "UniProtKB", "species": "Human", "url":"http"}
+        ]
+        mock_xml_retriever.return_value = ["2XG3", "3A1I"]
+        target = Target(self.target_json)
+        pdbs = target.uniprot_pdbs()
+        self.assertEqual(pdbs, ["2XG3", "3A1I"])
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    @patch("pygtop.pdb.query_rcsb_advanced")
+    def test_can_get_uniprot_pdbs_when_no_results(self, mock_xml_retriever, mock_json_retriever):
+        mock_json_retriever.return_value = [
+         {"accession": "10576", "database": "UniProtKB", "species": "Human", "url":"http"}
+        ]
+        mock_xml_retriever.return_value = None
+        target = Target(self.target_json)
+        pdbs = target.uniprot_pdbs()
+        self.assertEqual(pdbs, [])
+
+
 
 class TargetAccessTests(TargetTest):
 

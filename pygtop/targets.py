@@ -1,6 +1,7 @@
 """Contains target-specific objects and functions."""
 
 from . import gtop
+from . import pdb
 from .interactions import Interaction, get_interaction_by_id
 from .exceptions import NoSuchTargetError, NoSuchTargetFamilyError
 from .shared import DatabaseLink
@@ -214,6 +215,26 @@ class Target:
         return [pdb["pdbCode"] for pdb in self._get_pdb_json() if pdb["pdbCode"]]
 
 
+    def uniprot_pdbs(self):
+        """Queries the RSCB PDB database with the targets's uniprot accessions.
+
+        :param bool as_molecupy: Returns the PDBs as \
+        `molecuPy <http://molecupy.readthedocs.io>`_ PDB objects.
+        :returns: list of ``str`` PDB codes"""
+
+        uniprot_accessions = [
+         link.accession for link in self.database_links()
+          if link.database == "UniProtKB"
+        ]
+        if uniprot_accessions:
+            results = pdb.query_rcsb_advanced("UpAccessionIdQuery", {
+             "accessionIdList": ",".join(uniprot_accessions)
+            })
+            return [result.split(":")[0] for result in results] if results else []
+        else:
+            return []
+
+
     def _get_synonym_json(self):
         json_object = gtop.get_json_from_gtop(
          "targets/%i/synonyms" % self._target_id
@@ -352,56 +373,10 @@ class Target:
             return []
 
 
-    def get_targets(self):
-        """Returns a list of all targets which this target interacts with.
-
-        :returns: list of :py:class:`.Target` objects"""
-
-        targets = []
-        for interaction in self.get_interactions():
-            target = interaction.get_target()
-            if target not in targets:
-                targets.append(target)
-        return targets
 
 
     @pdb.ask_about_molecupy
-    def get_gtop_pdbs(self):
-        """Returns a list of PDBs which the Guide to PHARMACOLOGY says contain
-        this target.
 
-        :param bool as_molecupy: Returns the PDBs as \
-        `molecuPy <http://molecupy.readthedocs.io>`_ PDB objects.
-        :returns: list of ``str`` PDB codes"""
-
-        json_data = gtop.get_json_from_gtop("targets/%i/pdbStructure" % self.target_id)
-        if json_data:
-            return [pdb["pdbCode"] for pdb in json_data if pdb["pdbCode"]]
-        else:
-            return []
-
-
-    @pdb.ask_about_molecupy
-    def find_pdbs_by_uniprot_accession(self):
-        """Queries the RSCB PDB database with the targets's uniprot accessions.
-
-        :param bool as_molecupy: Returns the PDBs as \
-        `molecuPy <http://molecupy.readthedocs.io>`_ PDB objects.
-        :returns: list of ``str`` PDB codes"""
-
-        if "database_links" not in self.__dict__:
-            self.request_database_properties()
-        uniprot_accessions = [
-         link.accession for link in self.database_links
-          if link.database == "UniProtKB"
-        ]
-        if uniprot_accessions:
-            results = pdb.query_rcsb_advanced("UpAccessionIdQuery", {
-             "accessionIdList": ",".join(uniprot_accessions)
-            })
-            return [result.split(":")[0] for result in results] if results else []
-        else:
-            return []
 
 
     @pdb.ask_about_molecupy
