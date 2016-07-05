@@ -2,7 +2,7 @@ from unittest import TestCase
 import xml.etree.ElementTree as ElementTree
 import unittest.mock
 from unittest.mock import patch
-from pygtop.pdb import query_rcsb
+from pygtop.pdb import query_rcsb, query_rcsb_advanced
 
 class SimpleQueryTest(TestCase):
 
@@ -50,6 +50,39 @@ class SimpleQueryTest(TestCase):
          "search_type": "exact"
         })
         self.assertIs(result, None)
+
+
+
+class AdvancedQueryTests(TestCase):
+
+    def setUp(self):
+        self.mock_response = unittest.mock.Mock()
+        self.mock_response.status_code = 200
+        self.mock_response.text = "1LS6:1 1Z28:1 2D06:1 3QVU:1 3QVV:1 3U3J:1"
+
+
+    @patch("requests.post")
+    def test_can_produce_codes(self, mock_post):
+        mock_post.return_value = self.mock_response
+        results = query_rcsb_advanced("ChemCompDescriptorQuery", {
+         "descriptor": "InChI=1S/C6H6/c1-2-4-6-5-3-1/h1-6H",
+         "descriptorType": "InChI"
+        })
+        self.assertEqual(
+         results,
+         ["1LS6:1", "1Z28:1", "2D06:1", "3QVU:1", "3QVV:1", "3U3J:1"]
+        )
+
+
+    @patch("requests.post")
+    def test_can_produce_none_from_invalid_search(self, mock_post):
+        self.mock_response.text = "null"
+        mock_post.return_value = self.mock_response
+        results = query_rcsb_advanced("ChemCompDescriptorQuery", {
+         "descriptor": "InChI=1S/C6H6/c1-2-4-6-5-3-1/h1-6H",
+         "descriptorType": "InChI"
+        })
+        self.assertIs(results, None)
 
 
 '''import unittest
