@@ -410,6 +410,55 @@ class Ligand:
         return results if results else []
 
 
+    def sequence_pdbs(self):
+        """Queries the RSCB PDB database with the ligand's amino acid sequence,\
+        if that ligand is a peptide.
+
+        :param bool as_molecupy: Returns the PDBs as \
+        `molecuPy <http://molecupy.readthedocs.io>`_ PDB objects.
+        :returns: list of ``str`` PDB codes"""
+
+        if self.one_letter_sequence():
+            results = pdb.query_rcsb_advanced("SequenceQuery", {
+             "sequence": self.one_letter_sequence,
+             "eCutOff": "0.01",
+             "searchTool": "blast",
+             "sequenceIdentityCutoff": "100"
+            })
+            return results if results else []
+        else:
+            return []
+
+
+    def all_external_pdbs(self):
+        """Queries the RSCB PDB database by all parameters.
+
+        :param bool as_molecupy: Returns the PDBs as \
+        `molecuPy <http://molecupy.readthedocs.io>`_ PDB objects.
+        :returns: list of ``str`` PDB codes"""
+
+        return list(set(
+         self.smiles_pdbs() +
+         self.inchi_pdbs() +
+         self.name_pdbs() +
+         self.sequence_pdbs()
+        ))
+
+
+    def all_pdbs(self):
+        """Get a list of PDB codes using all means available - annotated and
+        external.
+
+        :param bool as_molecupy: Returns the PDBs as \
+        `molecuPy <http://molecupy.readthedocs.io>`_ PDB objects.
+        :returns: list of ``str`` PDB codes"""
+
+        return list(set(
+         self.gtop_pdbs() +
+         self.all_external_pdbs()
+        ))
+
+
     def _get_structure_json(self):
         json_object = gtop.get_json_from_gtop(
          "ligands/%i/structure" % self._ligand_id
@@ -544,57 +593,15 @@ class Ligand:
 
 
     @pdb.ask_about_molecupy
-    def find_pdbs_by_sequence(self):
-        """Queries the RSCB PDB database with the ligand's amino acid sequence,\
-        if that ligand is a peptide.
 
-        :param bool as_molecupy: Returns the PDBs as \
-        `molecuPy <http://molecupy.readthedocs.io>`_ PDB objects.
-        :returns: list of ``str`` PDB codes"""
-
-        if "one_letter_sequence" not in self.__dict__:
-            self.request_structural_properties()
-        if self.one_letter_sequence:
-            results = pdb.query_rcsb_advanced("SequenceQuery", {
-             "sequence": self.one_letter_sequence,
-             "eCutOff": "0.01",
-             "searchTool": "blast",
-             "sequenceIdentityCutoff": "100"
-            })
-            return results if results else []
-        else:
-            return []
 
 
     @pdb.ask_about_molecupy
-    def find_all_external_pdbs(self):
-        """Queries the RSCB PDB database by all parameters.
 
-        :param bool as_molecupy: Returns the PDBs as \
-        `molecuPy <http://molecupy.readthedocs.io>`_ PDB objects.
-        :returns: list of ``str`` PDB codes"""
-
-        return list(set(
-         self.find_pdbs_by_smiles() +
-         self.find_pdbs_by_inchi() +
-         self.find_pdbs_by_name() +
-         self.find_pdbs_by_sequence()
-        ))
 
 
     @pdb.ask_about_molecupy
-    def find_all_pdbs(self):
-        """Get a list of PDB codes using all means available - annotated and
-        external.
 
-        :param bool as_molecupy: Returns the PDBs as \
-        `molecuPy <http://molecupy.readthedocs.io>`_ PDB objects.
-        :returns: list of ``str`` PDB codes"""
-
-        return list(set(
-         self.get_gtop_pdbs() +
-         self.find_all_external_pdbs()
-        ))
 
 
     def find_in_pdb_by_smiles(self, molecupy_pdb):

@@ -496,7 +496,7 @@ class LigandPropertyTests(LigandTest):
     @patch("pygtop.gtop.get_json_from_gtop")
     @patch("pygtop.pdb.query_rcsb_advanced")
     def test_can_get_inchi_pdbs_when_no_results(self, mock_xml_retriever, mock_json_retriever):
-        mock_json_retriever.return_value = {"smiles": "CCC"}
+        mock_json_retriever.return_value = {"inchi": "CCC"}
         mock_xml_retriever.return_value = None
         ligand = Ligand(self.ligand_json)
         pdbs = ligand.inchi_pdbs()
@@ -518,6 +518,98 @@ class LigandPropertyTests(LigandTest):
         pdbs = ligand.name_pdbs()
         self.assertEqual(pdbs, [])
 
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    @patch("pygtop.pdb.query_rcsb_advanced")
+    def test_can_get_sequence_pdbs(self, mock_xml_retriever, mock_json_retriever):
+        mock_json_retriever.return_value = {"oneLetterSeq": "CCC"}
+        mock_xml_retriever.return_value = ["2XG3", "3A1I"]
+        ligand = Ligand(self.ligand_json)
+        pdbs = ligand.sequence_pdbs()
+        self.assertEqual(pdbs, ["2XG3", "3A1I"])
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    @patch("pygtop.pdb.query_rcsb_advanced")
+    def test_can_get_sequence_pdbs_when_no_results(self, mock_xml_retriever, mock_json_retriever):
+        mock_json_retriever.return_value = {"oneLetterSeq": "CCC"}
+        mock_xml_retriever.return_value = None
+        ligand = Ligand(self.ligand_json)
+        pdbs = ligand.sequence_pdbs()
+        self.assertEqual(pdbs, [])
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    @patch("pygtop.pdb.query_rcsb")
+    @patch("pygtop.pdb.query_rcsb_advanced")
+    def test_can_get_all_external_pdbs(self, mock_xml_retriever, mock_simple_retriever, mock_json_retriever):
+        mock_json_retriever.return_value = {"smiles": "CCC", "inchi": "CCC", "oneLetterSeq": "CCC"}
+        mock_simple_retriever.return_value = ElementTree.fromstring('''<?xml version='1.0' standalone='no' ?>
+<smilesQueryResult smiles="NC(=O)C1=CC=CC=C1" search_type="4">
+<ligandInfo>
+<ligand structureId="2XG3" chemicalID="UNU" type="non-polymer" molecularWeight="121.137">
+  <chemicalName>BENZAMIDE</chemicalName>
+  <formula>C7 H7 N O</formula>
+  <InChIKey>KXDAEFPNCMNJSK-UHFFFAOYSA-N</InChIKey>
+  <InChI>InChI=1S/C7H7NO/c8-7(9)6-4-2-1-3-5-6/h1-5H,(H2,8,9)</InChI>
+  <smiles>c1ccc(cc1)C(=O)N</smiles>
+</ligand>
+<ligand structureId="3A1I" chemicalID="UNU" type="non-polymer" molecularWeight="121.137">
+  <chemicalName>BENZAMIDE</chemicalName>
+  <formula>C7 H7 N O</formula>
+  <InChIKey>KXDAEFPNCMNJSK-UHFFFAOYSA-N</InChIKey>
+  <InChI>InChI=1S/C7H7NO/c8-7(9)6-4-2-1-3-5-6/h1-5H,(H2,8,9)</InChI>
+  <smiles>c1ccc(cc1)C(=O)N</smiles>
+</ligand>
+</ligandInfo>
+</smilesQueryResult>''')
+        mock_xml_retriever.side_effect = [["1xxx", "3A1I"], ["2xxx"], ["2xxx"]]
+        ligand = Ligand(self.ligand_json)
+        pdbs = ligand.all_external_pdbs()
+        self.assertEqual(len(pdbs), 4)
+        for code in ["2XG3", "3A1I", "1xxx", "2xxx"]:
+            self.assertIn(code, pdbs)
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    @patch("pygtop.pdb.query_rcsb")
+    @patch("pygtop.pdb.query_rcsb_advanced")
+    def test_can_get_all_pdbs(self, mock_xml_retriever, mock_simple_retriever, mock_json_retriever):
+        self.interaction_json["ligandId"] = 149
+        mock_json_retriever.side_effect = [
+         [self.interaction_json],
+         self.pdb_json,
+         {"smiles": "CCC", "inchi": "CCC", "oneLetterSeq": "CCC"},
+         {"smiles": "CCC", "inchi": "CCC", "oneLetterSeq": "CCC"},
+         {"smiles": "CCC", "inchi": "CCC", "oneLetterSeq": "CCC"},
+         {"smiles": "CCC", "inchi": "CCC", "oneLetterSeq": "CCC"},
+         {"smiles": "CCC", "inchi": "CCC", "oneLetterSeq": "CCC"}
+        ]
+        mock_simple_retriever.return_value = ElementTree.fromstring('''<?xml version='1.0' standalone='no' ?>
+<smilesQueryResult smiles="NC(=O)C1=CC=CC=C1" search_type="4">
+<ligandInfo>
+<ligand structureId="2XG3" chemicalID="UNU" type="non-polymer" molecularWeight="121.137">
+  <chemicalName>BENZAMIDE</chemicalName>
+  <formula>C7 H7 N O</formula>
+  <InChIKey>KXDAEFPNCMNJSK-UHFFFAOYSA-N</InChIKey>
+  <InChI>InChI=1S/C7H7NO/c8-7(9)6-4-2-1-3-5-6/h1-5H,(H2,8,9)</InChI>
+  <smiles>c1ccc(cc1)C(=O)N</smiles>
+</ligand>
+<ligand structureId="3A1I" chemicalID="UNU" type="non-polymer" molecularWeight="121.137">
+  <chemicalName>BENZAMIDE</chemicalName>
+  <formula>C7 H7 N O</formula>
+  <InChIKey>KXDAEFPNCMNJSK-UHFFFAOYSA-N</InChIKey>
+  <InChI>InChI=1S/C7H7NO/c8-7(9)6-4-2-1-3-5-6/h1-5H,(H2,8,9)</InChI>
+  <smiles>c1ccc(cc1)C(=O)N</smiles>
+</ligand>
+</ligandInfo>
+</smilesQueryResult>''')
+        mock_xml_retriever.side_effect = [["1xxx", "3A1I"], ["2xxx"], ["2xxx"]]
+        ligand = Ligand(self.ligand_json)
+        pdbs = ligand.all_pdbs()
+        self.assertEqual(len(pdbs), 5)
+        for code in ["4IAR", "2XG3", "3A1I", "1xxx", "2xxx"]:
+            self.assertIn(code, pdbs)
 
 
 class LigandAccessTests(LigandTest):
