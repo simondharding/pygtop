@@ -342,6 +342,19 @@ class TargetPropertyTests(TargetTest):
 
     @patch("pygtop.gtop.get_json_from_gtop")
     @patch("pygtop.pdb.query_rcsb_advanced")
+    def test_can_get_uniprot_pdbs_by_species(self, mock_xml_retriever, mock_json_retriever):
+        mock_json_retriever.return_value = [
+         {"accession": "10576", "database": "UniProtKB", "species": "Human", "url":"http"},
+         {"accession": "10576", "database": "UniProtKB", "species": "Rat", "url":"http"}
+        ]
+        mock_xml_retriever.side_effect = [["2XG3", "3A1I"], ["1xxx"]]
+        target = Target(self.target_json)
+        pdbs = target.uniprot_pdbs(species="rat")
+        self.assertEqual(pdbs, ["2XG3", "3A1I"])
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    @patch("pygtop.pdb.query_rcsb_advanced")
     def test_can_get_all_pdbs(self, mock_xml_retriever, mock_json_retriever):
         mock_json_retriever.side_effect = [
          self.pdb_json,

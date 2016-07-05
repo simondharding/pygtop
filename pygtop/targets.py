@@ -219,7 +219,7 @@ class Target:
              if pdb["pdbCode"] and pdb["species"].lower() == species.lower()]
 
 
-    def uniprot_pdbs(self):
+    def uniprot_pdbs(self, species=None):
         """Queries the RSCB PDB database with the targets's uniprot accessions.
 
         :param bool as_molecupy: Returns the PDBs as \
@@ -227,7 +227,7 @@ class Target:
         :returns: list of ``str`` PDB codes"""
 
         uniprot_accessions = [
-         link.accession for link in self.database_links()
+         link.accession for link in self.database_links(species=species)
           if link.database == "UniProtKB"
         ]
         if uniprot_accessions:
@@ -239,7 +239,7 @@ class Target:
             return []
 
 
-    def all_pdbs(self):
+    def all_pdbs(self, species=None):
         """Get a list of PDB codes using all means available - annotated and
         external.
 
@@ -248,8 +248,8 @@ class Target:
         :returns: list of ``str`` PDB codes"""
 
         return list(set(
-         self.gtop_pdbs() +
-         self.uniprot_pdbs()
+         self.gtop_pdbs(species=species) +
+         self.uniprot_pdbs(species=species)
         ))
 
 
