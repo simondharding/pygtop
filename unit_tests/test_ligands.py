@@ -444,6 +444,7 @@ class LigandPropertyTests(LigandTest):
         self.assertEqual(ligand.gtop_pdbs(), [])
 
 
+
 class LigandAccessTests(LigandTest):
 
     @patch("pygtop.gtop.get_json_from_gtop")

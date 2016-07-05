@@ -1,4 +1,58 @@
-import unittest
+from unittest import TestCase
+import xml.etree.ElementTree as ElementTree
+import unittest.mock
+from unittest.mock import patch
+from pygtop.pdb import query_rcsb
+
+class SimpleQueryTest(TestCase):
+
+    def setUp(self):
+        self.mock_response = unittest.mock.Mock()
+        self.mock_response.text = '''<?xml version='1.0' standalone='no' ?>
+<smilesQueryResult smiles="NC(=O)C1=CC=CC=C1" search_type="4">
+<ligandInfo>
+<ligand structureId="2XG3" chemicalID="UNU" type="non-polymer" molecularWeight="121.137">
+  <chemicalName>BENZAMIDE</chemicalName>
+  <formula>C7 H7 N O</formula>
+  <InChIKey>KXDAEFPNCMNJSK-UHFFFAOYSA-N</InChIKey>
+  <InChI>InChI=1S/C7H7NO/c8-7(9)6-4-2-1-3-5-6/h1-5H,(H2,8,9)</InChI>
+  <smiles>c1ccc(cc1)C(=O)N</smiles>
+</ligand>
+<ligand structureId="3A1I" chemicalID="UNU" type="non-polymer" molecularWeight="121.137">
+  <chemicalName>BENZAMIDE</chemicalName>
+  <formula>C7 H7 N O</formula>
+  <InChIKey>KXDAEFPNCMNJSK-UHFFFAOYSA-N</InChIKey>
+  <InChI>InChI=1S/C7H7NO/c8-7(9)6-4-2-1-3-5-6/h1-5H,(H2,8,9)</InChI>
+  <smiles>c1ccc(cc1)C(=O)N</smiles>
+</ligand>
+</ligandInfo>
+</smilesQueryResult>'''
+        self.mock_response.status_code = 200
+        self.mock_response.headers = {"Content-Type": "xml"}
+
+
+    @patch("requests.get")
+    def test_can_produce_xml(self, mock_get):
+        mock_get.return_value = self.mock_response
+        result = query_rcsb("smilesQuery", {
+         "smiles": "NC(=O)C1=CC=CC=C1",
+         "search_type": "exact"
+        })
+        self.assertIsInstance(result, ElementTree.Element)
+
+
+    @patch("requests.get")
+    def test_can_produce_none_from_invalid_search(self, mock_get):
+        self.mock_response.headers["Content-Type"] = "html"
+        mock_get.return_value = self.mock_response
+        result = query_rcsb("smilesQuery", {
+         "smiles": "NC(=O)C1=CC=CC=C1",
+         "search_type": "exact"
+        })
+        self.assertIs(result, None)
+
+
+'''import unittest
 import json
 import sys
 sys.path.append(".")
@@ -59,4 +113,4 @@ class MolecupyDecoratorTests(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main()
+    unittest.main()'''

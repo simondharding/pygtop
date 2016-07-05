@@ -493,23 +493,6 @@ class Ligand:
 
 
     @pdb.ask_about_molecupy
-    def get_gtop_pdbs(self):
-        """Returns a list of PDBs which the Guide to PHARMACOLOGY says contain
-        this ligand.
-
-        :param bool as_molecupy: Returns the PDBs as \
-        `molecuPy <http://molecupy.readthedocs.io>`_ PDB objects.
-        :returns: list of ``str`` PDB codes"""
-
-        pdbs = []
-        for interaction in self.get_interactions():
-            for pdb in interaction.get_gtop_pdbs():
-                if pdb not in pdbs:
-                    pdbs.append(pdb)
-        return pdbs
-
-
-    @pdb.ask_about_molecupy
     def find_pdbs_by_smiles(self, search_type="exact"):
         """Queries the RSCB PDB database with the ligand's SMILES string.
 
