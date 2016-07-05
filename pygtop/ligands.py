@@ -376,6 +376,40 @@ class Ligand:
             return []
 
 
+    def inchi_pdbs(self):
+        """Queries the RSCB PDB database with the ligand's InChI string.
+
+        :param bool as_molecupy: Returns the PDBs as \
+        `molecuPy <http://molecupy.readthedocs.io>`_ PDB objects.
+        :returns: list of ``str`` PDB codes"""
+
+        if self.inchi():
+            results = pdb.query_rcsb_advanced("ChemCompDescriptorQuery", {
+             "descriptor": self.inchi(),
+             "descriptorType": "InChI"
+            })
+            return results if results else []
+        else:
+            return []
+
+
+    def name_pdbs(self, comparator="equals"):
+        """Queries the RSCB PDB database with the ligand's name.
+
+        :param str comparator: The type of search to run - whether exact matches\
+        only should be returned, or substrings etc.
+        :param bool as_molecupy: Returns the PDBs as \
+        `molecuPy <http://molecupy.readthedocs.io>`_ PDB objects.
+        :returns: list of ``str`` PDB codes"""
+
+        results = pdb.query_rcsb_advanced("ChemCompNameQuery", {
+         "comparator": comparator.title(),
+         "name": self.name(),
+         "polymericType": "Any"
+        })
+        return results if results else []
+
+
     def _get_structure_json(self):
         json_object = gtop.get_json_from_gtop(
          "ligands/%i/structure" % self._ligand_id
@@ -506,41 +540,7 @@ class Ligand:
 
 
     @pdb.ask_about_molecupy
-    def find_pdbs_by_inchi(self):
-        """Queries the RSCB PDB database with the ligand's InChI string.
 
-        :param bool as_molecupy: Returns the PDBs as \
-        `molecuPy <http://molecupy.readthedocs.io>`_ PDB objects.
-        :returns: list of ``str`` PDB codes"""
-
-        if "inchi" not in self.__dict__:
-            self.request_structural_properties()
-        if self.inchi:
-            results = pdb.query_rcsb_advanced("ChemCompDescriptorQuery", {
-             "descriptor": self.inchi,
-             "descriptorType": "InChI"
-            })
-            return results if results else []
-        else:
-            return []
-
-
-    @pdb.ask_about_molecupy
-    def find_pdbs_by_name(self, comparator="equals"):
-        """Queries the RSCB PDB database with the ligand's name.
-
-        :param str comparator: The type of search to run - whether exact matches\
-        only should be returned, or substrings etc.
-        :param bool as_molecupy: Returns the PDBs as \
-        `molecuPy <http://molecupy.readthedocs.io>`_ PDB objects.
-        :returns: list of ``str`` PDB codes"""
-
-        results = pdb.query_rcsb_advanced("ChemCompNameQuery", {
-         "comparator": comparator.title(),
-         "name": self.name,
-         "polymericType": "Any"
-        })
-        return results if results else []
 
 
     @pdb.ask_about_molecupy

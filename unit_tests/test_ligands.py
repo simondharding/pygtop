@@ -483,6 +483,42 @@ class LigandPropertyTests(LigandTest):
         self.assertEqual(pdbs, [])
 
 
+    @patch("pygtop.gtop.get_json_from_gtop")
+    @patch("pygtop.pdb.query_rcsb_advanced")
+    def test_can_get_inchi_pdbs(self, mock_xml_retriever, mock_json_retriever):
+        mock_json_retriever.return_value = {"inchi": "CCC"}
+        mock_xml_retriever.return_value = ["2XG3", "3A1I"]
+        ligand = Ligand(self.ligand_json)
+        pdbs = ligand.inchi_pdbs()
+        self.assertEqual(pdbs, ["2XG3", "3A1I"])
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    @patch("pygtop.pdb.query_rcsb_advanced")
+    def test_can_get_inchi_pdbs_when_no_results(self, mock_xml_retriever, mock_json_retriever):
+        mock_json_retriever.return_value = {"smiles": "CCC"}
+        mock_xml_retriever.return_value = None
+        ligand = Ligand(self.ligand_json)
+        pdbs = ligand.inchi_pdbs()
+        self.assertEqual(pdbs, [])
+
+
+    @patch("pygtop.pdb.query_rcsb_advanced")
+    def test_can_get_name_pdbs(self, mock_xml_retriever):
+        mock_xml_retriever.return_value = ["2XG3", "3A1I"]
+        ligand = Ligand(self.ligand_json)
+        pdbs = ligand.name_pdbs()
+        self.assertEqual(pdbs, ["2XG3", "3A1I"])
+
+
+    @patch("pygtop.pdb.query_rcsb_advanced")
+    def test_can_get_name_pdbs_when_no_results(self, mock_xml_retriever):
+        mock_xml_retriever.return_value = None
+        ligand = Ligand(self.ligand_json)
+        pdbs = ligand.name_pdbs()
+        self.assertEqual(pdbs, [])
+
+
 
 class LigandAccessTests(LigandTest):
 
