@@ -332,6 +332,21 @@ class TargetPropertyTests(TargetTest):
         self.assertEqual(pdbs, [])
 
 
+    @patch("pygtop.gtop.get_json_from_gtop")
+    @patch("pygtop.pdb.query_rcsb_advanced")
+    def test_can_get_all_pdbs(self, mock_xml_retriever, mock_json_retriever):
+        mock_json_retriever.side_effect = [
+         self.pdb_json,
+         [{"accession": "10576", "database": "UniProtKB", "species": "Human", "url":"http"}]
+        ]
+        mock_xml_retriever.return_value = ["2XG3", "3A1I"]
+        target = Target(self.target_json)
+        pdbs = target.all_pdbs()
+        self.assertEqual(len(pdbs), 4)
+        for code in ["4IAQ", "4IAR", "2XG3", "3A1I"]:
+            self.assertIn(code, pdbs)
+
+
 
 class TargetAccessTests(TargetTest):
 

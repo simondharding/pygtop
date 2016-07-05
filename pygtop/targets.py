@@ -235,6 +235,20 @@ class Target:
             return []
 
 
+    def all_pdbs(self):
+        """Get a list of PDB codes using all means available - annotated and
+        external.
+
+        :param bool as_molecupy: Returns the PDBs as \
+        `molecuPy <http://molecupy.readthedocs.io>`_ PDB objects.
+        :returns: list of ``str`` PDB codes"""
+
+        return list(set(
+         self.gtop_pdbs() +
+         self.uniprot_pdbs()
+        ))
+
+
     def _get_synonym_json(self):
         json_object = gtop.get_json_from_gtop(
          "targets/%i/synonyms" % self._target_id
@@ -380,18 +394,7 @@ class Target:
 
 
     @pdb.ask_about_molecupy
-    def find_all_pdbs(self):
-        """Get a list of PDB codes using all means available - annotated and
-        external.
 
-        :param bool as_molecupy: Returns the PDBs as \
-        `molecuPy <http://molecupy.readthedocs.io>`_ PDB objects.
-        :returns: list of ``str`` PDB codes"""
-
-        return list(set(
-         self.get_gtop_pdbs() +
-         self.find_pdbs_by_uniprot_accession()
-        ))
 
 
     def request_database_properties(self):
