@@ -7,6 +7,7 @@ from pygtop.interactions import Interaction
 from pygtop.targets import Target
 import pygtop.exceptions as exceptions
 from pygtop.shared import DatabaseLink
+import xml.etree.ElementTree as ElementTree
 
 class LigandTest(TestCase):
 
@@ -442,6 +443,44 @@ class LigandPropertyTests(LigandTest):
         mock_json_retriever.return_value = None
         ligand = Ligand(self.ligand_json)
         self.assertEqual(ligand.gtop_pdbs(), [])
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    @patch("pygtop.pdb.query_rcsb")
+    def test_can_get_smiles_pdbs(self, mock_xml_retriever, mock_json_retriever):
+        mock_json_retriever.return_value = {"smiles": "CCC"}
+        mock_xml_retriever.return_value = ElementTree.fromstring('''<?xml version='1.0' standalone='no' ?>
+<smilesQueryResult smiles="NC(=O)C1=CC=CC=C1" search_type="4">
+<ligandInfo>
+<ligand structureId="2XG3" chemicalID="UNU" type="non-polymer" molecularWeight="121.137">
+  <chemicalName>BENZAMIDE</chemicalName>
+  <formula>C7 H7 N O</formula>
+  <InChIKey>KXDAEFPNCMNJSK-UHFFFAOYSA-N</InChIKey>
+  <InChI>InChI=1S/C7H7NO/c8-7(9)6-4-2-1-3-5-6/h1-5H,(H2,8,9)</InChI>
+  <smiles>c1ccc(cc1)C(=O)N</smiles>
+</ligand>
+<ligand structureId="3A1I" chemicalID="UNU" type="non-polymer" molecularWeight="121.137">
+  <chemicalName>BENZAMIDE</chemicalName>
+  <formula>C7 H7 N O</formula>
+  <InChIKey>KXDAEFPNCMNJSK-UHFFFAOYSA-N</InChIKey>
+  <InChI>InChI=1S/C7H7NO/c8-7(9)6-4-2-1-3-5-6/h1-5H,(H2,8,9)</InChI>
+  <smiles>c1ccc(cc1)C(=O)N</smiles>
+</ligand>
+</ligandInfo>
+</smilesQueryResult>''')
+        ligand = Ligand(self.ligand_json)
+        pdbs = ligand.smiles_pdbs()
+        self.assertEqual(pdbs, ["2XG3", "3A1I"])
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    @patch("pygtop.pdb.query_rcsb")
+    def test_can_get_smiles_pdbs_when_no_results(self, mock_xml_retriever, mock_json_retriever):
+        mock_json_retriever.return_value = {"smiles": "CCC"}
+        mock_xml_retriever.return_value = None
+        ligand = Ligand(self.ligand_json)
+        pdbs = ligand.smiles_pdbs()
+        self.assertEqual(pdbs, [])
 
 
 

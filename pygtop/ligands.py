@@ -1,6 +1,7 @@
 """Contains ligand-specific objects and functions."""
 
 from . import gtop
+from . import pdb
 from .interactions import Interaction, get_interaction_by_id
 from .exceptions import NoSuchLigandError
 from .shared import DatabaseLink
@@ -352,6 +353,29 @@ class Ligand:
         return pdbs
 
 
+    def smiles_pdbs(self, search_type="exact"):
+        """Queries the RSCB PDB database with the ligand's SMILES string.
+
+        :param str search_type: The type of search to run - whether exact matches\
+        only should be returned.
+        :param bool as_molecupy: Returns the PDBs as \
+        `molecuPy <http://molecupy.readthedocs.io>`_ PDB objects.
+        :returns: list of ``str`` PDB codes"""
+
+        if self.smiles():
+            xml = pdb.query_rcsb("smilesQuery", {
+             "smiles": self.smiles(),
+             "search_type": search_type
+            })
+            if xml:
+                ligand_elements = list(xml[0])
+                return [element.attrib["structureId"] for element in ligand_elements]
+            else:
+                return []
+        else:
+            return []
+
+
     def _get_structure_json(self):
         json_object = gtop.get_json_from_gtop(
          "ligands/%i/structure" % self._ligand_id
@@ -453,21 +477,6 @@ class Ligand:
     """
 
 
-    def get_interactions(self):
-        """Returns a list of all interactions which this ligand is involved in.
-
-        :returns: list of :py:class:`.Interaction` objects"""
-
-        from .interactions import Interaction
-        interactions_json = gtop.get_json_from_gtop(
-         "/ligands/%i/interactions" % self.ligand_id
-        )
-        if interactions_json:
-            return [Interaction(json) for json in interactions_json]
-        else:
-            return []
-
-
     get_interaction_by_id = interactions.get_interaction_by_id
     """Returns an Interaction object of a given ID belonging to the ligand.
 
@@ -493,29 +502,7 @@ class Ligand:
 
 
     @pdb.ask_about_molecupy
-    def find_pdbs_by_smiles(self, search_type="exact"):
-        """Queries the RSCB PDB database with the ligand's SMILES string.
 
-        :param str search_type: The type of search to run - whether exact matches\
-        only should be returned.
-        :param bool as_molecupy: Returns the PDBs as \
-        `molecuPy <http://molecupy.readthedocs.io>`_ PDB objects.
-        :returns: list of ``str`` PDB codes"""
-
-        if "smiles" not in self.__dict__:
-            self.request_structural_properties()
-        if self.smiles:
-            xml = pdb.query_rcsb("smilesQuery", {
-             "smiles": self.smiles,
-             "search_type": search_type
-            })
-            if xml:
-                ligand_elements = list(xml[0])
-                return [element.attrib["structureId"] for element in ligand_elements]
-            else:
-                return []
-        else:
-            return []
 
 
     @pdb.ask_about_molecupy
