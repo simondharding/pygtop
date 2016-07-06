@@ -4,7 +4,7 @@ from . import gtop
 from . import pdb
 from .interactions import Interaction, get_interaction_by_id
 from .exceptions import NoSuchTargetError, NoSuchTargetFamilyError
-from .shared import DatabaseLink, Gene
+from .shared import DatabaseLink, Gene, strip_html
 
 def get_target_by_id(target_id):
     """Returns a Target object of the target with the given ID.
@@ -116,14 +116,17 @@ class Target:
         return self._target_id
 
 
+    @strip_html
     def name(self):
         return self._name
 
 
+    @strip_html
     def abbreviation(self):
         return self._abbreviation
 
 
+    @strip_html
     def systematic_name(self):
         return self._systematic_name
 
@@ -168,6 +171,7 @@ class Target:
         return [get_target_by_id(id_) for id_ in self._complex_ids]
 
 
+    @strip_html
     def synonyms(self):
         return [synonym["name"] for synonym in self._get_synonym_json()]
 

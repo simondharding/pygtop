@@ -5,7 +5,7 @@ from . import gtop
 from . import pdb
 from .interactions import Interaction, get_interaction_by_id
 from .exceptions import NoSuchLigandError
-from .shared import DatabaseLink
+from .shared import DatabaseLink, strip_html
 
 def get_ligand_by_id(ligand_id):
     """Returns a Ligand object of the ligand with the given ID.
@@ -133,14 +133,17 @@ class Ligand:
         return self._ligand_id
 
 
+    @strip_html
     def name(self):
         return self._name
 
 
+    @strip_html
     def abbreviation(self):
         return self._abbreviation
 
 
+    @strip_html
     def inn(self):
         return self._inn
 
@@ -169,6 +172,7 @@ class Ligand:
         return self._withdrawn
 
 
+    @strip_html
     def approval_source(self):
         return self._approval_source
 
@@ -265,6 +269,7 @@ class Ligand:
         return self._get_molecular_json().get("lipinskisRuleOfFive")
 
 
+    @strip_html
     def synonyms(self):
         return [synonym["name"] for synonym in self._get_synonym_json()]
 
