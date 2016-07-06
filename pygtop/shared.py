@@ -1,6 +1,7 @@
 """Objects not specific to ligands or targets."""
 
 import re
+import html
 
 class DatabaseLink:
     """A link to an external database, containing accession and species
@@ -69,9 +70,9 @@ def strip_html(func):
         name = func(*args, **kwargs)
         if strip_html:
             if isinstance(name, str):
-                return re.sub(cleaner, "", name).replace("&ndash;", "–")
+                return html.unescape(re.sub(cleaner, "", name))
             elif isinstance(name, list) or isinstance(name, tuple):
-                return type(name)([re.sub(cleaner, "", n).replace("&ndash;", "–") for n in name])
+                return type(name)([html.unescape(re.sub(cleaner, "", n)) for n in name])
         else:
             return name
     new_func.__name__ = func.__name__
