@@ -58,3 +58,8 @@ class Gene:
 
     def __repr__(self):
         return "<%s Gene (%s)>" % (self.species, self.gene_symbol)
+
+
+
+def strip_html(func):
+    return func
