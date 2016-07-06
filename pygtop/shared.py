@@ -68,7 +68,10 @@ def strip_html(func):
     def new_func(*args, strip_html=False, **kwargs):
         name = func(*args, **kwargs)
         if strip_html:
-            return re.sub(cleaner, "", name).replace("&ndash;", "–")
+            if isinstance(name, str):
+                return re.sub(cleaner, "", name).replace("&ndash;", "–")
+            elif isinstance(name, list) or isinstance(name, tuple):
+                return type(name)([re.sub(cleaner, "", n).replace("&ndash;", "–") for n in name])
         else:
             return name
     new_func.__name__ = func.__name__
