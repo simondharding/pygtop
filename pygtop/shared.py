@@ -40,6 +40,27 @@ class DatabaseLink:
 
 
 
+class Gene:
+
+    def __init__(self, json_data):
+        self.json_data = json_data
+
+        self.target_id = json_data["targetId"]
+        self.species = json_data["species"]
+        self.gene_symbol = json_data["geneSymbol"]
+        self.gene_name = json_data["geneName"]
+        self.official_gene_id = json_data["officialGeneId"]
+        self.genomic_location = json_data["genomicLocation"]
+        self.amino_acids = int(json_data["aminoAcids"]) if json_data["aminoAcids"] else 0
+        self.transmembrane_domains = int(json_data["transmembraneDomains"]) if json_data["transmembraneDomains"] else 0
+        self.pore_loops = int(json_data["poreLoops"]) if json_data["poreLoops"] else 0
+
+
+    def __repr__(self):
+        return "<%s Gene (%s)>" % (self.species, self.gene_symbol)
+
+
+
 class Precursor:
     """A precursor to a Guide to PHARMACOLOGY ligand/target.
 
