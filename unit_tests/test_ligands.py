@@ -1,3 +1,4 @@
+from collections import Counter
 from unittest import TestCase
 import unittest.mock
 from unittest.mock import patch
@@ -611,6 +612,71 @@ class LigandPropertyTests(LigandTest):
         self.assertEqual(len(pdbs), 5)
         for code in ["4IAR", "2XG3", "3A1I", "1xxx", "2xxx"]:
             self.assertIn(code, pdbs)
+
+
+
+class LigandInPdbTests(LigandTest):
+
+    def setUp(self):
+        LigandTest.setUp(self)
+        self.pdb = unittest.mock.Mock()
+        self.pdb.model = unittest.mock.Mock()
+        self.molecule1 = unittest.mock.Mock()
+        self.molecule1.get_formula.return_value = Counter({"C": 6, "O": 6})
+        self.molecule1.molecule_name = "AAA"
+        self.molecule1.get_mass.return_value = 1000
+        self.molecule2 = unittest.mock.Mock()
+        self.molecule2.get_formula.return_value = Counter({"C": 5, "O": 5})
+        self.molecule2.molecule_name = "BBB"
+        self.molecule2.get_mass.return_value = 500
+        self.molecule3 = unittest.mock.Mock()
+        self.molecule3.get_formula.return_value = Counter({"C": 5, "N": 1, "O": 5})
+        self.molecule3.molecule_name = "CCC"
+        self.molecule3.get_mass.return_value = 139
+        self.pdb.model.small_molecules = set(
+         [self.molecule1, self.molecule2, self.molecule3]
+        )
+        self.chain1 = unittest.mock.Mock()
+        self.chain1.get_sequence_string.return_value = "ABCDEFG"
+        self.chain2 = unittest.mock.Mock()
+        self.chain2.get_sequence_string.return_value = "HIJKLMN"
+        self.pdb.model.chains = set([self.chain1, self.chain2])
+        self.pdb.data_file = unittest.mock.Mock()
+        self.pdb.data_file.het_names = {
+         "AAA": "adrug", "BBB": self.ligand_json["name"], "CCC": "cdrug"
+        }
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_can_find_ligand_in_pdb_by_smiles(self, mock_json_retriever):
+        mock_json_retriever.return_value = {"smiles": "CCCOOOCOCOCO"}
+        ligand = Ligand(self.ligand_json)
+        molecule = ligand.find_in_pdb_by_smiles(self.pdb)
+        self.assertIs(molecule, self.molecule1)
+
+
+    def test_can_find_ligand_in_pdb_by_name(self):
+        ligand = Ligand(self.ligand_json)
+        molecule = ligand.find_in_pdb_by_name(self.pdb)
+        self.assertIs(molecule, self.molecule2)
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_can_find_ligand_in_pdb_by_mass(self, mock_json_retriever):
+        mock_json_retriever.return_value = {"molecularWeight": 100}
+        ligand = Ligand(self.ligand_json)
+        molecule = ligand.find_in_pdb_by_mass(self.pdb)
+        self.assertIs(molecule, self.molecule3)
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_can_find_ligand_in_pdb_by_peptide_string(self, mock_json_retriever):
+        mock_json_retriever.return_value = {"oneLetterSeq": "ABCDEFG"}
+        ligand = Ligand(self.ligand_json)
+        molecule = ligand.find_in_pdb_by_peptide_string(self.pdb)
+        self.assertIs(molecule, self.chain1)
+
+
 
 
 class LigandAccessTests(LigandTest):

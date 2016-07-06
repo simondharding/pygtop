@@ -1,5 +1,6 @@
 """Contains ligand-specific objects and functions."""
 
+from collections import Counter
 from . import gtop
 from . import pdb
 from .interactions import Interaction, get_interaction_by_id
@@ -466,6 +467,42 @@ class Ligand:
         ))
 
 
+    def find_in_pdb_by_smiles(self, molecupy_pdb):
+        if self.smiles():
+            formula = Counter([char.upper() for char in self.smiles()
+             if char.isalpha() and char.upper() != "H"])
+            for molecule in molecupy_pdb.model.small_molecules:
+                if molecule.get_formula() == formula:
+                    return molecule
+
+
+    def find_in_pdb_by_name(self, molecupy_pdb):
+        if self.name():
+            for molecule in molecupy_pdb.model.small_molecules:
+                molecule_name = molecupy_pdb.data_file.het_names.get(molecule.molecule_name)
+                if molecule_name and self.name().lower() == molecule_name.lower():
+                    return molecule
+
+
+    def find_in_pdb_by_mass(self, molecupy_pdb):
+        if self.molecular_weight():
+            molecules = sorted(
+             list(molecupy_pdb.model.small_molecules),
+             key=lambda k: abs(k.get_mass() - self.molecular_weight())
+            )
+            if molecules and -40 < (molecules[0].get_mass() - self.molecular_weight()) < 40:
+                return molecules[0]
+
+
+    def find_in_pdb_by_peptide_string(self, molecupy_pdb):
+        if self.one_letter_sequence():
+            for chain in molecupy_pdb.model.chains:
+                if self.one_letter_sequence() in chain.get_sequence_string() and 0.9 <= (
+                 len(self.one_letter_sequence()) / len(chain.get_sequence_string())
+                ) <= 1:
+                    return chain
+
+
     def _get_structure_json(self):
         json_object = gtop.get_json_from_gtop(
          "ligands/%i/structure" % self._ligand_id
@@ -506,6 +543,7 @@ class Ligand:
          "ligands/%i/interactions" % self._ligand_id
         )
         return json_object if json_object else []
+
 
 
 
@@ -575,79 +613,14 @@ class Ligand:
     :raises: :class:`.NoSuchInteractionError`: if no such interaction exists in the database."""
 
 
-    def get_targets(self):
-
-
-    def get_species_targets(self):
-        """Returns a list of all species-specific targets which this ligand interacts with.
-
-        :returns: list of :py:class:`.SpeciesTarget` objects"""
-
-        species_targets = []
-        for interaction in self.get_interactions():
-            species_target = interaction.get_species_target()
-            if species_target not in species_targets:
-                species_targets.append(species_target)
-        return species_targets
-
-
-    @pdb.ask_about_molecupy
 
 
 
-    @pdb.ask_about_molecupy
 
 
 
-    @pdb.ask_about_molecupy
 
 
-
-    @pdb.ask_about_molecupy
-
-
-
-    @pdb.ask_about_molecupy
-
-
-
-    def find_in_pdb_by_smiles(self, molecupy_pdb):
-        self.request_structural_properties()
-        if self.smiles:
-            formula = Counter([char.upper() for char in self.smiles
-             if char.isalpha() and char.upper() != "H"])
-            for molecule in molecupy_pdb.model.small_molecules:
-                if molecule.get_formula() == formula:
-                    return molecule
-
-
-    def find_in_pdb_by_name(self, molecupy_pdb):
-        if self.name:
-            for molecule in molecupy_pdb.model.small_molecules:
-                molecule_name = molecupy_pdb.data_file.het_names.get(molecule.molecule_name)
-                if molecule_name and self.name.lower() == molecule_name.lower():
-                    return molecule
-
-
-    def find_in_pdb_by_mass(self, molecupy_pdb):
-        self.request_molecular_properties()
-        if self.molecular_weight:
-            molecules = sorted(
-             list(molecupy_pdb.model.small_molecules),
-             key=lambda k: abs(k.get_mass() - self.molecular_weight)
-            )
-            if molecules and -40 < (molecules[0].get_mass() - self.molecular_weight) < 40:
-                return molecules[0]
-
-
-    def find_in_pdb_by_peptide_string(self, molecupy_pdb):
-        if "inchi" not in self.__dict__: self.request_structural_properties()
-        if self.one_letter_sequence:
-            for chain in molecupy_pdb.model.chains:
-                if self.one_letter_sequence in chain.get_sequence_string() and 0.9 <= (
-                 len(self.one_letter_sequence) / len(chain.get_sequence_string())
-                ) <= 1:
-                    return chain
 
 
     def request_structural_properties(self):
