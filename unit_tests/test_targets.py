@@ -6,7 +6,7 @@ from pygtop.targets import get_target_by_name, TargetFamily
 from pygtop.interactions import Interaction
 from pygtop.ligands import Ligand
 import pygtop.exceptions as exceptions
-from pygtop.shared import DatabaseLink
+from pygtop.shared import DatabaseLink, Gene
 
 class TargetTest(TestCase):
 
@@ -34,6 +34,45 @@ class TargetTest(TestCase):
           "database": "ChEMBL Target",
           "url": "http://www.ebi.ac.uk/chembldb/index.php/target/inspect/11863",
           "species": "Mouse"
+         }
+        ]
+
+        self.gene_json = [
+         {
+          "targetId": 380,
+          "species": "Human",
+          "geneSymbol": "KCNMA1",
+          "geneName": "potassium calcium-activated channel subfamily M alpha 1",
+          "officialGeneId": "6284",
+          "genomicLocation": "10q22.3",
+          "aminoAcids": "1182",
+          "transmembraneDomains": "6",
+          "poreLoops": "1",
+          "refs": []
+         },
+         {
+          "targetId": 380,
+          "species": "Mouse",
+          "geneSymbol": "Kcnma1",
+          "geneName": "potassium large conductance calcium-activated channel",
+          "officialGeneId": "MGI:99923",
+          "genomicLocation": "14 A3",
+          "aminoAcids": "1236",
+          "transmembraneDomains": "6",
+          "poreLoops": "1",
+          "refs": []
+         },
+         {
+          "targetId": 380,
+          "species": "Rat",
+          "geneSymbol": "Kcnma2",
+          "geneName": "potassium calcium-activated channel subfamily M alpha 1",
+          "officialGeneId": "620715",
+          "genomicLocation": "15p16",
+          "aminoAcids": "1243",
+          "transmembraneDomains": "6",
+          "poreLoops": "1",
+          "refs": []
          }
         ]
 
@@ -197,6 +236,40 @@ class TargetPropertyTests(TargetTest):
         self.assertIsInstance(links[0], DatabaseLink)
         self.assertEqual(links[0].accession, "11863")
         self.assertEqual(links[0].species, "Mouse")
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_gene_properties(self, mock_json_retriever):
+        mock_json_retriever.return_value = self.gene_json
+        target = Target(self.target_json)
+
+        self.assertEqual(len(target.genes()), 3)
+        self.assertIsInstance(target.genes()[0], Gene)
+        self.assertIsInstance(target.genes()[1], Gene)
+        self.assertIsInstance(target.genes()[2], Gene)
+        self.assertEqual(target.genes()[0].gene_symbol, "KCNMA1")
+        self.assertEqual(target.genes()[1].gene_symbol, "Kcnma1")
+        self.assertEqual(target.genes()[2].gene_symbol, "Kcnma2")
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_gene_properties_when_no_json(self, mock_json_retriever):
+        mock_json_retriever.return_value = None
+        target = Target(self.target_json)
+
+        self.assertEqual(target.genes(), [])
+
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_species_gene_properties(self, mock_json_retriever):
+        mock_json_retriever.return_value = self.gene_json
+        target = Target(self.target_json)
+
+        genes = target.genes(species="mouse")
+        self.assertEqual(len(genes), 1)
+        self.assertIsInstance(genes[0], Gene)
+        self.assertEqual(genes[0].gene_symbol, "Kcnma1")
+        self.assertEqual(genes[0].species, "Mouse")
 
 
     @patch("pygtop.gtop.get_json_from_gtop")

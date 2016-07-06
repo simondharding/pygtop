@@ -4,7 +4,7 @@ from . import gtop
 from . import pdb
 from .interactions import Interaction, get_interaction_by_id
 from .exceptions import NoSuchTargetError, NoSuchTargetFamilyError
-from .shared import DatabaseLink
+from .shared import DatabaseLink, Gene
 
 def get_target_by_id(target_id):
     """Returns a Target object of the target with the given ID.
@@ -174,9 +174,18 @@ class Target:
 
     def database_links(self, species=None):
         if species:
-            return [DatabaseLink(link_json) for link_json in self._get_database_json() if link_json["species"] and link_json["species"].lower() == species.lower()]
+            return [DatabaseLink(link_json) for link_json in self._get_database_json()
+             if link_json["species"] and link_json["species"].lower() == species.lower()]
         else:
             return [DatabaseLink(link_json) for link_json in self._get_database_json()]
+
+
+    def genes(self, species=None):
+        if species:
+            return [Gene(gene_json) for gene_json in self._get_gene_json()
+             if gene_json["species"] and gene_json["species"].lower() == species.lower()]
+        else:
+            return [Gene(gene_json) for gene_json in self._get_gene_json()]
 
 
     def interactions(self):
@@ -265,6 +274,13 @@ class Target:
     def _get_database_json(self):
         json_object = gtop.get_json_from_gtop(
          "targets/%i/databaseLinks" % self._target_id
+        )
+        return json_object if json_object else []
+
+
+    def _get_gene_json(self):
+        json_object = gtop.get_json_from_gtop(
+         "targets/%i/geneProteinInformation" % self._target_id
         )
         return json_object if json_object else []
 
