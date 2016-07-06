@@ -3,5 +3,5 @@ from .targets import *
 from .interactions import *
 from .exceptions import *
 
-__version__ = "1.1.0"
+__version__ = "2.0.0"
 __author__ = "Sam Ireland"
