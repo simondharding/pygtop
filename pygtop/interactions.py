@@ -96,6 +96,19 @@ class Interaction:
             return []
 
 
+    def all_external_pdbs(self):
+        """Queries the RSCB PDB database for PDBs containing this interaction
+        by all parameters.
+
+        :param bool as_molecupy: Returns the PDBs as \
+        `molecuPy <http://molecupy.readthedocs.io>`_ PDB objects.
+        :returns: list of ``str`` PDB codes"""
+
+        ligand_external_pdbs = self.ligand().all_external_pdbs()
+        target_external_pdbs = self.target().uniprot_pdbs(species=self.species())
+        return [code for code in ligand_external_pdbs if code in target_external_pdbs]
+
+
     def species(self):
         return self._species
 
@@ -209,17 +222,7 @@ class Interaction:
 
 
     @pdb.ask_about_molecupy
-    def find_all_external_pdbs(self):
-        """Queries the RSCB PDB database for PDBs containing this interaction
-        by all parameters.
 
-        :param bool as_molecupy: Returns the PDBs as \
-        `molecuPy <http://molecupy.readthedocs.io>`_ PDB objects.
-        :returns: list of ``str`` PDB codes"""
-
-        ligand_external_pdbs = self.get_ligand().find_all_external_pdbs()
-        target_external_pdbs = self.get_species_target().find_pdbs_by_uniprot_accession()
-        return [code for code in ligand_external_pdbs if code in target_external_pdbs]
 
 
     @pdb.ask_about_molecupy

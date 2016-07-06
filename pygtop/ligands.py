@@ -420,7 +420,7 @@ class Ligand:
 
         if self.one_letter_sequence():
             results = pdb.query_rcsb_advanced("SequenceQuery", {
-             "sequence": self.one_letter_sequence,
+             "sequence": self.one_letter_sequence(),
              "eCutOff": "0.01",
              "searchTool": "blast",
              "sequenceIdentityCutoff": "100"

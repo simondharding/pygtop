@@ -583,6 +583,7 @@ class LigandPropertyTests(LigandTest):
          {"smiles": "CCC", "inchi": "CCC", "oneLetterSeq": "CCC"},
          {"smiles": "CCC", "inchi": "CCC", "oneLetterSeq": "CCC"},
          {"smiles": "CCC", "inchi": "CCC", "oneLetterSeq": "CCC"},
+         {"smiles": "CCC", "inchi": "CCC", "oneLetterSeq": "CCC"},
          {"smiles": "CCC", "inchi": "CCC", "oneLetterSeq": "CCC"}
         ]
         mock_simple_retriever.return_value = ElementTree.fromstring('''<?xml version='1.0' standalone='no' ?>

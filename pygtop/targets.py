@@ -230,6 +230,7 @@ class Target:
          link.accession for link in self.database_links(species=species)
           if link.database == "UniProtKB"
         ]
+        print(uniprot_accessions)
         if uniprot_accessions:
             results = pdb.query_rcsb_advanced("UpAccessionIdQuery", {
              "accessionIdList": ",".join(uniprot_accessions)
