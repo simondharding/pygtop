@@ -204,6 +204,7 @@ class Target:
         return ligands
 
 
+    @pdb.ask_about_molecupy
     def gtop_pdbs(self, species=None):
         """Returns a list of PDBs which the Guide to PHARMACOLOGY says contain
         this target.
@@ -218,6 +219,7 @@ class Target:
              if pdb["pdbCode"] and pdb["species"].lower() == species.lower()]
 
 
+    @pdb.ask_about_molecupy
     def uniprot_pdbs(self, species=None):
         """Queries the RSCB PDB database with the targets's uniprot accessions.
 
@@ -238,6 +240,7 @@ class Target:
             return []
 
 
+    @pdb.ask_about_molecupy
     def all_pdbs(self, species=None):
         """Get a list of PDB codes using all means available - annotated and
         external.

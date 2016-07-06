@@ -2,7 +2,7 @@ from unittest import TestCase
 import xml.etree.ElementTree as ElementTree
 import unittest.mock
 from unittest.mock import patch
-from pygtop.pdb import query_rcsb, query_rcsb_advanced
+from pygtop.pdb import query_rcsb, query_rcsb_advanced, ask_about_molecupy
 
 class SimpleQueryTest(TestCase):
 
@@ -85,25 +85,21 @@ class AdvancedQueryTests(TestCase):
         self.assertIs(results, None)
 
 
-'''
 
-
-
-class MolecupyDecoratorTests(unittest.TestCase):
+class MolecupyDecoratorTests(TestCase):
 
     def setUp(self):
-        self.return_pdb = lambda: ["1LOL"]
+        self.return_pdb = lambda: ["1LOL", "2LOL"]
 
 
     def test_decorator_not_normally_noticable(self):
         decorated_return_pdb = ask_about_molecupy(self.return_pdb)
         self.assertEqual(decorated_return_pdb()[0], "1LOL")
+        self.assertEqual(decorated_return_pdb()[1], "2LOL")
 
 
-    def test_decorator_can_return_molecupy_object(self):
+    @patch("molecupy.get_pdb_remotely")
+    def test_decorator_can_return_molecupy_object(self, mock_pdb_getter):
+        mock_pdb_getter.return_value = unittest.mock.Mock()
         decorated_return_pdb = ask_about_molecupy(self.return_pdb)
-        self.assertIsInstance(decorated_return_pdb(as_molecupy=True)[0], Pdb)
-
-
-if __name__ == "__main__":
-    unittest.main()'''
+        self.assertIsInstance(decorated_return_pdb(as_molecupy=True)[0], unittest.mock.Mock)

@@ -337,6 +337,7 @@ class Ligand:
         return targets
 
 
+    @pdb.ask_about_molecupy
     def gtop_pdbs(self):
         """Returns a list of PDBs which the Guide to PHARMACOLOGY says contain
         this ligand.
@@ -353,6 +354,7 @@ class Ligand:
         return pdbs
 
 
+    @pdb.ask_about_molecupy
     def smiles_pdbs(self, search_type="exact"):
         """Queries the RSCB PDB database with the ligand's SMILES string.
 
@@ -376,6 +378,7 @@ class Ligand:
             return []
 
 
+    @pdb.ask_about_molecupy
     def inchi_pdbs(self):
         """Queries the RSCB PDB database with the ligand's InChI string.
 
@@ -393,6 +396,7 @@ class Ligand:
             return []
 
 
+    @pdb.ask_about_molecupy
     def name_pdbs(self, comparator="equals"):
         """Queries the RSCB PDB database with the ligand's name.
 
@@ -410,6 +414,7 @@ class Ligand:
         return results if results else []
 
 
+    @pdb.ask_about_molecupy
     def sequence_pdbs(self):
         """Queries the RSCB PDB database with the ligand's amino acid sequence,\
         if that ligand is a peptide.
@@ -430,6 +435,7 @@ class Ligand:
             return []
 
 
+    @pdb.ask_about_molecupy
     def all_external_pdbs(self):
         """Queries the RSCB PDB database by all parameters.
 
@@ -445,6 +451,7 @@ class Ligand:
         ))
 
 
+    @pdb.ask_about_molecupy
     def all_pdbs(self):
         """Get a list of PDB codes using all means available - annotated and
         external.

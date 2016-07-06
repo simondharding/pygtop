@@ -289,7 +289,9 @@ class InteractionPropertyTests(InteractionTest):
         ]
         interaction = Interaction(self.interaction_json)
         pdbs = interaction.all_pdbs()
-        self.assertEqual(pdbs, ["3A1I", "4IAR"])
+        self.assertEqual(len(pdbs), 2)
+        for code in ["3A1I", "4IAR"]:
+            self.assertIn(code, pdbs)
 
 
 '''import unittest
