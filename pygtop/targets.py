@@ -211,7 +211,6 @@ class Target:
         :param bool as_molecupy: Returns the PDBs as \
         `molecuPy <http://molecupy.readthedocs.io>`_ PDB objects.
         :returns: list of ``str`` PDB codes"""
-
         if species is None:
             return [pdb["pdbCode"] for pdb in self._get_pdb_json() if pdb["pdbCode"]]
         else:
@@ -230,7 +229,6 @@ class Target:
          link.accession for link in self.database_links(species=species)
           if link.database == "UniProtKB"
         ]
-        print(uniprot_accessions)
         if uniprot_accessions:
             results = pdb.query_rcsb_advanced("UpAccessionIdQuery", {
              "accessionIdList": ",".join(uniprot_accessions)

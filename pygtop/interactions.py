@@ -109,6 +109,19 @@ class Interaction:
         return [code for code in ligand_external_pdbs if code in target_external_pdbs]
 
 
+    def all_pdbs(self):
+        """Get a list of PDB codes containing this interaction using all means
+        available - annotated and external.
+
+        :param bool as_molecupy: Returns the PDBs as \
+        `molecuPy <http://molecupy.readthedocs.io>`_ PDB objects.
+        :returns: list of ``str`` PDB codes"""
+
+        ligand_pdbs = self.ligand().all_pdbs()
+        target_pdbs = self.target().all_pdbs(species=self.species())
+        return [code for code in ligand_pdbs if code in target_pdbs]
+
+
     def species(self):
         return self._species
 
@@ -225,17 +238,6 @@ class Interaction:
 
 
 
-    @pdb.ask_about_molecupy
-    def find_all_pdbs(self):
-        """Get a list of PDB codes containing this interaction using all means
-        available - annotated and external.
 
-        :param bool as_molecupy: Returns the PDBs as \
-        `molecuPy <http://molecupy.readthedocs.io>`_ PDB objects.
-        :returns: list of ``str`` PDB codes"""
-
-        ligand_pdbs = self.get_ligand().find_all_pdbs()
-        target_pdbs = self.get_species_target().find_all_pdbs()
-        return [code for code in ligand_pdbs if code in target_pdbs]
 
 '''

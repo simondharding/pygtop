@@ -249,6 +249,49 @@ class InteractionPropertyTests(InteractionTest):
         self.assertEqual(pdbs, ["4IAR"])
 
 
+    @patch("pygtop.gtop.get_json_from_gtop")
+    @patch("pygtop.pdb.query_rcsb")
+    @patch("pygtop.pdb.query_rcsb_advanced")
+    def test_can_get_all_pdbs(self, mock_xml_retriever, mock_simple_retriever, mock_json_retriever):
+        mock_simple_retriever.return_value = ElementTree.fromstring('''<?xml version='1.0' standalone='no' ?>
+<smilesQueryResult smiles="NC(=O)C1=CC=CC=C1" search_type="4">
+<ligandInfo>
+<ligand structureId="2XG3" chemicalID="UNU" type="non-polymer" molecularWeight="121.137">
+  <chemicalName>BENZAMIDE</chemicalName>
+  <formula>C7 H7 N O</formula>
+  <InChIKey>KXDAEFPNCMNJSK-UHFFFAOYSA-N</InChIKey>
+  <InChI>InChI=1S/C7H7NO/c8-7(9)6-4-2-1-3-5-6/h1-5H,(H2,8,9)</InChI>
+  <smiles>c1ccc(cc1)C(=O)N</smiles>
+</ligand>
+<ligand structureId="3A1I" chemicalID="UNU" type="non-polymer" molecularWeight="121.137">
+  <chemicalName>BENZAMIDE</chemicalName>
+  <formula>C7 H7 N O</formula>
+  <InChIKey>KXDAEFPNCMNJSK-UHFFFAOYSA-N</InChIKey>
+  <InChI>InChI=1S/C7H7NO/c8-7(9)6-4-2-1-3-5-6/h1-5H,(H2,8,9)</InChI>
+  <smiles>c1ccc(cc1)C(=O)N</smiles>
+</ligand>
+</ligandInfo>
+</smilesQueryResult>''')
+        mock_xml_retriever.side_effect = [["1xxx", "3A1I"], ["4IAR"], ["2xxx"], ["3A1I", "3xxx"]]
+        mock_json_retriever.side_effect = [
+         self.ligand_json, # Create ligand
+         [self.interaction_json],
+         self.pdb_json,
+         {"smiles": "CCC", "inchi": "CCC", "oneLetterSeq": "CCC"}, # Check has smiles
+         {"smiles": "CCC", "inchi": "CCC", "oneLetterSeq": "CCC"}, # Use smiles
+         {"smiles": "CCC", "inchi": "CCC", "oneLetterSeq": "CCC"}, # Check has inchi
+         {"smiles": "CCC", "inchi": "CCC", "oneLetterSeq": "CCC"}, # Use inchi
+         {"smiles": "CCC", "inchi": "CCC", "oneLetterSeq": "CCC"}, # Check has peptide code
+         {"smiles": "CCC", "inchi": "CCC", "oneLetterSeq": "CCC"}, # Use peptide code
+         self.target_json, # Make target
+         self.pdb_json,
+         [{"accession": "10576", "database": "UniProtKB", "species": "Human", "url":"http"}]
+        ]
+        interaction = Interaction(self.interaction_json)
+        pdbs = interaction.all_pdbs()
+        self.assertEqual(pdbs, ["3A1I", "4IAR"])
+
+
 '''import unittest
 import json
 import sys
