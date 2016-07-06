@@ -1,5 +1,7 @@
 """Objects not specific to ligands or targets."""
 
+import re
+
 class DatabaseLink:
     """A link to an external database, containing accession and species
     information.
@@ -62,4 +64,13 @@ class Gene:
 
 
 def strip_html(func):
-    return func
+    cleaner = re.compile("<.*?>")
+    def new_func(*args, strip_html=False, **kwargs):
+        name = func(*args, **kwargs)
+        if strip_html:
+            return re.sub(cleaner, "", name).replace("&ndash;", "–")
+        else:
+            return name
+    new_func.__name__ = func.__name__
+    new_func.__doc__ = func.__doc__
+    return new_func

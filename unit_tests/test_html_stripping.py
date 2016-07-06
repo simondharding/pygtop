@@ -22,3 +22,11 @@ class DecoratorTests(HtmlStripTest):
          decorated_synonyms(),
          ["name1", "name<sup>2</sup>", "name<sub>3</sub>"]
         )
+
+
+    def test_can_strip_html_from_strings(self):
+        decorated_name = strip_html(self.name)
+        self.assertEqual(
+         decorated_name(strip_html=True),
+         "5AF-barns–nool5"
+        )
