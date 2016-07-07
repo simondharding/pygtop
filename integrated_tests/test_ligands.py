@@ -1,7 +1,9 @@
 from unittest import TestCase
 import pygtop
 from pygtop.ligands import Ligand
-from pygtop.exceptions import NoSuchLigandError
+from pygtop.interactions import Interaction
+from pygtop.targets import Target
+from pygtop.exceptions import NoSuchLigandError, NoSuchInteractionError
 
 class LigandAccessTests(TestCase):
 
@@ -32,6 +34,37 @@ class LigandAccessTests(TestCase):
         self.assertIsInstance(ligands, list)
         self.assertIsInstance(ligands[0], Ligand)
         self.assertGreater(len(ligands), 5000)
+
+
+
+class LigandPropertyTests(TestCase):
+
+    def test_can_get_interactions(self):
+        ligand = pygtop.get_ligand_by_id(2)
+        interactions = ligand.interactions()
+        self.assertGreater(len(interactions), 3)
+        for interaction in interactions:
+            self.assertIsInstance(interaction, Interaction)
+
+
+    def test_can_get_interaction_by_id(self):
+        ligand = pygtop.get_ligand_by_id(2)
+        interaction = ligand.get_interaction_by_id(2)
+        self.assertIsInstance(interaction, Interaction)
+
+
+    def test_cannot_get_incorrect_interaction(self):
+        ligand = pygtop.get_ligand_by_id(2)
+        with self.assertRaises(NoSuchInteractionError):
+            interaction = ligand.get_interaction_by_id(1000000)
+
+
+    def test_can_get_targets(self):
+        ligand = pygtop.get_ligand_by_id(2)
+        targets = ligand.targets()
+        self.assertGreater(len(targets), 3)
+        for target in targets:
+            self.assertIsInstance(target, Target)
 
 
 
