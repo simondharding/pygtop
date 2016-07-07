@@ -12,7 +12,9 @@ def get_interaction_by_id(self, interaction_id):
 
 
 class Interaction:
-    """A Guide to PHARMACOLOGY interaction object."""
+    """A Guide to PHARMACOLOGY interaction object.
+    
+    :param json_data: A dictionary obtained from the web services."""
 
     def __init__(self, json_data):
         self.json_data = json_data

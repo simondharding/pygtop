@@ -95,6 +95,9 @@ def get_all_target_families():
 
 
 class Target:
+    """A Guide to PHARMACOLOGY target object.
+
+    :param json_data: A dictionary obtained from the web services."""
 
     def __init__(self, json_data):
         self.json_data = json_data
@@ -113,29 +116,56 @@ class Target:
 
 
     def target_id(self):
+        """Returns the target's GtoP ID.
+
+        :rtype: int"""
+
         return self._target_id
 
 
     @strip_html
     def name(self):
+        """Returns the target's name.
+
+        :param bool strip_html: If ``True``, the name will have HTML entities stripped.
+        :rtype: str"""
+
         return self._name
 
 
     @strip_html
     def abbreviation(self):
+        """Returns the target's abbreviation.
+
+        :param bool strip_html: If ``True``, the abbreviation will have HTML entities stripped.
+        :rtype: str"""
+
         return self._abbreviation
 
 
     @strip_html
     def systematic_name(self):
+        """Returns the target's systematic name.
+
+        :param bool strip_html: If ``True``, the name will have HTML entities stripped.
+        :rtype: str"""
+
         return self._systematic_name
 
 
     def target_type(self):
+        """Returns the target's type.
+
+        :rtype: str"""
+
         return self._target_type
 
 
     def family_ids(self):
+        """Returns the the family IDs of any families this target is a member of.
+
+        :returns: list of ``int``"""
+
         return self._family_ids
 
 
@@ -148,6 +178,11 @@ class Target:
 
 
     def subunit_ids(self):
+        """Returns the the target IDs of all targets which are subunits of this
+        target.
+
+        :returns: list of ``int``"""
+
         return self._subunit_ids
 
 
@@ -160,6 +195,11 @@ class Target:
 
 
     def complex_ids(self):
+        """Returns the the target IDs of all targets of which this target is a
+        subunit.
+
+        :returns: list of ``int``"""
+
         return self._complex_ids
 
 
@@ -173,10 +213,20 @@ class Target:
 
     @strip_html
     def synonyms(self):
+        """Returns any synonyms for this target.
+
+        :param bool strip_html: If ``True``, the synonyms will have HTML entities stripped.
+        :returns: list of :py:class:`Target` objects"""
+
         return [synonym["name"] for synonym in self._get_synonym_json()]
 
 
     def database_links(self, species=None):
+        """Returns any database links for this target.
+
+        :param str species: If given, only links belonging to this species will be returned.
+        :returns: list of  :class:`.DatabaseLink` objects."""
+
         if species:
             return [DatabaseLink(link_json) for link_json in self._get_database_json()
              if link_json["species"] and link_json["species"].lower() == species.lower()]
@@ -185,6 +235,11 @@ class Target:
 
 
     def genes(self, species=None):
+        """Returns any genes for this target.
+
+        :param str species: If given, only genes belonging to this species will be returned.
+        :returns: list of  :class:`.Gene` objects."""
+
         if species:
             return [Gene(gene_json) for gene_json in self._get_gene_json()
              if gene_json["species"] and gene_json["species"].lower() == species.lower()]
@@ -193,6 +248,11 @@ class Target:
 
 
     def interactions(self, species=None):
+        """Returns any interactions for this target.
+
+        :param str species: If given, only interactions belonging to this species will be returned.
+        :returns: list of  :class:`.Interaction` objects."""
+
         if species:
             return [Interaction(interaction_json) for interaction_json in self._get_interactions_json()
              if interaction_json["targetSpecies"] and interaction_json["targetSpecies"].lower() == species.lower()]
@@ -210,9 +270,10 @@ class Target:
 
 
     def ligands(self, species=None):
-        """Returns a list of all ligands which this target interacts with.
+        """Returns any ligands that this target interacts with.
 
-        :returns: list of :py:class:`.Ligand` objects"""
+        :param str species: If given, only ligands belonging to this species will be returned.
+        :returns: list of  :class:`.DatabaseLink` objects."""
 
         ligands = []
         for interaction in self.interactions(species=species):
@@ -243,6 +304,7 @@ class Target:
 
         :param bool as_molecupy: Returns the PDBs as \
         `molecuPy <http://molecupy.readthedocs.io>`_ PDB objects.
+        :param str species: If given, only PDBs belonging to this species will be returned.
         :returns: list of ``str`` PDB codes"""
 
         uniprot_accessions = [
@@ -265,6 +327,7 @@ class Target:
 
         :param bool as_molecupy: Returns the PDBs as \
         `molecuPy <http://molecupy.readthedocs.io>`_ PDB objects.
+        :param str species: If given, only PDBs belonging to this species will be returned.
         :returns: list of ``str`` PDB codes"""
 
         return list(set(
@@ -310,6 +373,9 @@ class Target:
 
 
 class TargetFamily:
+    """A Guide to PHARMACOLOGY target family object.
+
+    :param json_data: A dictionary obtained from the web services."""
 
     def __init__(self, json_data):
         self.json_data = json_data
@@ -326,14 +392,30 @@ class TargetFamily:
 
 
     def family_id(self):
+        """Returns the family's GtoP ID.
+
+        :rtype: int"""
+
         return self._family_id
 
 
+    @strip_html
     def name(self):
+        """Returns the family's name.
+
+        :param bool strip_html: If ``True``, the name will have HTML entities stripped.
+        :rtype: str"""
+
         return self._name
 
 
     def target_ids(self):
+        """Returns the the target IDs of all targets in this family. Note that only
+        immediate children are shown - if a family has subfamilies then it will
+        not return any targets here - you must look in the sub-families.
+
+        :returns: list of ``int``"""
+
         return self._target_ids
 
 
@@ -348,6 +430,11 @@ class TargetFamily:
 
 
     def parent_family_ids(self):
+        """Returns the the target IDs of all target families of which this
+        family is a member.
+
+        :returns: list of ``int``"""
+
         return self._parent_family_ids
 
 
@@ -360,6 +447,11 @@ class TargetFamily:
 
 
     def sub_family_ids(self):
+        """Returns the the target IDs of all arget families which are a member
+        of this family.
+
+        :returns: list of ``int``"""
+
         return self._sub_family_ids
 
 
