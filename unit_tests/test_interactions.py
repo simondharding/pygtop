@@ -138,6 +138,13 @@ class InteractionCreationTests(InteractionTest):
         self.assertEqual(interaction._affinity_high, 9.0)
 
 
+    def test_can_process_dash_affinity(self):
+        self.interaction_json["affinity"] = "-"
+        interaction = Interaction(self.interaction_json)
+        self.assertEqual(interaction._affinity_low, None)
+        self.assertEqual(interaction._affinity_high, None)
+
+
     def test_interaction_repr(self):
         interaction = Interaction(self.interaction_json)
         self.assertEqual(str(interaction), "<Interaction (7191 --> Human 1)>")

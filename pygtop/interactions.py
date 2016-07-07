@@ -28,8 +28,8 @@ class Interaction:
          [char for char in json_data["affinity"] if char in "0123456789. "]
         ).split()
         affinity_values = tuple(sorted([float(val) for val in affinity_values]))
-        self._affinity_low = affinity_values[0]
-        self._affinity_high = affinity_values[-1]
+        self._affinity_low = affinity_values[0] if affinity_values else None
+        self._affinity_high = affinity_values[-1] if affinity_values else None
         self._affinity_type = json_data["affinityType"]
 
 

@@ -1,7 +1,9 @@
 from unittest import TestCase
 import pygtop
 from pygtop.targets import Target, TargetFamily
-from pygtop.exceptions import NoSuchTargetError, NoSuchTargetFamilyError
+from pygtop.interactions import Interaction
+from pygtop.ligands import Ligand
+from pygtop.exceptions import NoSuchTargetError, NoSuchTargetFamilyError, NoSuchInteractionError
 
 class TargetAccessTests(TestCase):
 
@@ -50,6 +52,55 @@ class TargetAccessTests(TestCase):
         self.assertIsInstance(targets, list)
         self.assertIsInstance(targets[0], TargetFamily)
         self.assertGreater(len(targets), 20)
+
+
+
+class TargetPropertyTests(TestCase):
+
+    def test_can_get_interactions(self):
+        target = pygtop.get_target_by_id(2)
+        interactions = target.interactions()
+        self.assertGreater(len(interactions), 3)
+        for interaction in interactions:
+            self.assertIsInstance(interaction, Interaction)
+
+
+    def test_can_get_interaction_by_id(self):
+        target = pygtop.get_target_by_id(2)
+        interaction = target.get_interaction_by_id(107)
+        self.assertIsInstance(interaction, Interaction)
+
+
+    def test_cannot_get_incorrect_interaction(self):
+        target = pygtop.get_target_by_id(2)
+        with self.assertRaises(NoSuchInteractionError):
+            interaction = target.get_interaction_by_id(1000000)
+
+
+    def test_can_get_ligands(self):
+        target = pygtop.get_target_by_id(2)
+        ligands = target.ligands()
+        self.assertGreater(len(ligands), 3)
+        for ligand in ligands:
+            self.assertIsInstance(ligand, Ligand)
+
+
+    def test_can_get_gtop_pdbs(self):
+        target = pygtop.get_target_by_id(2)
+        pdbs = target.gtop_pdbs()
+        self.assertGreaterEqual(len(pdbs), 1)
+
+
+    def test_can_get_pdbs_by_uniprot(self):
+        target = pygtop.get_target_by_id(2)
+        pdbs = target.uniprot_pdbs()
+        self.assertGreaterEqual(len(pdbs), 1)
+
+
+    def test_can_get_all_pdbs(self):
+        target = pygtop.get_target_by_id(2)
+        pdbs = target.all_pdbs()
+        self.assertGreaterEqual(len(pdbs), 1)
 
 
 
