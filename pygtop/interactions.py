@@ -12,6 +12,7 @@ def get_interaction_by_id(self, interaction_id):
 
 
 class Interaction:
+    """A Guide to PHARMACOLOGY interaction object."""
 
     def __init__(self, json_data):
         self.json_data = json_data
@@ -42,10 +43,18 @@ class Interaction:
 
 
     def interaction_id(self):
+        """Returns the interaction's GtoP ID.
+
+        :rtype: int"""
+
         return self._interaction_id
 
 
     def ligand_id(self):
+        """Returns the GtoP ID of the associated ligand.
+
+        :rtype: int"""
+
         return self._ligand_id
 
 
@@ -62,6 +71,10 @@ class Interaction:
 
 
     def target_id(self):
+        """Returns the GtoP ID of the associated target.
+
+        :rtype: int"""
+
         return self._target_id
 
 
@@ -127,32 +140,65 @@ class Interaction:
 
 
     def species(self):
+        """Returns the species in which the interaction takes place.
+
+        :rtype: str"""
+
         return self._species
 
 
     def primary_target(self):
+        """Returns ``True`` if the the interaction represents a ligand
+        interacting with its primary target.
+
+        :rtype: bool"""
+
         return self._primary_target
 
 
     def endogenous(self):
+        """Returns ``True`` if the the interaction is an endogenous interaction.
+
+        :rtype: bool"""
+
         return self._endogenous
 
 
     def interaction_type(self):
+        """Returns the type of interaction.
+
+        :rtype: str"""
+
         return self._interaction_type
 
 
     def action(self):
+        """Returns the action of the interaction.
+
+        :rtype: str"""
+
         return self._action
 
 
     def affinity_low(self):
+        """Returns the lowest reported affinity for this interaction.
+
+        :rtype: float"""
+
         return self._affinity_low
 
 
     def affinity_high(self):
+        """Returns the highest reported affinity for this interaction.
+
+        :rtype: float"""
+
         return self._affinity_high
 
 
     def affinity_type(self):
+        """Returns the units of the interaction.
+
+        :rtype: str"""
+
         return self._affinity_type
