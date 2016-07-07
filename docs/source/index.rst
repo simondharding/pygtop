@@ -10,9 +10,9 @@ Example
 
   >>> import pygtop
   >>> my_drug = pygtop.get_ligand_by_id(5239)
-  >>> my_drug.name
+  >>> my_drug.name()
   'paracetamol'
-  >>> my_drug.ligand_type
+  >>> my_drug.ligand_type()
   'Synthetic organic'
 
 See the :doc:`overview page <overview>` for more examples, or the :doc:`full
