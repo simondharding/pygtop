@@ -67,6 +67,48 @@ class LigandPropertyTests(TestCase):
             self.assertIsInstance(target, Target)
 
 
+    def test_can_get_gtop_pdbs(self):
+        ligand = pygtop.get_ligand_by_id(121)
+        pdbs = ligand.gtop_pdbs()
+        self.assertGreaterEqual(len(pdbs), 1)
+
+
+    def test_can_get_pdbs_by_smiles(self):
+        ligand = pygtop.get_ligand_by_id(121)
+        pdbs = ligand.smiles_pdbs()
+        self.assertGreaterEqual(len(pdbs), 1)
+
+
+    def test_can_get_pdbs_by_inchi(self):
+        ligand = pygtop.get_ligand_by_id(4701)
+        pdbs = ligand.inchi_pdbs()
+        self.assertGreaterEqual(len(pdbs), 1)
+
+
+    def test_can_get_pdbs_by_name(self):
+        ligand = pygtop.get_ligand_by_id(121)
+        pdbs = ligand.name_pdbs()
+        self.assertGreaterEqual(len(pdbs), 1)
+
+
+    def test_can_get_pdbs_by_sequence(self):
+        ligand = pygtop.get_ligand_by_id(683)
+        pdbs = ligand.sequence_pdbs()
+        self.assertGreaterEqual(len(pdbs), 1)
+
+
+    def test_can_get_external_pdbs(self):
+        ligand = pygtop.get_ligand_by_id(121)
+        pdbs = ligand.all_external_pdbs()
+        self.assertGreaterEqual(len(pdbs), 1)
+
+
+    def test_can_get_all_pdbs(self):
+        ligand = pygtop.get_ligand_by_id(121)
+        pdbs = ligand.all_pdbs()
+        self.assertGreaterEqual(len(pdbs), 1)
+
+
 
 class LigandSearchTests(TestCase):
 
