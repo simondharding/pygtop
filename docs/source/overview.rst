@@ -134,7 +134,7 @@ The interactions of a ligand can be accessed as follows:
 Alternatively you can request the interacting targets instead:
 
     >>> ligand.targets()
-    [<'COX-1' Target (Enzyme)>, <'COX-2' Target (Enzyme)>]
+    [<Target 1375 (COX-1 )>, <Target 1376 (COX-2 )>]
 
 Targets can access interactions in much the same way:
 
