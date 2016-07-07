@@ -65,6 +65,13 @@ class TargetPropertyTests(TestCase):
             self.assertIsInstance(interaction, Interaction)
 
 
+    def test_can_get_species_interactions(self):
+        target = pygtop.get_target_by_id(2)
+        interactions = target.interactions()
+        species_interactions = target.interactions(species="human")
+        self.assertGreater(len(interactions), len(species_interactions))
+
+
     def test_can_get_interaction_by_id(self):
         target = pygtop.get_target_by_id(2)
         interaction = target.get_interaction_by_id(107)
@@ -81,6 +88,15 @@ class TargetPropertyTests(TestCase):
         target = pygtop.get_target_by_id(2)
         ligands = target.ligands()
         self.assertGreater(len(ligands), 3)
+        for ligand in ligands:
+            self.assertIsInstance(ligand, Ligand)
+
+
+    def test_can_get_species_ligands(self):
+        target = pygtop.get_target_by_id(2)
+        ligands = target.ligands()
+        species_ligands = target.ligands(species="human")
+        self.assertGreater(len(ligands), len(species_ligands))
         for ligand in ligands:
             self.assertIsInstance(ligand, Ligand)
 

@@ -192,8 +192,13 @@ class Target:
             return [Gene(gene_json) for gene_json in self._get_gene_json()]
 
 
-    def interactions(self):
-        return [Interaction(interaction_json) for interaction_json in self._get_interactions_json()]
+    def interactions(self, species=None):
+        if species:
+            return [Interaction(interaction_json) for interaction_json in self._get_interactions_json()
+             if interaction_json["targetSpecies"] and interaction_json["targetSpecies"].lower() == species.lower()]
+        else:
+            return [Interaction(interaction_json) for interaction_json in self._get_interactions_json()]
+
 
 
     get_interaction_by_id = get_interaction_by_id
@@ -204,13 +209,13 @@ class Target:
     :raises: :class:`.NoSuchInteractionError`: if no such interaction exists in the database."""
 
 
-    def ligands(self):
+    def ligands(self, species=None):
         """Returns a list of all ligands which this target interacts with.
 
         :returns: list of :py:class:`.Ligand` objects"""
 
         ligands = []
-        for interaction in self.interactions():
+        for interaction in self.interactions(species=species):
             ligand = interaction.ligand()
             if ligand not in ligands:
                 ligands.append(ligand)
