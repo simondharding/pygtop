@@ -44,6 +44,45 @@ class DatabaseLink:
 
 
 class Gene:
+    """A gene for a pyGtoP target.
+
+    :param json_data: A dictionary obtained from the web services.
+
+    .. py:attribute:: target_id:
+
+        The ID of the pyGtoP target derived from this gene.
+
+    .. py:attribute:: species:
+
+        The species the gene is from.
+
+    .. py:attribute:: gene_symbol:
+
+        the gene's code.
+
+    .. py:attribute:: gene_name:
+
+        The gene's name.
+
+    .. py:attribute:: official_gene_id:
+
+        The gene's official ID.
+
+    .. py:attribute:: genomic_location:
+
+        The gene's location in its genome.
+
+    .. py:attribute:: amino_acids:
+
+        The number of amino acids the gene codes for.
+
+    .. py:attribute:: transmembrane_domains:
+
+        The number of amino acids in the resultant protein.
+
+    .. py:attribute:: pore_loops:
+
+        The number of pore loops in the resultant protein."""
 
     def __init__(self, json_data):
         self.json_data = json_data
@@ -65,6 +104,10 @@ class Gene:
 
 
 def strip_html(func):
+    """A decorator which, when applied to a function, will add a 'strip_html'
+    keyword argument - if set to True this will strip any HTML from the
+    function's output."""
+    
     cleaner = re.compile("<.*?>")
     def new_func(*args, strip_html=False, **kwargs):
         name = func(*args, **kwargs)

@@ -12,6 +12,8 @@ def get_json_from_gtop(query, attempts=5):
     doesn't get JSON back, it will return None.
 
     :param str query: The query to append to the base URL.
+    :param int attempts: The number of attempts to make before giving up \
+    (default is 5).
     :return: JSON object or None"""
 
     if not isinstance(attempts, int):
