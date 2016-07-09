@@ -196,7 +196,7 @@ class Ligand:
 
 
     def labelled(self):
-        """Returns True if the ligand is labelld.
+        """Returns True if the ligand is labelled.
 
         :rtype: bool"""
 

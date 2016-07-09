@@ -82,7 +82,7 @@ The API for targets works in much the same way as for ligands:
 
 There is a class representing target families, which are arranged hierarchically:
 
-    >>> my_target.get_families()
+    >>> my_target.families()
     [<'Motilin receptor' TargetFamily>]
     >>> my_target.families()[0].parent_families()
     [<'G protein-coupled receptors' TargetFamily>]
@@ -190,8 +190,7 @@ These can be accessed as follows:
     ['1NYX']
 
 In addition, ligands and targets can query the `RSCB PDB Web Services
-<http:/www.rcsb.org/pdb/software/rest.do>`_ to find other PDB codes
-(SpeciesTargets will only return PDBs relevant to that species):
+<http:/www.rcsb.org/pdb/software/rest.do>`_ to find other PDB codes:
 
     >>> ligand.smiles_pdbs()
     ['4IAR', '4IB4', '4NC3']

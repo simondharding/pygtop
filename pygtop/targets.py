@@ -135,7 +135,7 @@ class Target:
 
     @strip_html
     def abbreviation(self):
-        """Returns the target's abbreviation.
+        """Returns the target's abbreviated name.
 
         :param bool strip_html: If ``True``, the abbreviation will have HTML entities stripped.
         :rtype: str"""
@@ -216,7 +216,7 @@ class Target:
         """Returns any synonyms for this target.
 
         :param bool strip_html: If ``True``, the synonyms will have HTML entities stripped.
-        :returns: list of :py:class:`Target` objects"""
+        :returns: list of str"""
 
         return [synonym["name"] for synonym in self._get_synonym_json()]
 
