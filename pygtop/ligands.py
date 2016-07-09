@@ -105,6 +105,10 @@ def get_ligands_by_smiles(smiles, search_type="exact", cutoff=0.8):
 
 
 class Ligand:
+    """A Guide to PHARMACOLOGY ligand object.
+
+    :param json_data: A dictionary obtained from the web services."""
+
 
     def __init__(self, json_data):
         self.json_data = json_data
@@ -130,195 +134,391 @@ class Ligand:
 
 
     def ligand_id(self):
+        """Returns the ligand's GtoP ID.
+
+        :rtype: int"""
+
         return self._ligand_id
 
 
     @strip_html
     def name(self):
+        """Returns the ligand's name.
+
+        :param bool strip_html: If ``True``, the name will have HTML entities stripped.
+        :rtype: str"""
+
         return self._name
 
 
     @strip_html
     def abbreviation(self):
+        """Returns the ligand's abbreviated name.
+
+        :param bool strip_html: If ``True``, the abbreviation will have HTML entities stripped.
+        :rtype: str"""
+
         return self._abbreviation
 
 
     @strip_html
     def inn(self):
+        """Returns the ligand's INN name.
+
+        :param bool strip_html: If ``True``, the name will have HTML entities stripped.
+        :rtype: str"""
+
         return self._inn
 
 
     def ligand_type(self):
+        """Returns the ligand's type.
+
+        :rtype: str"""
+
         return self._ligand_type
 
 
     def species(self):
+        """Returns the ligand's species, where appropriate.
+
+        :rtype: str"""
+
         return self._species
 
 
     def radioactive(self):
+        """Returns True if the ligand is radioactive.
+
+        :rtype: bool"""
+
         return self._radioactive
 
 
     def labelled(self):
+        """Returns True if the ligand is labelld.
+
+        :rtype: bool"""
+
         return self._labelled
 
 
     def approved(self):
+        """Returns True if the ligand is approved.
+
+        :rtype: bool"""
+
         return self._approved
 
 
     def withdrawn(self):
+        """Returns True if the ligand has been withdrawn.
+
+        :rtype: bool"""
+
         return self._withdrawn
 
 
     @strip_html
     def approval_source(self):
+        """Returns the regulatory body that approved the ligand, where appropriate.
+
+        :param bool strip_html: If ``True``, the name will have HTML entities stripped.
+        :rtype: str"""
+
         return self._approval_source
 
 
     def subunit_ids(self):
+        """Returns the the ligand IDs of all ligands which are subunits of this
+        target.
+
+        :returns: list of ``int``"""
+
         return self._subunit_ids
 
 
     def subunits(self):
+        """Returns a list of all ligands which are subunits of this ligand.
+
+        :returns: list of :py:class:`Ligand` objects"""
+
         return [get_ligand_by_id(id_) for id_ in self._subunit_ids]
 
 
     def complex_ids(self):
+        """Returns the the ligand IDs of all ligands of which this target is a
+        subunit.
+
+        :returns: list of ``int``"""
+
         return self._complex_ids
 
 
     def complexes(self):
+        """Returns a list of all ligands of which this ligand is a subunit.
+
+        :returns: list of :py:class:`Ligand` objects"""
+
         return [get_ligand_by_id(id_) for id_ in self._complex_ids]
 
 
     def prodrug_ids(self):
+        """Returns the the ligand IDs of all ligands which are prodrugs of this
+        ligand.
+
+        :returns: list of ``int``"""
+
         return self._prodrug_ids
 
 
     def prodrugs(self):
+        """Returns a list of all ligands which are prodrugs of this ligand.
+
+        :returns: list of :py:class:`Ligand` objects"""
+
         return [get_ligand_by_id(id_) for id_ in self._prodrug_ids]
 
 
     def active_drug_ids(self):
+        """Returns the the ligand IDs of all ligands which are active
+        equivalents of this ligand.
+
+        :returns: list of ``int``"""
+
         return self._active_drug_ids
 
 
     def active_drugs(self):
+        """Returns a list of all ligands which are active equivalents of this ligand.
+
+        :returns: list of :py:class:`Ligand` objects"""
+
         return [get_ligand_by_id(id_) for id_ in self._active_drug_ids]
 
 
     def iupac_name(self):
+        """Returns the ligand's IUPAC name.
+
+        :rtype: str"""
+
         return self._get_structure_json().get("iupacName")
 
 
     def smiles(self):
+        """Returns the ligand's SMILES string.
+
+        :rtype: str"""
+
         return self._get_structure_json().get("smiles")
 
 
     def inchi(self):
+        """Returns the ligand's InChI string.
+
+        :rtype: str"""
+
         return self._get_structure_json().get("inchi")
 
 
     def inchi_key(self):
+        """Returns the ligand's InChI key.
+
+        :rtype: str"""
+
         return self._get_structure_json().get("inchiKey")
 
 
     def one_letter_sequence(self):
+        """Returns the ligand's single letter amino acid sequence where appropriate.
+
+        :rtype: str"""
+
         return self._get_structure_json().get("oneLetterSeq")
 
 
     def three_letter_sequence(self):
+        """Returns the ligand's three letter amino acid sequence where appropriate.
+
+        :rtype: str"""
+
         return self._get_structure_json().get("threeLetterSeq")
 
 
     def post_translational_modifications(self):
+        """Returns any post-translational modifications.
+
+        :rtype: str"""
+
         return self._get_structure_json().get("postTranslationalModifications")
 
 
     def chemical_modifications(self):
+        """Returns any chemical modifications.
+
+        :rtype: str"""
+
         return self._get_structure_json().get("chemicalModifications")
 
 
     def hydrogen_bond_acceptors(self):
+        """Returns the number of hydrogen bond accepting atoms.
+
+        :rtype: int"""
+
         return self._get_molecular_json().get("hydrogenBondAcceptors")
 
 
     def hydrogen_bond_donors(self):
+        """Returns the number of hydrogen bond donor atoms.
+
+        :rtype: int"""
+
         return self._get_molecular_json().get("hydrogenBondDonors")
 
 
     def rotatable_bonds(self):
+        """Returns the number of rotatable bonds in the ligand.
+
+        :rtype: int"""
+
         return self._get_molecular_json().get("rotatableBonds")
 
 
     def topological_polar_surface_area(self):
+        """Returns the polar surface area of the ligand in Angstroms.
+
+        :rtype: float"""
+
         return self._get_molecular_json().get("topologicalPolarSurfaceArea")
 
 
     def molecular_weight(self):
+        """Returns the ligand's mass in Daltons.
+
+        :rtype: float"""
+
         return self._get_molecular_json().get("molecularWeight")
 
 
     def log_p(self):
+        """Returns the logP value of the ligand.
+
+        :rtype: int"""
+
         return self._get_molecular_json().get("logP")
 
 
     def lipinski_rules_broken(self):
+        """Returns the number of Lipinski's Rules the ligand breaks.
+
+        :rtype: int"""
+
         return self._get_molecular_json().get("lipinskisRuleOfFive")
 
 
     @strip_html
     def synonyms(self):
+        """Returns the number ligand's synonyms
+
+        :returns: list of ``str``"""
+
         return [synonym["name"] for synonym in self._get_synonym_json()]
 
 
     def general_comments(self):
+        """Returns general comments pertaining to the ligand.
+
+        :rtype: str"""
+
         return self._get_comments_json().get("comments")
 
 
     def bioactivity_comments(self):
+        """Returns comments pertaining to bioactivity.
+
+        :rtype: str"""
+
         return self._get_molecular_json().get("bioactivityComments")
 
 
     def clinical_use_comments(self):
+        """Returns comments pertaining to clinical use.
+
+        :rtype: str"""
+
         return self._get_molecular_json().get("clinicalUse")
 
 
     def mechanism_of_action_comments(self):
+        """Returns comments pertaining to mechanism.
+
+        :rtype: str"""
+
         return self._get_molecular_json().get("mechanismOfAction")
 
 
     def absorption_and_distribution_comments(self):
+        """Returns comments pertaining to absorption and distribution.
+
+        :rtype: str"""
+
         return self._get_molecular_json().get("absorptionAndDistribution")
 
 
     def metabolism_comments(self):
+        """Returns comments pertaining to metabolism.
+
+        :rtype: str"""
+
         return self._get_molecular_json().get("metabolism")
 
 
     def elimination_comments(self):
+        """Returns comments pertaining to elimination from the body.
+
+        :rtype: str"""
+
         return self._get_molecular_json().get("elimination")
 
 
     def population_pharmacokinetics_comments(self):
+        """Returns comments pertaining to population pharmacokinetics.
+
+        :rtype: str"""
+
         return self._get_molecular_json().get("populationPharmacokinetics")
 
 
     def organ_function_impairments_comments(self):
+        """Returns comments pertaining to organ function impairment.
+
+        :rtype: str"""
+
         return self._get_molecular_json().get("organFunctionImpairment")
 
 
     def mutations_and_pathophysiology_comments(self):
+        """Returns comments pertaining to mutations and pathophysiology.
+
+        :rtype: str"""
+
         return self._get_molecular_json().get("mutationsAndPathophysiology")
 
 
     def database_links(self):
+        """Returns a list of database links for this ligand.
+
+        :rtype: list of :py:class:`.DatabaseLink`"""
+
         return [DatabaseLink(link_json) for link_json in self._get_database_json()]
 
 
     def interactions(self):
+        """Returns a list of interactions for this ligand.
+
+        :rtype: list of :py:class:`.Interaction`"""
+
         return [Interaction(interaction_json) for interaction_json in self._get_interactions_json()]
 
 
@@ -473,6 +673,12 @@ class Ligand:
 
 
     def find_in_pdb_by_smiles(self, molecupy_pdb):
+        """Searches for the ligand in a `molecuPy <http://molecupy.readthedocs.io>`_
+        PDB object by SMILES string and returns the small molecule it finds.
+
+        :param molecupy_pdb: The molecuPy PDB object.
+        :rtype: ``PdbSmallMolecule``"""
+
         if self.smiles():
             formula = Counter([char.upper() for char in self.smiles()
              if char.isalpha() and char.upper() != "H"])
@@ -482,6 +688,12 @@ class Ligand:
 
 
     def find_in_pdb_by_name(self, molecupy_pdb):
+        """Searches for the ligand in a `molecuPy <http://molecupy.readthedocs.io>`_
+        PDB object by ligand name and returns the small molecule it finds.
+
+        :param molecupy_pdb: The molecuPy PDB object.
+        :rtype: ``PdbSmallMolecule``"""
+
         if self.name():
             for molecule in molecupy_pdb.model.small_molecules:
                 molecule_name = molecupy_pdb.data_file.het_names.get(molecule.molecule_name)
@@ -490,6 +702,12 @@ class Ligand:
 
 
     def find_in_pdb_by_mass(self, molecupy_pdb):
+        """Searches for the ligand in a `molecuPy <http://molecupy.readthedocs.io>`_
+        PDB object by ligand mass and returns the small molecule it finds.
+
+        :param molecupy_pdb: The molecuPy PDB object.
+        :rtype: ``PdbSmallMolecule``"""
+
         if self.molecular_weight():
             molecules = sorted(
              list(molecupy_pdb.model.small_molecules),
@@ -500,6 +718,12 @@ class Ligand:
 
 
     def find_in_pdb_by_peptide_string(self, molecupy_pdb):
+        """Searches for the ligand in a `molecuPy <http://molecupy.readthedocs.io>`_
+        PDB object by peptide sequence and returns the chain it finds.
+
+        :param molecupy_pdb: The molecuPy PDB object.
+        :rtype: ``PdbChain``"""
+
         if self.one_letter_sequence():
             for chain in molecupy_pdb.model.chains:
                 if self.one_letter_sequence() in chain.get_sequence_string() and 0.9 <= (
