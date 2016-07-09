@@ -1,6 +1,30 @@
 Changelog
 ---------
 
+Release 2.0.0
+~~~~~~~~~~~~~
+
+`9 July 2016`
+
+* Most properties now accessible as methods.
+
+    * Affects ligands, targets and interactions.
+    * This removes the need to request these properties separately.
+    
+* Gene object added.
+
+* Added ability to strip HTML from certain string outputs, such as name.
+
+* Added extra safeguards to GtoP web services requester to make more stable.
+
+* Changed handling of affinity values in Interactions.
+
+    * Now provides a low and a high value as numbers.
+    * String range accessible via the original JSON object.
+
+* This release is backwards-incompatible with the 1.x releases.
+
+
 Release 1.0.1
 ~~~~~~~~~~~~~
 
