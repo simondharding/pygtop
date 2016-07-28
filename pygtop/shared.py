@@ -103,19 +103,55 @@ class Gene:
     def __init__(self, json_data):
         self.json_data = json_data
 
-        self.target_id = json_data["targetId"]
-        self.species = json_data["species"]
-        self.gene_symbol = json_data["geneSymbol"]
-        self.gene_name = json_data["geneName"]
-        self.official_gene_id = json_data["officialGeneId"]
-        self.genomic_location = json_data["genomicLocation"]
-        self.amino_acids = int(json_data["aminoAcids"]) if json_data["aminoAcids"] else 0
-        self.transmembrane_domains = int(json_data["transmembraneDomains"]) if json_data["transmembraneDomains"] else 0
-        self.pore_loops = int(json_data["poreLoops"]) if json_data["poreLoops"] else 0
+        self._target_id = json_data["targetId"]
+        self._species = json_data["species"]
+        self._gene_symbol = json_data["geneSymbol"]
+        self._gene_name = json_data["geneName"]
+        self._official_gene_id = json_data["officialGeneId"]
+        self._genomic_location = json_data["genomicLocation"]
+        self._amino_acids = int(json_data["aminoAcids"]) if json_data["aminoAcids"] else 0
+        self._transmembrane_domains = int(json_data["transmembraneDomains"]) if json_data["transmembraneDomains"] else 0
+        self._pore_loops = int(json_data["poreLoops"]) if json_data["poreLoops"] else 0
 
 
     def __repr__(self):
-        return "<%s Gene (%s)>" % (self.species, self.gene_symbol)
+        return "<%s Gene (%s)>" % (self._species, self._gene_symbol)
+
+
+    def target_id(self):
+        return self._target_id
+
+
+    def species(self):
+        return self._species
+
+
+    def gene_symbol(self):
+        return self._gene_symbol
+
+
+    def gene_name(self):
+        return self._gene_name
+
+
+    def official_gene_id(self):
+        return self._official_gene_id
+
+
+    def genomic_location(self):
+        return self._genomic_location
+
+
+    def amino_acids(self):
+        return self._amino_acids
+
+
+    def transmembrane_domains(self):
+        return self._transmembrane_domains
+
+
+    def pore_loops(self):
+        return self._pore_loops
 
 
 

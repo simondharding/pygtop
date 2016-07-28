@@ -247,9 +247,9 @@ class TargetPropertyTests(TargetTest):
         self.assertIsInstance(target.genes()[0], Gene)
         self.assertIsInstance(target.genes()[1], Gene)
         self.assertIsInstance(target.genes()[2], Gene)
-        self.assertEqual(target.genes()[0].gene_symbol, "KCNMA1")
-        self.assertEqual(target.genes()[1].gene_symbol, "Kcnma1")
-        self.assertEqual(target.genes()[2].gene_symbol, "Kcnma2")
+        self.assertEqual(target.genes()[0].gene_symbol(), "KCNMA1")
+        self.assertEqual(target.genes()[1].gene_symbol(), "Kcnma1")
+        self.assertEqual(target.genes()[2].gene_symbol(), "Kcnma2")
 
 
     @patch("pygtop.gtop.get_json_from_gtop")
@@ -268,8 +268,8 @@ class TargetPropertyTests(TargetTest):
         genes = target.genes(species="mouse")
         self.assertEqual(len(genes), 1)
         self.assertIsInstance(genes[0], Gene)
-        self.assertEqual(genes[0].gene_symbol, "Kcnma1")
-        self.assertEqual(genes[0].species, "Mouse")
+        self.assertEqual(genes[0].gene_symbol(), "Kcnma1")
+        self.assertEqual(genes[0].species(), "Mouse")
 
 
     @patch("pygtop.gtop.get_json_from_gtop")
