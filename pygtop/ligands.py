@@ -682,8 +682,8 @@ class Ligand:
         if self.smiles():
             formula = Counter([char.upper() for char in self.smiles()
              if char.isalpha() and char.upper() != "H"])
-            for molecule in molecupy_pdb.model.small_molecules:
-                if molecule.get_formula() == formula:
+            for molecule in molecupy_pdb.model().small_molecules():
+                if molecule.formula() == formula:
                     return molecule
 
 
@@ -695,8 +695,8 @@ class Ligand:
         :rtype: ``PdbSmallMolecule``"""
 
         if self.name():
-            for molecule in molecupy_pdb.model.small_molecules:
-                molecule_name = molecupy_pdb.data_file.het_names.get(molecule.molecule_name)
+            for molecule in molecupy_pdb.model().small_molecules():
+                molecule_name = molecupy_pdb.data_file().het_names().get(molecule.molecule_name())
                 if molecule_name and self.name().lower() == molecule_name.lower():
                     return molecule
 
@@ -710,10 +710,10 @@ class Ligand:
 
         if self.molecular_weight():
             molecules = sorted(
-             list(molecupy_pdb.model.small_molecules),
-             key=lambda k: abs(k.get_mass() - self.molecular_weight())
+             list(molecupy_pdb.model().small_molecules()),
+             key=lambda k: abs(k.mass() - self.molecular_weight())
             )
-            if molecules and -40 < (molecules[0].get_mass() - self.molecular_weight()) < 40:
+            if molecules and -40 < (molecules[0].mass() - self.molecular_weight()) < 40:
                 return molecules[0]
 
 
@@ -725,9 +725,9 @@ class Ligand:
         :rtype: ``PdbChain``"""
 
         if self.one_letter_sequence():
-            for chain in molecupy_pdb.model.chains:
-                if self.one_letter_sequence() in chain.get_sequence_string() and 0.9 <= (
-                 len(self.one_letter_sequence()) / len(chain.get_sequence_string())
+            for chain in molecupy_pdb.model().chains():
+                if self.one_letter_sequence() in chain.sequence_string() and 0.9 <= (
+                 len(self.one_letter_sequence()) / len(chain.sequence_string())
                 ) <= 1:
                     return chain
 
