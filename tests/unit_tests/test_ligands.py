@@ -620,31 +620,33 @@ class LigandInPdbTests(LigandTest):
     def setUp(self):
         LigandTest.setUp(self)
         self.pdb = unittest.mock.Mock()
-        self.pdb.model = unittest.mock.Mock()
+        model = unittest.mock.Mock()
         self.molecule1 = unittest.mock.Mock()
-        self.molecule1.get_formula.return_value = Counter({"C": 6, "O": 6})
-        self.molecule1.molecule_name = "AAA"
-        self.molecule1.get_mass.return_value = 1000
+        self.molecule1.formula.return_value = Counter({"C": 6, "O": 6})
+        self.molecule1.molecule_name.return_value = "AAA"
+        self.molecule1.mass.return_value = 1000
         self.molecule2 = unittest.mock.Mock()
-        self.molecule2.get_formula.return_value = Counter({"C": 5, "O": 5})
-        self.molecule2.molecule_name = "BBB"
-        self.molecule2.get_mass.return_value = 500
+        self.molecule2.formula.return_value = Counter({"C": 5, "O": 5})
+        self.molecule2.molecule_name.return_value = "BBB"
+        self.molecule2.mass.return_value = 500
         self.molecule3 = unittest.mock.Mock()
-        self.molecule3.get_formula.return_value = Counter({"C": 5, "N": 1, "O": 5})
-        self.molecule3.molecule_name = "CCC"
-        self.molecule3.get_mass.return_value = 139
-        self.pdb.model.small_molecules = set(
+        self.molecule3.formula.return_value = Counter({"C": 5, "N": 1, "O": 5})
+        self.molecule3.molecule_name.return_value = "CCC"
+        self.molecule3.mass.return_value = 139
+        model.small_molecules.return_value = set(
          [self.molecule1, self.molecule2, self.molecule3]
         )
         self.chain1 = unittest.mock.Mock()
-        self.chain1.get_sequence_string.return_value = "ABCDEFG"
+        self.chain1.sequence_string.return_value = "ABCDEFG"
         self.chain2 = unittest.mock.Mock()
-        self.chain2.get_sequence_string.return_value = "HIJKLMN"
-        self.pdb.model.chains = set([self.chain1, self.chain2])
-        self.pdb.data_file = unittest.mock.Mock()
-        self.pdb.data_file.het_names = {
+        self.chain2.sequence_string.return_value = "HIJKLMN"
+        model.chains.return_value = set([self.chain1, self.chain2])
+        self.pdb.model.return_value = model
+        data_file = unittest.mock.Mock()
+        data_file.het_names.return_value = {
          "AAA": "adrug", "BBB": self.ligand_json["name"], "CCC": "cdrug"
         }
+        self.pdb.data_file.return_value = data_file
 
 
     @patch("pygtop.gtop.get_json_from_gtop")
