@@ -212,10 +212,10 @@ class TargetPropertyTests(TargetTest):
         self.assertEqual(len(target.database_links()), 2)
         self.assertIsInstance(target.database_links()[0], DatabaseLink)
         self.assertIsInstance(target.database_links()[1], DatabaseLink)
-        self.assertEqual(target.database_links()[0].accession, "10576")
-        self.assertEqual(target.database_links()[1].accession, "11863")
-        self.assertEqual(target.database_links()[0].species, "Rat")
-        self.assertEqual(target.database_links()[1].species, "Mouse")
+        self.assertEqual(target.database_links()[0].accession(), "10576")
+        self.assertEqual(target.database_links()[1].accession(), "11863")
+        self.assertEqual(target.database_links()[0].species(), "Rat")
+        self.assertEqual(target.database_links()[1].species(), "Mouse")
 
 
     @patch("pygtop.gtop.get_json_from_gtop")
@@ -234,8 +234,8 @@ class TargetPropertyTests(TargetTest):
         links = target.database_links(species="mouse")
         self.assertEqual(len(links), 1)
         self.assertIsInstance(links[0], DatabaseLink)
-        self.assertEqual(links[0].accession, "11863")
-        self.assertEqual(links[0].species, "Mouse")
+        self.assertEqual(links[0].accession(), "11863")
+        self.assertEqual(links[0].species(), "Mouse")
 
 
     @patch("pygtop.gtop.get_json_from_gtop")

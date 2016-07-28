@@ -28,18 +28,34 @@ class DatabaseLink:
     def __init__(self, json_data):
         self.json_data = json_data
 
-        self.accession = json_data["accession"]
-        self.database = json_data["database"]
-        self.url = json_data["url"]
-        self.species = None if json_data["species"] == "None" else json_data["species"]
+        self._accession = json_data["accession"]
+        self._database = json_data["database"]
+        self._url = json_data["url"]
+        self._species = None if json_data["species"] == "None" else json_data["species"]
 
 
     def __repr__(self):
         return "<%s link (%s)%s>" % (
-         self.database,
-         self.accession,
-         " for " + self.species if self.species else ""
+         self._database,
+         self._accession,
+         " for " + self._species if self._species else ""
         )
+
+
+    def accession(self):
+        return self._accession
+
+
+    def database(self):
+        return self._database
+
+
+    def url(self):
+        return self._url
+
+
+    def species(self):
+        return self._species
 
 
 
@@ -107,7 +123,7 @@ def strip_html(func):
     """A decorator which, when applied to a function, will add a 'strip_html'
     keyword argument - if set to True this will strip any HTML from the
     function's output."""
-    
+
     cleaner = re.compile("<.*?>")
     def new_func(*args, strip_html=False, **kwargs):
         name = func(*args, **kwargs)

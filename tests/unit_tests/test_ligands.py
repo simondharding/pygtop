@@ -319,8 +319,8 @@ class LigandPropertyTests(LigandTest):
         self.assertEqual(len(ligand.database_links()), 2)
         self.assertIsInstance(ligand.database_links()[0], DatabaseLink)
         self.assertIsInstance(ligand.database_links()[1], DatabaseLink)
-        self.assertEqual(ligand.database_links()[0].accession, "CHEMBL1742477")
-        self.assertEqual(ligand.database_links()[1].accession, "57347")
+        self.assertEqual(ligand.database_links()[0].accession(), "CHEMBL1742477")
+        self.assertEqual(ligand.database_links()[1].accession(), "57347")
 
 
     @patch("pygtop.gtop.get_json_from_gtop")
