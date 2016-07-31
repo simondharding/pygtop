@@ -222,4 +222,4 @@ any of the PDB requesting methods:
     [<Pdb (4IAR)>, <Pdb (4IB4)>, <Pdb (4NC3)>]
 
 See the molecuPy documentation for a full accounting of the functionality this
-offers.
+offers. pyGtoP requires molecuPy 1.0.0 or higher.
