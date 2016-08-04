@@ -7,23 +7,7 @@ class DatabaseLink:
     """A link to an external database, containing accession and species
     information.
 
-    :param json_data: A dictionary obtained from the web services.
-
-    .. py:attribute:: accession:
-
-        The Accession code.
-
-    .. py:attribute:: database:
-
-        The Database being linked to.
-
-    .. py:attribute:: url:
-
-        The URL for this database entry.
-
-    .. py:attribute:: species:
-
-        The specific species the database entry refers to."""
+    :param json_data: A dictionary obtained from the web services."""
 
     def __init__(self, json_data):
         self.json_data = json_data
@@ -43,18 +27,26 @@ class DatabaseLink:
 
 
     def accession(self):
+        """The Accession code."""
+
         return self._accession
 
 
     def database(self):
+        """The Database being linked to."""
+
         return self._database
 
 
     def url(self):
+        """The URL for this database entry."""
+
         return self._url
 
 
     def species(self):
+        """The specific species the database entry refers to."""
+
         return self._species
 
 
@@ -62,43 +54,7 @@ class DatabaseLink:
 class Gene:
     """A gene for a pyGtoP target.
 
-    :param json_data: A dictionary obtained from the web services.
-
-    .. py:attribute:: target_id:
-
-        The ID of the pyGtoP target derived from this gene.
-
-    .. py:attribute:: species:
-
-        The species the gene is from.
-
-    .. py:attribute:: gene_symbol:
-
-        the gene's code.
-
-    .. py:attribute:: gene_name:
-
-        The gene's name.
-
-    .. py:attribute:: official_gene_id:
-
-        The gene's official ID.
-
-    .. py:attribute:: genomic_location:
-
-        The gene's location in its genome.
-
-    .. py:attribute:: amino_acids:
-
-        The number of amino acids the gene codes for.
-
-    .. py:attribute:: transmembrane_domains:
-
-        The number of amino acids in the resultant protein.
-
-    .. py:attribute:: pore_loops:
-
-        The number of pore loops in the resultant protein."""
+    :param json_data: A dictionary obtained from the web services."""
 
     def __init__(self, json_data):
         self.json_data = json_data
@@ -119,38 +75,56 @@ class Gene:
 
 
     def target_id(self):
+        """The ID of the pyGtoP target derived from this gene."""
+
         return self._target_id
 
 
     def species(self):
+        """The species the gene is from."""
+
         return self._species
 
 
     def gene_symbol(self):
+        """The gene's code."""
+
         return self._gene_symbol
 
 
     def gene_name(self):
+        """The gene's name."""
+
         return self._gene_name
 
 
     def official_gene_id(self):
+        """The gene's official ID."""
+
         return self._official_gene_id
 
 
     def genomic_location(self):
+        """The gene's location in its genome."""
+
         return self._genomic_location
 
 
     def amino_acids(self):
+        """The number of amino acids the gene codes for."""
+
         return self._amino_acids
 
 
     def transmembrane_domains(self):
+        """The number of amino acids in the resultant protein."""
+
         return self._transmembrane_domains
 
 
     def pore_loops(self):
+        """The number of pore loops in the resultant protein."""
+
         return self._pore_loops
 
 

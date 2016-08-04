@@ -677,7 +677,7 @@ class Ligand:
         PDB object by SMILES string and returns the small molecule it finds.
 
         :param molecupy_pdb: The molecuPy PDB object.
-        :rtype: ``PdbSmallMolecule``"""
+        :rtype: ``SmallMolecule``"""
 
         if self.smiles():
             formula = Counter([char.upper() for char in self.smiles()
@@ -692,7 +692,7 @@ class Ligand:
         PDB object by ligand name and returns the small molecule it finds.
 
         :param molecupy_pdb: The molecuPy PDB object.
-        :rtype: ``PdbSmallMolecule``"""
+        :rtype: ``SmallMolecule``"""
 
         if self.name():
             for molecule in molecupy_pdb.model().small_molecules():
@@ -706,7 +706,7 @@ class Ligand:
         PDB object by ligand mass and returns the small molecule it finds.
 
         :param molecupy_pdb: The molecuPy PDB object.
-        :rtype: ``PdbSmallMolecule``"""
+        :rtype: ``SmallMolecule``"""
 
         if self.molecular_weight():
             molecules = sorted(
@@ -722,7 +722,7 @@ class Ligand:
         PDB object by peptide sequence and returns the chain it finds.
 
         :param molecupy_pdb: The molecuPy PDB object.
-        :rtype: ``PdbChain``"""
+        :rtype: ``Chain``"""
 
         if self.one_letter_sequence():
             for chain in molecupy_pdb.model().chains():
