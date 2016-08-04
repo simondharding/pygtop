@@ -268,7 +268,7 @@ Release 2.0.1
 
 `4 August 2016`
 
-* pyGtoP not compatible for molecuPy 1.0.0 and higher.
+* pyGtoP now compatible for molecuPy 1.0.0 and higher.
 
 * DatabaseLink and Gene objects now have method properties.
 
