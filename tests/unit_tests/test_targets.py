@@ -441,6 +441,12 @@ class TargetPropertyTests(TargetTest):
             self.assertIn(code, pdbs)
 
 
+    def test_can_get_target_sequence(self):
+        target = Target(self.target_json)
+        self.assertEqual(target.sequence("human"), "ABCDEABCDEF")
+        self.assertEqual(target.sequence("mouse"), "QWERTYQWERY")
+
+
 
 class TargetAccessTests(TargetTest):
 
