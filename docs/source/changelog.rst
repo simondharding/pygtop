@@ -1,6 +1,14 @@
 Changelog
 ---------
 
+Release 2.1.0
+~~~~~~~~~~~~~
+
+`23 August 2017`
+
+* Added search by HET method for ligand PDBs
+
+
 Release 2.0.1
 ~~~~~~~~~~~~~
 

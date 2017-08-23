@@ -672,7 +672,8 @@ class Ligand:
          self.smiles_pdbs() +
          self.inchi_pdbs() +
          self.name_pdbs() +
-         self.sequence_pdbs()
+         self.sequence_pdbs() +
+         self.het_pdbs()
         ))
 
 
