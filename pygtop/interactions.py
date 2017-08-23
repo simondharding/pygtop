@@ -11,6 +11,17 @@ def get_interaction_by_id(self, interaction_id):
     raise NoSuchInteractionError("%s has no interaction %i" % (str(self), interaction_id))
 
 
+def get_all_interactions():
+    """Returns a list of all interactions in the Guide to PHARMACOLOGY database.
+    This can take a few seconds.
+
+    :returns: list of :py:class:`Interaction` objects"""
+
+    json_data = gtop.get_json_from_gtop("interactions")
+    return [Interaction(t) for t in json_data]
+
+
+
 class Interaction:
     """A Guide to PHARMACOLOGY interaction object.
 

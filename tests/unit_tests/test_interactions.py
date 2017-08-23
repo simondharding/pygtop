@@ -1,7 +1,7 @@
 from unittest import TestCase
 import unittest.mock
 from unittest.mock import patch
-from pygtop.interactions import Interaction
+from pygtop.interactions import Interaction, get_all_interactions
 from pygtop.ligands import Ligand
 from pygtop.targets import Target
 import pygtop.exceptions as exceptions
@@ -103,6 +103,17 @@ class InteractionTest(TestCase):
         ]
 
 
+
+class InteractionRetrievalTests(InteractionTest):
+
+    @patch("pygtop.gtop.get_json_from_gtop")
+    def test_can_get_all_interactions(self, mock_json_retriever):
+        mock_json_retriever.return_value = [self.interaction_json, self.interaction_json]
+        interactions = get_all_interactions()
+        self.assertIsInstance(interactions, list)
+        self.assertEqual(len(interactions), 2)
+        self.assertIsInstance(interactions[0], Interaction)
+        self.assertIsInstance(interactions[1], Interaction)
 
 
 

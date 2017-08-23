@@ -642,6 +642,25 @@ class Ligand:
 
 
     @pdb.ask_about_molecupy
+    def het_pdbs(self):
+        """Queries the RSCB PDB database with the ligand's amino acid sequence,\
+        if that ligand is a peptide.
+
+        :param bool as_molecupy: Returns the PDBs as \
+        `molecuPy <http://molecupy.readthedocs.io>`_ PDB objects.
+        :returns: list of ``str`` PDB codes"""
+
+        het = [h for h in self.database_links() if "PDB" in h.database()]
+        if het:
+            results = pdb.query_rcsb_advanced("ChemCompIdQuery", {
+             "chemCompId": het[0].accession(),
+            })
+            return results if results else []
+        else:
+            return []
+
+
+    @pdb.ask_about_molecupy
     def all_external_pdbs(self):
         """Queries the RSCB PDB database by all parameters.
 

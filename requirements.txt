@@ -1,2 +1,2 @@
 requests
-molecupy
+molecupy==1.0.5
