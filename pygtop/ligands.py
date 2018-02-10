@@ -702,7 +702,7 @@ class Ligand:
         if self.smiles():
             formula = Counter([char.upper() for char in self.smiles()
              if char.isalpha() and char.upper() != "H"])
-            for molecule in molecupy_pdb.model().small_molecules():
+            for molecule in sorted(molecupy_pdb.model().small_molecules(), key=lambda m: m.molecule_id()):
                 if molecule.formula() == formula:
                     return molecule
 
@@ -715,7 +715,7 @@ class Ligand:
         :rtype: ``SmallMolecule``"""
 
         if self.name():
-            for molecule in molecupy_pdb.model().small_molecules():
+            for molecule in sorted(molecupy_pdb.model().small_molecules(), key=lambda m: m.molecule_id()):
                 molecule_name = molecupy_pdb.data_file().het_names().get(molecule.molecule_name())
                 if molecule_name and self.name().lower() == molecule_name.lower():
                     return molecule
