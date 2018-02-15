@@ -702,9 +702,13 @@ class Ligand:
         if self.smiles():
             formula = Counter([char.upper() for char in self.smiles()
              if char.isalpha() and char.upper() != "H"])
+            matches = []
             for molecule in sorted(molecupy_pdb.model().small_molecules(), key=lambda m: m.molecule_id()):
                 if molecule.formula() == formula:
-                    return molecule
+                    matches.append(molecule)
+            if matches:
+                return sorted(matches,key=lambda m: len(m.bind_site().residues())
+                 if m.bind_site() else 0, reverse = True)[0]
 
 
     def find_in_pdb_by_name(self, molecupy_pdb):
@@ -715,10 +719,14 @@ class Ligand:
         :rtype: ``SmallMolecule``"""
 
         if self.name():
+            matches = []
             for molecule in sorted(molecupy_pdb.model().small_molecules(), key=lambda m: m.molecule_id()):
                 molecule_name = molecupy_pdb.data_file().het_names().get(molecule.molecule_name())
                 if molecule_name and self.name().lower() == molecule_name.lower():
-                    return molecule
+                    matches.append(molecule)
+            if matches:
+                return sorted(matches,key=lambda m: len(m.bind_site().residues())
+                 if m.bind_site() else 0, reverse = True)[0]
 
 
     def find_in_pdb_by_mass(self, molecupy_pdb):

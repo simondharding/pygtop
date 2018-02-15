@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
  name="pygtop",
- version="2.1.2",
+ version="2.1.3",
  description="A Python wrapper for the Guide to PHARMACOLOGY API. It provides \
  a Python interface for access to the GtoP database.",
  url="https://pygtop.readthedocs.org",
